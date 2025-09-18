@@ -1,0 +1,114 @@
+<% content_for :title, "Wins Portfolio - JotChain" %>
+
+<div class="max-w-4xl mx-auto">
+  <!-- Header -->
+  <div class="mb-8">
+    <h1 class="text-3xl font-mono font-bold text-text-primary mb-2">Your Wins Portfolio</h1>
+    <p class="text-text-secondary">Track and celebrate your professional achievements</p>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+    <div class="card">
+      <div class="text-2xl font-bold text-text-primary"><%= @total_wins %></div>
+      <div class="text-sm text-text-secondary">Total Wins</div>
+    </div>
+    <div class="card">
+      <div class="text-2xl font-bold text-wins-minor"><%= @wins_by_level['minor'] || 0 %></div>
+      <div class="text-sm text-text-secondary">Minor Wins</div>
+    </div>
+    <div class="card">
+      <div class="text-2xl font-bold text-wins-major"><%= @wins_by_level['major'] || 0 %></div>
+      <div class="text-sm text-text-secondary">Major Wins</div>
+    </div>
+    <div class="card">
+      <div class="text-2xl font-bold text-wins-career"><%= @wins_by_level['career_defining'] || 0 %></div>
+      <div class="text-sm text-text-secondary">Career Defining</div>
+    </div>
+  </div>
+
+  <!-- Filters and Export -->
+  <div class="flex justify-between items-center mb-6">
+    <div class="flex gap-2">
+      <%= link_to "All", wins_path, class: "px-4 py-2 rounded-lg #{params[:level].blank? ? 'bg-accent text-white' : 'bg-background-secondary text-text-secondary hover:bg-background-tertiary'} transition-colors" %>
+      <%= link_to "Minor", wins_path(level: 'minor'), class: "px-4 py-2 rounded-lg #{params[:level] == 'minor' ? 'bg-wins-minor text-white' : 'bg-background-secondary text-text-secondary hover:bg-background-tertiary'} transition-colors" %>
+      <%= link_to "Major", wins_path(level: 'major'), class: "px-4 py-2 rounded-lg #{params[:level] == 'major' ? 'bg-wins-major text-white' : 'bg-background-secondary text-text-secondary hover:bg-background-tertiary'} transition-colors" %>
+      <%= link_to "Career", wins_path(level: 'career_defining'), class: "px-4 py-2 rounded-lg #{params[:level] == 'career_defining' ? 'bg-wins-career text-white' : 'bg-background-secondary text-text-secondary hover:bg-background-tertiary'} transition-colors" %>
+    </div>
+
+    <div class="dropdown relative">
+      <button class="btn-secondary text-sm" data-dropdown-toggle>
+        Export <svg class="w-4 h-4 inline ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+        </svg>
+      </button>
+      <div class="dropdown-menu hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-border">
+        <%= link_to "Export as Markdown", export_wins_path(format: :markdown, level: params[:level]), class: "block px-4 py-2 text-sm text-text-primary hover:bg-background-secondary", download: "wins_portfolio.md" %>
+        <%= link_to "Export as Text", export_wins_path(format: :text, level: params[:level]), class: "block px-4 py-2 text-sm text-text-primary hover:bg-background-secondary", download: "wins_portfolio.txt" %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Wins List -->
+  <div class="space-y-4">
+    <% if @wins.any? %>
+      <% @wins.each do |win| %>
+        <div class="card">
+          <div class="flex justify-between items-start mb-3">
+            <div>
+              <h3 class="text-lg font-semibold text-text-primary">
+                <%= win.entry_date.strftime("%B %d, %Y") %>
+              </h3>
+              <% case win.win_level %>
+              <% when 'minor' %>
+                <span class="win-badge-minor">Minor Win</span>
+              <% when 'major' %>
+                <span class="win-badge-major">Major Win</span>
+              <% when 'career_defining' %>
+                <span class="win-badge-career">Career Defining</span>
+              <% end %>
+            </div>
+            <%= link_to "View Entry", entry_path(win), class: "text-sm text-accent hover:text-accent-hover" %>
+          </div>
+
+          <div class="text-text-primary">
+            <%= simple_format(win.content) %>
+          </div>
+        </div>
+      <% end %>
+
+      <!-- Pagination -->
+      <div class="mt-8 flex justify-center">
+        <%= paginate @wins %>
+      </div>
+    <% else %>
+      <div class="card text-center py-12">
+        <div class="text-4xl mb-4">🏆</div>
+        <h3 class="text-lg font-semibold text-text-primary mb-2">No wins yet</h3>
+        <p class="text-text-secondary">Start marking your achievements as wins to build your portfolio!</p>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<script>
+  // Simple dropdown toggle
+  document.addEventListener('DOMContentLoaded', function() {
+    const dropdownToggle = document.querySelector('[data-dropdown-toggle]');
+    const dropdownMenu = document.querySelector('.dropdown-menu');
+
+    if (dropdownToggle && dropdownMenu) {
+      dropdownToggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        dropdownMenu.classList.toggle('hidden');
+      });
+
+      // Close dropdown when clicking outside
+      document.addEventListener('click', function(e) {
+        if (!dropdownToggle.contains(e.target) && !dropdownMenu.contains(e.target)) {
+          dropdownMenu.classList.add('hidden');
+        }
+      });
+    }
+  });
+</script>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html class="h-full">
+  <head>
+    <title><%= content_for(:title) || "JotChain - Log today. Start tomorrow ahead." %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+
+    <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="h-full bg-background text-text-primary">
+    <% if user_signed_in? %>
+      <div class="h-full flex" data-controller="sidebar" data-turbo-permanent="sidebar">
+        <!-- Mobile sidebar overlay -->
+        <div class="hidden fixed inset-0 z-40 bg-black bg-opacity-50 lg:hidden"
+             data-sidebar-target="overlay"
+             data-action="click->sidebar#close"></div>
+
+        <!-- Sidebar -->
+        <div class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform -translate-x-full lg:translate-x-0 overflow-hidden"
+             data-sidebar-target="sidebar" data-turbo-permanent="sidebar-content">
+
+          <!-- Logo -->
+          <div class="h-16 flex items-center justify-between px-4 lg:px-6 border-b border-border">
+            <a href="<%= root_path %>" class="hover:opacity-80 transition-opacity sidebar-logo flex items-center justify-center w-full lg:w-auto">
+              <span class="font-mono font-bold text-xl"><span class="text-accent">Jot</span>Chain</span>
+            </a>
+            <button data-action="click->sidebar#toggleCollapse"
+                    data-sidebar-target="collapseButton"
+                    class="hidden lg:block p-1 rounded hover:bg-background-secondary transition-colors">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"></path>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Navigation -->
+          <nav class="flex-1 px-2 lg:px-4 py-6 space-y-2">
+            <%= link_to root_path, class: "sidebar-nav-item flex items-center gap-3 px-2 lg:px-3 py-2 rounded-lg text-text-primary hover:bg-background-secondary transition-colors #{'bg-background-secondary' if current_page?(root_path)}" do %>
+              <svg class="w-5 h-5 flex-shrink-0 sidebar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+              </svg>
+              <span class="font-medium sidebar-text">Dashboard</span>
+            <% end %>
+
+            <%= link_to entries_path, class: "sidebar-nav-item flex items-center gap-3 px-2 lg:px-3 py-2 rounded-lg text-text-secondary hover:bg-background-secondary hover:text-text-primary transition-colors #{'bg-background-secondary text-text-primary' if current_page?(entries_path)}" do %>
+              <svg class="w-5 h-5 flex-shrink-0 sidebar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+              </svg>
+              <span class="font-medium sidebar-text">Entries</span>
+            <% end %>
+
+            <%= link_to wins_path, class: "sidebar-nav-item flex items-center gap-3 px-2 lg:px-3 py-2 rounded-lg text-text-secondary hover:bg-background-secondary hover:text-text-primary transition-colors #{'bg-background-secondary text-text-primary' if current_page?(wins_path)}" do %>
+              <svg class="w-5 h-5 flex-shrink-0 sidebar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <span class="font-medium sidebar-text">Wins</span>
+            <% end %>
+          </nav>
+
+          <!-- User section at bottom -->
+          <div class="absolute bottom-0 left-0 right-0 border-t border-border">
+            <div class="sidebar-bottom-section p-4 space-y-1">
+              <!-- Profile/Settings link with user info -->
+              <%= link_to edit_user_registration_path, class: "sidebar-user-link flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-background-secondary transition-colors" do %>
+                <div class="w-10 h-10 bg-accent text-white font-semibold rounded-full flex items-center justify-center flex-shrink-0">
+                  <%= current_user.email[0].upcase %>
+                </div>
+                <div class="flex-1 min-w-0 sidebar-text">
+                  <p class="text-sm font-medium text-text-primary truncate"><%= current_user.email %></p>
+                  <p class="text-xs text-text-secondary">Settings</p>
+                </div>
+                <svg class="w-4 h-4 text-text-tertiary sidebar-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+              <% end %>
+
+              <!-- Logout link -->
+              <%= link_to destroy_user_session_path, method: :delete, data: { turbo_method: :delete }, class: "sidebar-logout-link flex items-center gap-3 px-3 py-2 rounded-lg text-text-secondary hover:bg-background-secondary hover:text-text-primary transition-colors" do %>
+                <svg class="sidebar-logout-icon w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                </svg>
+                <span class="font-medium sidebar-text">Logout</span>
+              <% end %>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main content area -->
+        <div class="flex-1 flex flex-col lg:ml-64" data-sidebar-target="mainContent">
+          <!-- Top bar for mobile -->
+          <header class="bg-white border-b border-border px-4 py-3 lg:hidden">
+            <div class="flex items-center justify-between">
+              <button data-action="click->sidebar#toggle"
+                      data-sidebar-target="toggleButton"
+                      class="p-2 rounded-lg hover:bg-background-secondary transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+              </button>
+              <span class="font-mono font-bold text-lg"><span class="text-accent">Jot</span>Chain</span>
+              <div class="w-10"></div>
+            </div>
+          </header>
+
+          <!-- Page content -->
+          <main class="flex-1 overflow-auto bg-background">
+            <div class="px-4 sm:px-6 lg:px-8 py-8">
+              <%= yield %>
+            </div>
+          </main>
+        </div>
+      </div>
+    <% else %>
+      <!-- No sidebar for non-authenticated pages -->
+      <main>
+        <%= yield %>
+      </main>
+    <% end %>
+
+    <!-- Flash messages -->
+    <% if notice.present? %>
+      <div class="fixed top-4 right-4 z-[60] bg-white border-l-4 border-success rounded-lg shadow-lg p-4 max-w-md"
+           data-turbo-temporary="true"
+           data-controller="flash-message"
+           data-flash-message-auto-dismiss-value="true">
+        <div class="flex items-start">
+          <div class="flex-shrink-0">
+            <svg class="h-5 w-5 text-success" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <div class="ml-3 flex-1">
+            <p class="text-sm text-text-primary"><%= notice %></p>
+          </div>
+          <button type="button"
+                  class="ml-4 text-text-secondary hover:text-text-primary transition-colors"
+                  data-action="click->flash-message#dismiss">
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    <% end %>
+
+    <% if alert.present? %>
+      <div class="fixed top-4 right-4 z-[60] bg-white border-l-4 border-red-500 rounded-lg shadow-lg p-4 max-w-md"
+           data-turbo-temporary="true"
+           data-controller="flash-message"
+           data-flash-message-auto-dismiss-value="true">
+        <div class="flex items-start">
+          <div class="flex-shrink-0">
+            <svg class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <div class="ml-3 flex-1">
+            <p class="text-sm text-text-primary"><%= alert %></p>
+          </div>
+          <button type="button"
+                  class="ml-4 text-text-secondary hover:text-text-primary transition-colors"
+                  data-action="click->flash-message#dismiss">
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    <% end %>
+  </body>
+</html>
