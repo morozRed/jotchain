@@ -1,0 +1,223 @@
+---
+
+---
+
+<section id="pricing" class="py-20 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-6xl mx-auto">
+    <!-- Section header -->
+    <div class="text-center mb-16">
+      <h2 class="font-mono text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
+        Simple, transparent pricing
+      </h2>
+    </div>
+
+    <!-- Single Pricing Card with Toggle -->
+    <div class="max-w-md mx-auto">
+      <!-- Billing Tab Switch -->
+      <div class="flex justify-center mb-8">
+        <div class="bg-gray-100 border border-gray-200 rounded-full p-1 flex shadow-sm">
+          <button id="monthly-tab" class="tab-button px-6 py-2 rounded-full text-sm font-medium transition-all duration-200">
+            Monthly
+          </button>
+          <button id="yearly-tab" class="tab-button px-6 py-2 rounded-full text-sm font-medium transition-all duration-200 tab-active">
+            Yearly
+            <span class="text-xs ml-1">(Save $10)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Pricing Card -->
+      <div class="border-2 border-accent rounded-2xl p-8 relative">
+        <!-- Popular Badge (shown for yearly) -->
+        <div id="popular-badge" class="absolute -top-3 left-1/2 transform -translate-x-1/2">
+          <span class="bg-accent text-white text-xs font-semibold px-3 py-1 rounded-full">
+            MOST POPULAR
+          </span>
+        </div>
+
+        <div class="text-center mb-8">
+          <h3 class="text-2xl font-bold mb-4">Pro Plan</h3>
+
+          <!-- Price Display -->
+          <div class="flex items-baseline justify-center gap-1">
+            <span class="text-4xl font-bold text-accent">
+              $<span id="price-amount">50</span>
+            </span>
+            <span class="text-text-secondary text-sm">
+              /<span id="price-period">year</span>
+            </span>
+          </div>
+
+          <!-- Price comparison for yearly -->
+          <p id="price-comparison" class="text-xs text-text-tertiary mt-2">
+            That's just $4.17 per month!
+          </p>
+        </div>
+
+        <!-- Features List -->
+        <ul class="space-y-3 mb-8">
+          <li class="flex items-start gap-2">
+            <svg class="w-5 h-5 text-accent mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path>
+            </svg>
+            <span class="text-sm">Unlimited daily entries</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <svg class="w-5 h-5 text-accent mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path>
+            </svg>
+            <span class="text-sm">Unlimited history & recall</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <svg class="w-5 h-5 text-accent mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path>
+            </svg>
+            <span class="text-sm">Unlimited wins tracking</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <svg class="w-5 h-5 text-accent mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path>
+            </svg>
+            <span class="text-sm">Weekly & monthly summaries</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <svg class="w-5 h-5 text-accent mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path>
+            </svg>
+            <span class="text-sm">Advanced analytics & insights</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <svg class="w-5 h-5 text-accent mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path>
+            </svg>
+            <span class="text-sm">Export in multiple formats</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <svg class="w-5 h-5 text-accent mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path>
+            </svg>
+            <span class="text-sm">AI-powered content suggestions</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <svg class="w-5 h-5 text-accent mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path>
+            </svg>
+            <span class="text-sm">Priority support</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <svg class="w-5 h-5 text-accent mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path>
+            </svg>
+            <span class="text-sm">End-to-end encryption</span>
+          </li>
+        </ul>
+
+        <!-- CTA Button -->
+        <button class="w-full btn-primary py-3">
+          Start 14-Day Free Trial
+        </button>
+
+        <p class="text-xs text-center text-text-tertiary mt-4">
+          No credit card required • Cancel anytime
+        </p>
+      </div>
+    </div>
+
+    <!-- FAQ teaser -->
+    <div class="mt-20 text-center">
+      <h3 class="text-xl font-semibold mb-6">Common questions</h3>
+      <div class="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto text-left">
+        <div>
+          <h4 class="font-semibold mb-2 text-accent">Can I switch between plans?</h4>
+          <p class="text-sm text-text-secondary">
+            Yes! You can switch between monthly and yearly billing anytime. We'll prorate your payment.
+          </p>
+        </div>
+        <div>
+          <h4 class="font-semibold mb-2 text-accent">What happens to my data if I cancel?</h4>
+          <p class="text-sm text-text-secondary">
+            Your data is always yours. Export it anytime, and we keep it for 30 days after cancellation.
+          </p>
+        </div>
+        <div>
+          <h4 class="font-semibold mb-2 text-accent">Is my data really encrypted?</h4>
+          <p class="text-sm text-text-secondary">
+            Yes. End-to-end encryption means even we can't read your entries. Ever.
+          </p>
+        </div>
+        <div>
+          <h4 class="font-semibold mb-2 text-accent">Do you offer team plans?</h4>
+          <p class="text-sm text-text-secondary">
+            Not yet, but it's coming! JotChain is currently designed for individual professionals.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Tab Switch Styles */
+  .tab-button {
+    cursor: pointer;
+    position: relative;
+  }
+
+  .tab-button:not(.tab-active) {
+    color: var(--text-secondary);
+  }
+
+  .tab-button:not(.tab-active):hover {
+    color: var(--text-primary);
+  }
+
+  .tab-button.tab-active {
+    background-color: var(--accent);
+    color: white;
+  }
+
+  .tab-button.tab-active span {
+    color: white;
+    opacity: 0.9;
+  }
+</style>
+
+<script>
+  const monthlyTab = document.getElementById('monthly-tab');
+  const yearlyTab = document.getElementById('yearly-tab');
+  const priceAmount = document.getElementById('price-amount');
+  const pricePeriod = document.getElementById('price-period');
+  const priceComparison = document.getElementById('price-comparison');
+  const popularBadge = document.getElementById('popular-badge');
+
+  function setActiveTab(isYearly: boolean) {
+    if (monthlyTab && yearlyTab && priceAmount && pricePeriod && priceComparison && popularBadge) {
+      if (isYearly) {
+        // Yearly pricing
+        yearlyTab.classList.add('tab-active');
+        monthlyTab.classList.remove('tab-active');
+        priceAmount.textContent = '50';
+        pricePeriod.textContent = 'year';
+        priceComparison.style.display = 'block';
+        popularBadge.style.display = 'block';
+      } else {
+        // Monthly pricing
+        monthlyTab.classList.add('tab-active');
+        yearlyTab.classList.remove('tab-active');
+        priceAmount.textContent = '5';
+        pricePeriod.textContent = 'month';
+        priceComparison.style.display = 'none';
+        popularBadge.style.display = 'none';
+      }
+    }
+  }
+
+  // Add click listeners
+  if (monthlyTab && yearlyTab) {
+    monthlyTab.addEventListener('click', () => setActiveTab(false));
+    yearlyTab.addEventListener('click', () => setActiveTab(true));
+
+    // Initialize with yearly selected
+    setActiveTab(true);
+  }
+</script>

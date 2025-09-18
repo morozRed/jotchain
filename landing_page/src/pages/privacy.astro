@@ -1,0 +1,181 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+const lastUpdated = 'September 16, 2024';
+---
+
+<Layout>
+  <Header />
+  <main class="pt-16">
+    <!-- Hero Section -->
+    <section class="py-12 px-4 sm:px-6 lg:px-8 bg-bg-secondary">
+      <div class="max-w-4xl mx-auto text-center">
+        <h1 class="font-mono text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
+          Privacy Policy
+        </h1>
+        <p class="text-text-secondary">
+          Last updated: {lastUpdated}
+        </p>
+      </div>
+    </section>
+
+    <!-- Content -->
+    <section class="py-16 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-4xl mx-auto prose prose-lg">
+        <div class="space-y-8 text-text-primary">
+
+          <div>
+            <h2 class="text-2xl font-bold mb-4">Your Privacy Matters</h2>
+            <p class="mb-4 text-text-secondary">
+              At JotChain, we take your privacy seriously. This policy explains how we collect, use, and protect your information when you use our service.
+            </p>
+          </div>
+
+          <div>
+            <h3 class="text-xl font-semibold mb-3">1. Information We Collect</h3>
+            <p class="mb-4 text-text-secondary">
+              We collect minimal information necessary to provide our service:
+            </p>
+            <ul class="list-disc pl-6 space-y-2 text-text-secondary">
+              <li>Account information (email address, password hash)</li>
+              <li>Journal entries and notes you create</li>
+              <li>Usage data (login times, feature usage)</li>
+              <li>Device information (browser type, operating system)</li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 class="text-xl font-semibold mb-3">2. End-to-End Encryption</h3>
+            <p class="mb-4 text-text-secondary">
+              <strong>Your journal entries are end-to-end encrypted.</strong> This means:
+            </p>
+            <ul class="list-disc pl-6 space-y-2 text-text-secondary">
+              <li>Your entries are encrypted on your device before being sent to our servers</li>
+              <li>We cannot read your journal content, even if we wanted to</li>
+              <li>Only you have the encryption keys to decrypt your data</li>
+              <li>If you lose your password, we cannot recover your encrypted entries</li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 class="text-xl font-semibold mb-3">3. How We Use Your Information</h3>
+            <p class="mb-4 text-text-secondary">
+              We use your information solely to:
+            </p>
+            <ul class="list-disc pl-6 space-y-2 text-text-secondary">
+              <li>Provide and maintain the JotChain service</li>
+              <li>Send important service updates and notifications</li>
+              <li>Respond to your support requests</li>
+              <li>Improve our service based on aggregated, anonymous usage patterns</li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 class="text-xl font-semibold mb-3">4. Data Sharing</h3>
+            <p class="mb-4 text-text-secondary">
+              We do not sell, trade, or rent your personal information. We may share data only:
+            </p>
+            <ul class="list-disc pl-6 space-y-2 text-text-secondary">
+              <li>With your explicit consent</li>
+              <li>To comply with legal obligations</li>
+              <li>To protect our rights and prevent fraud</li>
+              <li>With service providers who help us operate our service (under strict confidentiality agreements)</li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 class="text-xl font-semibold mb-3">5. Data Retention</h3>
+            <p class="mb-4 text-text-secondary">
+              We retain your data as follows:
+            </p>
+            <ul class="list-disc pl-6 space-y-2 text-text-secondary">
+              <li>Active accounts: Data is retained as long as your account is active</li>
+              <li>Deleted accounts: Personal data is deleted within 30 days</li>
+              <li>Backups: Encrypted backups may persist for up to 90 days</li>
+              <li>You can export your data at any time</li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 class="text-xl font-semibold mb-3">6. Your Rights</h3>
+            <p class="mb-4 text-text-secondary">
+              You have the right to:
+            </p>
+            <ul class="list-disc pl-6 space-y-2 text-text-secondary">
+              <li>Access your personal data</li>
+              <li>Correct inaccurate data</li>
+              <li>Request deletion of your data</li>
+              <li>Export your data in a portable format</li>
+              <li>Opt-out of marketing communications</li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 class="text-xl font-semibold mb-3">7. Cookies</h3>
+            <p class="mb-4 text-text-secondary">
+              We use essential cookies to:
+            </p>
+            <ul class="list-disc pl-6 space-y-2 text-text-secondary">
+              <li>Keep you logged in</li>
+              <li>Remember your preferences</li>
+              <li>Ensure security</li>
+            </ul>
+            <p class="text-text-secondary">
+              We do not use tracking or advertising cookies.
+            </p>
+          </div>
+
+          <div>
+            <h3 class="text-xl font-semibold mb-3">8. Security</h3>
+            <p class="mb-4 text-text-secondary">
+              We implement industry-standard security measures including:
+            </p>
+            <ul class="list-disc pl-6 space-y-2 text-text-secondary">
+              <li>TLS/SSL encryption for data in transit</li>
+              <li>Encryption at rest for stored data</li>
+              <li>Regular security audits</li>
+              <li>Secure password hashing (bcrypt)</li>
+              <li>Two-factor authentication (optional)</li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 class="text-xl font-semibold mb-3">9. Children's Privacy</h3>
+            <p class="mb-4 text-text-secondary">
+              JotChain is not intended for children under 13. We do not knowingly collect personal information from children under 13. If we discover we have collected such information, we will promptly delete it.
+            </p>
+          </div>
+
+          <div>
+            <h3 class="text-xl font-semibold mb-3">10. Changes to This Policy</h3>
+            <p class="mb-4 text-text-secondary">
+              We may update this privacy policy from time to time. We will notify you of any significant changes via email or through the service. Your continued use of JotChain after changes indicates acceptance of the updated policy.
+            </p>
+          </div>
+
+          <div>
+            <h3 class="text-xl font-semibold mb-3">11. Contact Us</h3>
+            <p class="mb-4 text-text-secondary">
+              If you have questions about this privacy policy or our practices, please contact us at:
+            </p>
+            <p class="text-text-secondary">
+              Email: privacy@jotchain.com<br />
+              Address: JotChain, Inc.<br />
+              [Address to be added]
+            </p>
+          </div>
+
+          <div class="mt-12 p-6 bg-bg-secondary rounded-lg">
+            <p class="text-sm text-text-tertiary text-center">
+              By using JotChain, you agree to this Privacy Policy. We are committed to protecting your privacy and ensuring your data remains yours.
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>
