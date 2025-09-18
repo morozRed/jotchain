@@ -1,4 +1,164 @@
-<div>
-  <h1 class="font-bold text-4xl">Entries#edit</h1>
-  <p>Find me in app/views/entries/edit.html.erb</p>
+<% content_for :title, "Edit Entry - JotChain" %>
+
+<div class="max-w-4xl mx-auto">
+  <!-- Header -->
+  <div class="mb-8">
+    <div class="flex items-center justify-between mb-4">
+      <%= link_to entry_path(@entry), class: "text-text-secondary hover:text-text-primary transition-colors" do %>
+        <svg class="w-5 h-5 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+        Back to Entry
+      <% end %>
+    </div>
+
+    <h1 class="text-3xl font-mono font-bold text-text-primary">Edit Entry</h1>
+    <p class="text-text-secondary"><%= @entry.entry_date.strftime("%B %d, %Y - %A") %></p>
+  </div>
+
+  <!-- Edit Form Card -->
+  <div class="card">
+    <div data-controller="tabs">
+      <%= form_with model: @entry, url: entry_path(@entry), method: :patch,
+                    data: { controller: "autosave", turbo: false }, class: "space-y-4" do |form| %>
+        <%= form.hidden_field :entry_date %>
+
+        <!-- Tab Navigation -->
+        <div class="border-b border-border mb-6">
+          <nav class="-mb-px flex space-x-8" role="tablist" aria-label="Entry tabs">
+            <button type="button"
+                    id="today-tab"
+                    class="py-2 px-1 border-b-2 border-accent text-accent font-medium text-sm transition-colors"
+                    data-tabs-target="tab"
+                    data-action="click->tabs#switch"
+                    role="tab"
+                    aria-selected="true"
+                    aria-controls="today-panel">
+              Today
+            </button>
+            <button type="button"
+                    id="next-tab"
+                    class="py-2 px-1 border-b-2 border-transparent text-text-secondary font-medium text-sm transition-colors"
+                    data-tabs-target="tab"
+                    data-action="click->tabs#switch"
+                    role="tab"
+                    aria-selected="false"
+                    aria-controls="next-panel">
+              Next
+            </button>
+            <button type="button"
+                    id="win-tab"
+                    class="py-2 px-1 border-b-2 border-transparent text-text-secondary font-medium text-sm transition-colors"
+                    data-tabs-target="tab"
+                    data-action="click->tabs#switch"
+                    role="tab"
+                    aria-selected="false"
+                    aria-controls="win-panel">
+              Win
+            </button>
+          </nav>
+        </div>
+
+        <!-- Tab Panels -->
+        <div class="mt-6">
+          <!-- Today Panel -->
+          <div data-tabs-target="panel" role="tabpanel" id="today-panel" aria-labelledby="today-tab">
+            <label for="entry_content" class="block text-sm font-medium text-text-primary mb-2">
+              What did you work on?
+            </label>
+            <div data-controller="lexxy-editor"
+                 data-lexxy-editor-placeholder-value="Describe what you accomplished, learned, or worked on..."
+                 data-lexxy-editor-content-value="<%= @entry.content %>">
+              <%= form.hidden_field :content,
+                  id: "entry_content",
+                  value: @entry.content,
+                  data: {
+                    lexxy_editor_target: "input",
+                    autosave_target: "content"
+                  } %>
+              <div data-lexxy-editor-target="editor"
+                   class="lexxy-editor w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent min-h-[200px] text-text-primary">
+              </div>
+            </div>
+          </div>
+
+          <!-- Next Panel -->
+          <div data-tabs-target="panel" class="hidden" role="tabpanel" id="next-panel" aria-labelledby="next-tab">
+            <label for="entry_next_actions" class="block text-sm font-medium text-text-primary mb-2">
+              What's next?
+            </label>
+            <div data-controller="lexxy-editor"
+                 data-lexxy-editor-placeholder-value="What will you focus on tomorrow? List your next actions..."
+                 data-lexxy-editor-content-value="<%= @entry.next_actions %>">
+              <%= form.hidden_field :next_actions,
+                  id: "entry_next_actions",
+                  value: @entry.next_actions,
+                  data: {
+                    lexxy_editor_target: "input",
+                    autosave_target: "next_actions"
+                  } %>
+              <div data-lexxy-editor-target="editor"
+                   class="lexxy-editor w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent min-h-[200px] text-text-primary">
+              </div>
+            </div>
+          </div>
+
+          <!-- Win Panel -->
+          <div data-tabs-target="panel" class="hidden" role="tabpanel" id="win-panel" aria-labelledby="win-tab">
+            <label for="entry_win_description" class="block text-sm font-medium text-text-primary mb-2">
+              What did you win at today? 🏆
+            </label>
+            <div data-controller="lexxy-editor"
+                 data-lexxy-editor-placeholder-value="Describe your achievement and why it matters..."
+                 data-lexxy-editor-content-value="<%= @entry.win_description %>">
+              <%= form.hidden_field :win_description,
+                  id: "entry_win_description",
+                  value: @entry.win_description,
+                  data: {
+                    lexxy_editor_target: "input",
+                    autosave_target: "win_description"
+                  } %>
+              <div data-lexxy-editor-target="editor"
+                   class="lexxy-editor w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent min-h-[200px] text-text-primary">
+              </div>
+            </div>
+
+            <% if @entry.win_description.present? %>
+              <div class="mt-4">
+                <label for="entry_win_level" class="block text-sm font-medium text-text-primary mb-2">
+                  Win Level
+                </label>
+                <%= form.select :win_level,
+                    options_for_select([
+                      ['Minor Win', 'minor'],
+                      ['Major Win', 'major'],
+                      ['Career Defining', 'career_defining']
+                    ], @entry.win_level),
+                    { prompt: 'Select win level' },
+                    class: "w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent" %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+
+        <!-- Submit Buttons -->
+        <div class="flex justify-between items-center pt-6">
+          <!-- Last Updated Status -->
+          <div id="autosave-status" class="flex items-center gap-1.5">
+            <svg class="w-3 h-3 text-text-tertiary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <div class="text-[10px] text-text-tertiary">
+              <span class="opacity-60" data-autosave-target="status">Auto-save enabled</span>
+            </div>
+          </div>
+
+          <div class="flex gap-3">
+            <%= link_to "Cancel", entry_path(@entry), class: "px-6 py-2 text-text-secondary hover:text-text-primary transition-colors" %>
+            <%= form.submit "Save Changes", class: "px-6 py-2 bg-accent text-white font-medium rounded-lg hover:bg-accent-hover transition-colors cursor-pointer" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
 </div>

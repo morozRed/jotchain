@@ -1,0 +1,47 @@
+<% content_for :title, "Feedback - JotChain" %>
+
+<div class="max-w-2xl mx-auto">
+  <!-- Header -->
+  <div class="mb-8">
+    <h1 class="text-3xl font-mono font-bold text-text-primary mb-2">Send Feedback</h1>
+    <p class="text-text-secondary">Help us improve JotChain with your suggestions and bug reports</p>
+  </div>
+
+  <!-- Feedback Form -->
+  <div class="card">
+    <%= form_with url: feedback_index_path, local: true do |form| %>
+      <div class="mb-6">
+        <label for="feedback_type" class="block text-sm font-medium text-text-primary mb-2">Feedback Type</label>
+        <%= select_tag :feedback_type,
+            options_for_select(@feedback_types),
+            class: "w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent" %>
+      </div>
+
+      <div class="mb-6">
+        <label for="feedback_message" class="block text-sm font-medium text-text-primary mb-2">Your Message</label>
+        <%= text_area_tag :feedback_message, nil,
+            rows: 8,
+            placeholder: "Please describe your feedback in detail...",
+            required: true,
+            class: "w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent resize-none" %>
+        <p class="text-xs text-text-tertiary mt-1">Be as specific as possible. For bug reports, include steps to reproduce.</p>
+      </div>
+
+      <div class="flex justify-between items-center">
+        <%= link_to "Cancel", root_path, class: "text-text-secondary hover:text-text-primary" %>
+        <%= submit_tag "Send Feedback", class: "px-6 py-2 bg-accent text-white font-medium rounded-lg hover:bg-accent-hover transition-colors cursor-pointer" %>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Help Section -->
+  <div class="mt-8 p-4 bg-background-secondary rounded-lg">
+    <h3 class="text-sm font-semibold text-text-primary mb-2">Tips for Good Feedback:</h3>
+    <ul class="text-sm text-text-secondary space-y-1">
+      <li>• For bugs: Include what you were doing when it happened</li>
+      <li>• For features: Explain the problem you're trying to solve</li>
+      <li>• Be specific about what's not working or what could be better</li>
+      <li>• Include any error messages you encountered</li>
+    </ul>
+  </div>
+</div>

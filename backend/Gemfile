@@ -35,6 +35,9 @@ gem "hiredis", "~> 0.6"
 # Payments
 gem "stripe", "~> 13.0"
 
+# AI Integration
+gem "ruby-openai", "~> 7.3"
+
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "bcrypt", "~> 3.1.7"
 

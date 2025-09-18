@@ -1,4 +1,146 @@
-<div>
-  <h1 class="font-bold text-4xl">Entries#index</h1>
-  <p>Find me in app/views/entries/index.html.erb</p>
+<% content_for :title, "Journal Entries - JotChain" %>
+
+<div class="max-w-4xl mx-auto">
+  <!-- Header -->
+  <div class="mb-8">
+    <h1 class="text-3xl font-mono font-bold text-text-primary mb-2">Journal Entries</h1>
+    <p class="text-text-secondary">Your complete journaling history</p>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+    <div class="card">
+      <div class="text-2xl font-bold text-text-primary"><%= @entries.total_count %></div>
+      <div class="text-sm text-text-secondary">Total Entries</div>
+    </div>
+    <div class="card">
+      <div class="text-2xl font-bold text-accent"><%= current_user.current_streak %></div>
+      <div class="text-sm text-text-secondary">Current Streak</div>
+    </div>
+    <div class="card">
+      <div class="text-2xl font-bold text-wins-major"><%= current_user.total_wins %></div>
+      <div class="text-sm text-text-secondary">Total Wins</div>
+    </div>
+    <div class="card">
+      <div class="text-2xl font-bold text-text-primary"><%= current_user.longest_streak %></div>
+      <div class="text-sm text-text-secondary">Longest Streak</div>
+    </div>
+  </div>
+
+  <!-- Filters and Export -->
+  <div class="flex justify-between items-center mb-6">
+    <div class="flex gap-2">
+      <%= link_to "All Entries", entries_path, class: "px-4 py-2 rounded-lg #{params[:filter].blank? ? 'bg-accent text-white' : 'bg-background-secondary text-text-secondary hover:bg-background-tertiary'} transition-colors" %>
+      <%= link_to "With Wins", entries_path(filter: 'wins'), class: "px-4 py-2 rounded-lg #{params[:filter] == 'wins' ? 'bg-accent text-white' : 'bg-background-secondary text-text-secondary hover:bg-background-tertiary'} transition-colors" %>
+      <%= link_to "This Week", entries_path(filter: 'week'), class: "px-4 py-2 rounded-lg #{params[:filter] == 'week' ? 'bg-accent text-white' : 'bg-background-secondary text-text-secondary hover:bg-background-tertiary'} transition-colors" %>
+      <%= link_to "This Month", entries_path(filter: 'month'), class: "px-4 py-2 rounded-lg #{params[:filter] == 'month' ? 'bg-accent text-white' : 'bg-background-secondary text-text-secondary hover:bg-background-tertiary'} transition-colors" %>
+    </div>
+
+    <div class="dropdown relative">
+      <button class="btn-secondary text-sm" data-dropdown-toggle="entries-export">
+        Export <svg class="w-4 h-4 inline ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+        </svg>
+      </button>
+      <div id="entries-export-menu" class="dropdown-menu hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-border z-10">
+        <%= link_to "Export as Markdown", export_entries_path(filter: params[:filter]) + ".md", class: "block px-4 py-2 text-sm text-text-primary hover:bg-background-secondary" %>
+        <%= link_to "Export as Text", export_entries_path(filter: params[:filter]) + ".txt", class: "block px-4 py-2 text-sm text-text-primary hover:bg-background-secondary" %>
+        <%= link_to "Export as CSV", export_entries_path(filter: params[:filter]) + ".csv", class: "block px-4 py-2 text-sm text-text-primary hover:bg-background-secondary" %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Entries List -->
+  <div class="space-y-4">
+    <% if @entries.any? %>
+      <% @entries.each do |entry| %>
+        <div class="card hover:shadow-md transition-shadow">
+          <div class="flex justify-between items-start mb-3">
+            <div>
+              <h3 class="text-lg font-semibold text-text-primary flex items-center gap-2">
+                <%= entry.entry_date.strftime("%B %d, %Y") %>
+                <span class="text-sm text-text-secondary">(<%= entry.entry_date.strftime("%A") %>)</span>
+              </h3>
+              <% if entry.is_win? %>
+                <% case entry.win_level %>
+                <% when 'minor' %>
+                  <span class="win-badge-minor">Minor Win</span>
+                <% when 'major' %>
+                  <span class="win-badge-major">Major Win</span>
+                <% when 'career_defining' %>
+                  <span class="win-badge-career">Career Defining</span>
+                <% end %>
+              <% end %>
+            </div>
+            <div class="flex gap-2">
+              <%= link_to "View", entry_path(entry), class: "text-sm text-accent hover:text-accent-hover" %>
+              <%= link_to "Edit", edit_entry_path(entry), class: "text-sm text-text-secondary hover:text-text-primary" %>
+            </div>
+          </div>
+
+          <% if entry.content.present? %>
+            <div class="mb-3">
+              <h4 class="text-xs font-semibold text-text-tertiary uppercase tracking-wider mb-1">What I Did</h4>
+              <div class="text-text-primary line-clamp-3">
+                <%= simple_format(truncate(entry.content, length: 300)) %>
+              </div>
+            </div>
+          <% end %>
+
+          <% if entry.next_actions.present? %>
+            <div class="mb-3">
+              <h4 class="text-xs font-semibold text-text-tertiary uppercase tracking-wider mb-1">What Next</h4>
+              <div class="text-text-secondary text-sm line-clamp-2">
+                <%= simple_format(truncate(entry.next_actions, length: 200)) %>
+              </div>
+            </div>
+          <% end %>
+
+          <% if entry.is_win? && entry.win_description.present? %>
+            <div class="bg-gradient-to-r from-accent/5 to-transparent p-3 rounded-lg">
+              <h4 class="text-xs font-semibold text-accent uppercase tracking-wider mb-1">Win Description</h4>
+              <div class="text-text-primary text-sm">
+                <%= simple_format(truncate(entry.win_description, length: 200)) %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+
+      <!-- Pagination -->
+      <div class="mt-8 flex justify-center">
+        <%= paginate @entries %>
+      </div>
+    <% else %>
+      <div class="card text-center py-12">
+        <div class="text-4xl mb-4">📝</div>
+        <h3 class="text-lg font-semibold text-text-primary mb-2">No entries yet</h3>
+        <p class="text-text-secondary mb-4">Start journaling to track your progress and achievements!</p>
+        <%= link_to "Create Your First Entry", new_entry_path, class: "btn-primary" %>
+      </div>
+    <% end %>
+  </div>
 </div>
+
+<script>
+  // Dropdown toggle functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    const dropdownToggle = document.querySelector('[data-dropdown-toggle="entries-export"]');
+    const dropdownMenu = document.getElementById('entries-export-menu');
+
+    if (dropdownToggle && dropdownMenu) {
+      dropdownToggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        dropdownMenu.classList.toggle('hidden');
+      });
+
+      // Close dropdown when clicking outside
+      document.addEventListener('click', function(e) {
+        if (!dropdownToggle.contains(e.target) && !dropdownMenu.contains(e.target)) {
+          dropdownMenu.classList.add('hidden');
+        }
+      });
+    }
+  });
+</script>

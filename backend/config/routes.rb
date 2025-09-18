@@ -8,20 +8,18 @@ Rails.application.routes.draw do
       root to: "dashboard#index", as: :authenticated_root
 
       resources :entries do
-        member do
-          patch :toggle_win
-        end
-      end
-
-      resource :dashboard, only: [:show], controller: 'dashboard'
-
-      resources :wins, only: [:index] do
         collection do
           get :export
         end
       end
 
+      resource :dashboard, only: [:show], controller: 'dashboard'
+
+
       resources :streaks, only: [:index]
+
+      resources :feedback, only: [:new, :create]
+      resources :insights, only: [:index, :create]
     end
 
     # Redirect non-authenticated users to sign in
