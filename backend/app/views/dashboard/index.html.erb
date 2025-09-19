@@ -10,14 +10,20 @@
       <% if @yesterday_entry %>
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
           <div class="flex items-center gap-2 mb-5">
-            <span class="text-xl">🔄</span>
+            <div class="w-6 h-6 text-blue-600">
+              <%= heroicon "arrow-path", options: { class: "w-6 h-6" } %>
+            </div>
             <h2 class="text-lg font-semibold text-gray-900">Continue from Yesterday</h2>
           </div>
 
           <div class="space-y-5">
             <% if @yesterday_entry.content.present? %>
               <div class="flex gap-3">
-                <span class="text-lg mt-0.5">📅</span>
+                <div class="flex-shrink-0">
+                  <div class="w-7 h-7 bg-green-50 rounded-lg flex items-center justify-center">
+                    <%= heroicon "calendar", variant: :solid, options: { class: "w-4 h-4 text-green-600" } %>
+                  </div>
+                </div>
                 <div class="flex-1">
                   <h3 class="text-sm font-semibold text-gray-900 mb-1.5">What We Did</h3>
                   <div class="text-sm text-gray-600 leading-relaxed">
@@ -29,7 +35,11 @@
 
             <% if @yesterday_entry.next_actions.present? %>
               <div class="flex gap-3">
-                <span class="text-lg mt-0.5">🎯</span>
+                <div class="flex-shrink-0">
+                  <div class="w-7 h-7 bg-blue-50 rounded-lg flex items-center justify-center">
+                    <%= heroicon "adjustments-vertical", variant: :solid, options: { class: "w-4 h-4 text-blue-600" } %>
+                  </div>
+                </div>
                 <div class="flex-1">
                   <h3 class="text-sm font-semibold text-gray-900 mb-1.5">What We Planned</h3>
                   <div class="text-sm text-gray-600 leading-relaxed">
@@ -41,7 +51,11 @@
 
             <% if @yesterday_entry.win_description.present? %>
               <div class="flex gap-3">
-                <span class="text-lg mt-0.5">⭐</span>
+                <div class="flex-shrink-0">
+                  <div class="w-7 h-7 bg-yellow-50 rounded-lg flex items-center justify-center">
+                    <%= heroicon "star", variant: :solid, options: { class: "w-4 h-4 text-yellow-500" } %>
+                  </div>
+                </div>
                 <div class="flex-1">
                   <h3 class="text-sm font-semibold text-gray-900 mb-1.5">Yesterday's Win</h3>
                   <div class="text-sm text-gray-600 leading-relaxed">

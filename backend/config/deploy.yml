@@ -38,6 +38,12 @@ registry:
 env:
   secret:
     - RAILS_MASTER_KEY
+    - DATABASE_PASSWORD
+    - REDIS_PASSWORD
+    - STRIPE_PUBLISHABLE_KEY
+    - STRIPE_SECRET_KEY
+    - STRIPE_WEBHOOK_SECRET
+    - LOCKBOX_MASTER_KEY
   clear:
     # Run the Solid Queue Supervisor inside the web server's Puma process to do jobs.
     # When you start using multiple servers, you should split out job processing to a dedicated machine.
@@ -84,8 +90,8 @@ builder:
   # remote: ssh://docker@docker-builder-server
   #
   # # Pass arguments and secrets to the Docker build process
-  # args:
-  #   RUBY_VERSION: ruby-3.2.2
+  args:
+    RUBY_VERSION: 3.4.2
   # secrets:
   #   - GITHUB_TOKEN
   #   - RAILS_MASTER_KEY
