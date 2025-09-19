@@ -4,5 +4,6 @@ import "controllers"
 
 // Use Lexxy instead of Trix
 // import "trix"
-import "@rails/actiontext"
+// NOTE: We are not using ActionText/Trix in the dashboard. Importing it without Trix causes JS errors that break Stimulus/Turbo.
+// import "@rails/actiontext"
 import "lexxy"
