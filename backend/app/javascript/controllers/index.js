@@ -2,31 +2,40 @@
 // Run that command whenever you add a new controller or create them with
 // ./bin/rails generate stimulus controllerName
 
-import { application } from "controllers/application"
+import { application } from "./application"
 
-import AutosaveController from "controllers/autosave_controller"
+import AutosaveController from "./autosave_controller"
 application.register("autosave", AutosaveController)
 
-import CollapsibleController from "controllers/collapsible_controller"
+import CalendarController from "./calendar_controller"
+application.register("calendar", CalendarController)
+
+import CollapsibleController from "./collapsible_controller"
 application.register("collapsible", CollapsibleController)
 
-import FlashMessageController from "controllers/flash_message_controller"
+import DropdownController from "./dropdown_controller"
+application.register("dropdown", DropdownController)
+
+import FlashMessageController from "./flash_message_controller"
 application.register("flash-message", FlashMessageController)
 
-import HelloController from "controllers/hello_controller"
+import HelloController from "./hello_controller"
 application.register("hello", HelloController)
 
-import LexxyEditorController from "controllers/lexxy_editor_controller"
+import InsightsController from "./insights_controller"
+application.register("insights", InsightsController)
+
+import LexxyEditorController from "./lexxy_editor_controller"
 application.register("lexxy-editor", LexxyEditorController)
 
-import SidebarController from "controllers/sidebar_controller"
+import SidebarController from "./sidebar_controller"
 application.register("sidebar", SidebarController)
 
-import TabsController from "controllers/tabs_controller"
+import TabsController from "./tabs_controller"
 application.register("tabs", TabsController)
 
-import TooltipController from "controllers/tooltip_controller"
+import TooltipController from "./tooltip_controller"
 application.register("tooltip", TooltipController)
 
-import UnifiedEntryController from "controllers/unified_entry_controller"
+import UnifiedEntryController from "./unified_entry_controller"
 application.register("unified-entry", UnifiedEntryController)

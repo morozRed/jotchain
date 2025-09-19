@@ -15,6 +15,7 @@ Rails.application.routes.draw do
       resources :entries do
         collection do
           get :export
+          get :by_date
         end
       end
 

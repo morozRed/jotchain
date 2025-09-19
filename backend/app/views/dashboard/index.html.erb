@@ -2,71 +2,12 @@
 
 <div id="flash-container"></div>
 
-<div class="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8 py-4 sm:py-8">
-  <div class="grid grid-cols-1 xl:grid-cols-3 gap-4 sm:gap-6">
-    <!-- Left Column - Main Content -->
-    <div class="xl:col-span-2 space-y-4 sm:space-y-8">
-      <!-- Previous Entry -->
-      <% if @yesterday_entry %>
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-          <div class="flex items-center gap-2 mb-5">
-            <%= heroicon "arrow-path", options: { class: "w-6 h-6 text-blue-600" } %>
-            <h2 class="text-lg font-semibold text-gray-900">Continue from Yesterday</h2>
-          </div>
-
-          <div class="space-y-5">
-            <% if @yesterday_entry.content.present? %>
-              <div class="flex gap-3">
-                <div class="flex-shrink-0">
-                  <div class="w-7 h-7 bg-green-50 rounded-lg flex items-center justify-center">
-                    <%= heroicon "calendar", variant: :solid, options: { class: "w-4 h-4 text-green-600" } %>
-                  </div>
-                </div>
-                <div class="flex-1">
-                  <h3 class="text-sm font-semibold text-gray-900 mb-1.5">What We Did</h3>
-                  <div class="text-sm text-gray-600 leading-relaxed">
-                    <%= render_markdown(@yesterday_entry.content).html_safe %>
-                  </div>
-                </div>
-              </div>
-            <% end %>
-
-            <% if @yesterday_entry.next_actions.present? %>
-              <div class="flex gap-3">
-                <div class="flex-shrink-0">
-                  <div class="w-7 h-7 bg-blue-50 rounded-lg flex items-center justify-center">
-                    <%= heroicon "adjustments-vertical", variant: :solid, options: { class: "w-4 h-4 text-blue-600" } %>
-                  </div>
-                </div>
-                <div class="flex-1">
-                  <h3 class="text-sm font-semibold text-gray-900 mb-1.5">What We Planned</h3>
-                  <div class="text-sm text-gray-600 leading-relaxed">
-                    <%= render_markdown(@yesterday_entry.next_actions).html_safe %>
-                  </div>
-                </div>
-              </div>
-            <% end %>
-
-            <% if @yesterday_entry.win_description.present? %>
-              <div class="flex gap-3">
-                <div class="flex-shrink-0">
-                  <div class="w-7 h-7 bg-yellow-50 rounded-lg flex items-center justify-center">
-                    <%= heroicon "star", variant: :solid, options: { class: "w-4 h-4 text-yellow-500" } %>
-                  </div>
-                </div>
-                <div class="flex-1">
-                  <h3 class="text-sm font-semibold text-gray-900 mb-1.5">Yesterday's Win</h3>
-                  <div class="text-sm text-gray-600 leading-relaxed">
-                    <%= render_markdown(@yesterday_entry.win_description).html_safe %>
-                  </div>
-                </div>
-              </div>
-            <% end %>
-          </div>
-        </div>
-      <% end %>
+<div class="max-w-6xl mx-auto p-6">
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Main Entry Form -->
+    <div class="lg:col-span-2">
       <!-- Journal Entry Card -->
-      <div class="bg-white rounded-lg shadow-sm border border-gray-200" data-controller="tooltip">
+      <div data-controller="tooltip">
         <!-- First-time User Tooltip Bubble -->
         <div data-tooltip-target="bubble" class="hidden absolute -top-2 left-1/2 transform -translate-x-1/2 z-10">
           <div class="bg-accent text-white px-4 py-3 rounded-lg shadow-lg relative max-w-xs">
@@ -87,7 +28,7 @@
         </div>
 
         <!-- Card Header -->
-        <div class="px-6 pt-6 pb-4">
+        <div class="pb-4">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2">
               <div class="p-1.5 bg-accent/10 rounded-lg">
@@ -107,7 +48,7 @@
         </div>
 
         <!-- Card Content -->
-        <div class="px-6 pb-6 pt-0">
+        <div>
           <div data-controller="tabs unified-entry">
             <%= form_with model: @entry, url: @entry.persisted? ? entry_path(@entry) : entries_path,
                           data: { turbo: true } do |form| %>
@@ -197,62 +138,47 @@
             <% end %>
           </div>
         </div>
+              <!-- AI Insights Section (Below the main grid) -->
+        <div class="mt-8">
+          <%= render 'shared/ai_insights_preview', can_use_ai_insights: @can_use_ai_insights, has_entries: @has_entries %>
+        </div>
       </div>
     </div>
 
-    <!-- Right Column - Sidebar -->
-    <div class="space-y-4 sm:space-y-8">
-      <!-- Streak -->
-      <div class="bg-white rounded-lg shadow-sm border border-border p-6">
-        <h3 class="text-base font-semibold text-text-primary mb-4">Streak</h3>
-
-        <div class="grid grid-cols-2 gap-4 mb-8">
-          <div>
-            <p class="text-sm text-text-secondary">Current Streak</p>
-            <p class="text-2xl font-bold text-text-primary"><%= current_user.current_streak %></p>
-          </div>
-          <div>
-            <p class="text-sm text-text-secondary">Longest Streak</p>
-            <p class="text-2xl font-bold text-text-primary"><%= current_user.longest_streak %></p>
-          </div>
-        </div>
-
-        <!-- Calendar Heatmap -->
-        <div class="space-y-2">
-          <!-- Calendar Grid with week day labels -->
-          <div class="flex gap-2">
-            <!-- Week day labels (vertical, aligned with rows) -->
-            <div class="flex flex-col gap-1 text-xs text-text-tertiary">
-              <div class="h-5 flex items-center justify-end pr-1">S</div>
-              <div class="h-5 flex items-center justify-end pr-1">M</div>
-              <div class="h-5 flex items-center justify-end pr-1">T</div>
-              <div class="h-5 flex items-center justify-end pr-1">W</div>
-              <div class="h-5 flex items-center justify-end pr-1">T</div>
-              <div class="h-5 flex items-center justify-end pr-1">F</div>
-              <div class="h-5 flex items-center justify-end pr-1">S</div>
-            </div>
-
-            <!-- Calendar Grid -->
-            <div aria-label="Contribution calendar showing daily activity">
-              <%= render StreakGridComponent.new(user: current_user) %>
-            </div>
-          </div>
-
-          <!-- Legend -->
-          <div class="flex items-center gap-2 text-xs text-text-tertiary mt-3">
-            <span>Less</span>
-            <div class="flex gap-1">
-              <div class="w-5 h-5 bg-gray-100 rounded-sm"></div>
-              <div class="w-5 h-5 bg-accent opacity-25 rounded-sm"></div>
-              <div class="w-5 h-5 bg-accent opacity-50 rounded-sm"></div>
-              <div class="w-5 h-5 bg-accent opacity-75 rounded-sm"></div>
-              <div class="w-5 h-5 bg-accent rounded-sm"></div>
-            </div>
-            <span>More</span>
-          </div>
-        </div>
+    <!-- Context Sidebar -->
+    <div class="space-y-6">
+      <!-- Recent Context Header -->
+      <div class="flex items-center justify-between">
+        <h3 class="text-lg font-semibold">Recent Context</h3>
+        <span class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors border-border">
+          <%= @recent_entries&.count || 0 %> entries
+        </span>
       </div>
 
+      <!-- Yesterday's Entry -->
+      <% if @yesterday_entry %>
+        <%= render 'shared/context_card', entry: @yesterday_entry, show_latest_badge: true, content_length: 150 %>
+      <% end %>
+
+      <!-- Additional Recent Entries -->
+      <% if @recent_entries&.any? %>
+        <% @recent_entries.limit(3).each_with_index do |entry, index| %>
+          <% next if entry == @yesterday_entry %> <!-- Skip yesterday's entry as it's already shown above -->
+          <%= render 'shared/context_card', entry: entry, content_length: 100 %>
+        <% end %>
+      <% end %>
+
+      <!-- Empty State -->
+      <% if !@yesterday_entry && (!@recent_entries || @recent_entries.empty?) %>
+        <div class="bg-card border border-card-border border-dashed rounded-lg shadow-sm">
+          <div class="flex flex-col items-center justify-center py-8 text-center">
+            <div class="text-muted-foreground mb-2">No previous entries</div>
+            <p class="text-sm text-muted-foreground">
+              Start journaling to see your context here
+            </p>
+          </div>
+        </div>
+      <% end %>
     </div>
   </div>
 </div>

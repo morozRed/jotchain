@@ -8,6 +8,8 @@ class DashboardController < ApplicationController
     @recent_entries = current_user.recent_entries(5)
     @current_streak = current_user.current_streak
     @user_first_name = extract_first_name(current_user.email)
+    @can_use_ai_insights = current_user.can_use_ai_insights?
+    @has_entries = current_user.entries.any?
   end
 
   private

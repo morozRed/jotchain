@@ -21,6 +21,31 @@ class EntriesController < ApplicationController
     @entries = @entries.page(params[:page]).per(20)
   end
 
+  def by_date
+    date = Date.parse(params[:date]) rescue Date.current
+    @entry = current_user.entries.find_by(entry_date: date)
+
+    respond_to do |format|
+      format.json do
+        if @entry
+          render json: {
+            date: @entry.entry_date.strftime('%A, %B %d, %Y'),
+            content: @entry.content,
+            next_actions: @entry.next_actions,
+            win_description: @entry.win_description,
+            is_win: @entry.is_win?,
+            html: render_to_string(partial: 'entries/calendar_entry', locals: { entry: @entry })
+          }
+        else
+          render json: {
+            date: date.strftime('%A, %B %d, %Y'),
+            html: '<div class="text-text-secondary text-sm">No entry for this date</div>'
+          }
+        end
+      end
+    end
+  end
+
   def export
     @entries = current_user.accessible_entries.recent
 

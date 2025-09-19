@@ -1,25 +1,190 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
+/* JotChain Typography System */
+:root {
+  --font-sans: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer components {
+  /* JotChain-inspired button styles with 150ms transitions */
   .btn-primary {
-    @apply px-6 py-3 bg-accent hover:bg-accent-hover text-white font-semibold rounded-lg transition-all duration-200 hover:transform hover:-translate-y-0.5 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply px-4 py-2 bg-accent hover:bg-accent-hover text-white font-medium rounded-md transition-all duration-150 hover:transform hover:-translate-y-0.5 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
   .btn-secondary {
-    @apply px-6 py-3 bg-transparent text-text-primary font-semibold rounded-lg border border-border hover:border-accent hover:bg-accent-muted transition-all duration-200;
+    @apply px-4 py-2 bg-transparent text-text-primary font-medium rounded-md border border-border hover:border-accent hover:bg-accent-muted transition-all duration-150;
   }
 
+  /* JotChain-inspired card styles with proper spacing */
   .card {
-    @apply bg-background-card border border-border rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-200;
+    @apply bg-background-card border border-border rounded-lg p-6 shadow-sm hover:shadow-md transition-all duration-150;
   }
 
   .card-compact {
     @apply bg-background-card border border-border rounded-lg p-4 shadow-sm;
+  }
+
+  /* JotChain card color classes */
+  .bg-card {
+    @apply bg-background-card;
+  }
+
+  .border-card-border {
+    @apply border-border;
+  }
+
+  .text-foreground {
+    @apply text-text-primary;
+  }
+
+  .text-muted-foreground {
+    @apply text-text-secondary;
+  }
+
+  .bg-secondary {
+    @apply bg-background-secondary;
+  }
+
+  .text-secondary-foreground {
+    @apply text-text-primary;
+  }
+
+  .bg-primary {
+    @apply bg-accent;
+  }
+
+  .text-primary-foreground {
+    @apply text-white;
+  }
+
+  .text-primary {
+    @apply text-accent;
+  }
+
+  .bg-muted {
+    @apply bg-background-tertiary;
+  }
+
+  .hover\:bg-primary\/90:hover {
+    @apply hover:bg-accent-hover;
+  }
+
+  /* Fix color inconsistencies */
+  .text-muted-foreground {
+    @apply text-text-secondary;
+  }
+
+  .bg-sidebar {
+    @apply bg-white;
+  }
+
+  .text-sidebar-foreground {
+    @apply text-text-primary;
+  }
+
+  .bg-sidebar-accent {
+    @apply bg-background-secondary;
+  }
+
+  /* JotChain calendar color classes */
+  .text-foreground {
+    @apply text-text-primary;
+  }
+
+  .text-muted-foreground {
+    @apply text-text-secondary;
+  }
+
+  .bg-muted {
+    @apply bg-background-secondary;
+  }
+
+  .text-primary-foreground {
+    @apply text-white;
+  }
+
+  .ring-offset-background {
+    @apply ring-offset-white;
+  }
+
+  .hover\:border-primary\/50:hover {
+    @apply hover:border-accent/50;
+  }
+
+  .ring-primary {
+    @apply ring-accent;
+  }
+
+  .bg-primary {
+    @apply bg-accent;
+  }
+
+  .bg-primary\/20 {
+    @apply bg-accent/20;
+  }
+
+  .bg-primary\/40 {
+    @apply bg-accent/40;
+  }
+
+  .bg-primary\/60 {
+    @apply bg-accent/60;
+  }
+
+  .bg-primary\/80 {
+    @apply bg-accent/80;
+  }
+
+  /* JotChain Typography Classes */
+  .text-jot-sm {
+    @apply text-sm font-sans; /* 14px */
+  }
+
+  .text-jot-base {
+    @apply text-base font-sans; /* 16px */
+  }
+
+  .text-jot-lg {
+    @apply text-lg font-sans; /* 18px */
+  }
+
+  .text-jot-xl {
+    @apply text-xl font-sans; /* 20px */
+  }
+
+  .text-jot-2xl {
+    @apply text-2xl font-sans; /* 24px */
+  }
+
+  .text-jot-mono {
+    @apply font-mono;
+  }
+
+  /* JotChain Spacing System - consistent rhythm */
+  .spacing-micro {
+    @apply p-2; /* 8px */
+  }
+
+  .spacing-standard {
+    @apply p-4; /* 16px */
+  }
+
+  .spacing-section {
+    @apply p-6; /* 24px */
+  }
+
+  .spacing-large {
+    @apply p-8; /* 32px */
+  }
+
+  .spacing-break {
+    @apply p-12; /* 48px */
   }
 
   .input-field {
@@ -146,14 +311,19 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
   }
 
-  /* Smooth transitions for collapsible elements */
+  /* JotChain-style smooth transitions - 150ms duration */
   .collapsible-transition {
-    transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    transition: max-height 0.15s ease-in-out, opacity 0.15s ease-in-out;
   }
 
-  /* Smooth rotation for icons */
+  /* Smooth rotation for icons - JotChain style */
   .rotate-transition {
-    transition: transform 0.3s ease-in-out;
+    transition: transform 0.15s ease-in-out;
+  }
+
+  /* JotChain sidebar transitions */
+  .sidebar-transitions {
+    transition: all 0.15s ease-in-out;
   }
 
   /* Sidebar transitions - only when enabled */

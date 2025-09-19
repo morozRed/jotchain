@@ -21,120 +21,25 @@
 
   <body class="h-full bg-background text-text-primary">
     <% if user_signed_in? %>
-      <div class="h-full flex" data-controller="sidebar" data-turbo-permanent="sidebar">
-        <!-- Mobile sidebar overlay -->
-        <div class="hidden fixed inset-0 z-40 bg-black bg-opacity-50 lg:hidden"
-             data-sidebar-target="overlay"
-             data-action="click->sidebar#close"></div>
+      <div class="h-full flex flex-col overflow-hidden" data-controller="sidebar dropdown" data-turbo-permanent="sidebar">
+        <!-- Top Navigation -->
+        <%= render 'shared/top_navigation' %>
 
-        <!-- Sidebar -->
-        <div class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform -translate-x-full lg:translate-x-0 overflow-hidden"
-             data-sidebar-target="sidebar" data-turbo-permanent="sidebar-content">
+        <!-- Main Content Area -->
+        <div class="flex-1 flex overflow-hidden">
+          <!-- Main Content -->
+          <div class="flex-1 flex flex-col transition-all duration-150" data-sidebar-target="mainContent">
 
-          <!-- Logo -->
-          <div class="h-16 flex items-center justify-between px-4 lg:px-6 border-b border-border">
-            <a href="<%= root_path %>" class="hover:opacity-80 transition-opacity sidebar-logo flex items-center justify-center w-full lg:w-auto">
-              <span class="font-mono font-bold text-xl"><span class="text-accent">Jot</span>Chain</span>
-            </a>
-            <button data-action="click->sidebar#toggleCollapse"
-                    data-sidebar-target="collapseButton"
-                    class="hidden lg:block p-1 rounded hover:bg-background-secondary transition-colors">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"></path>
-              </svg>
-            </button>
+            <!-- Page content -->
+            <main class="flex-1 overflow-auto bg-background">
+              <div class="px-4 sm:px-6 lg:px-8 py-8">
+                <%= yield %>
+              </div>
+            </main>
           </div>
 
-          <!-- Navigation -->
-          <nav class="flex-1 px-2 lg:px-4 py-6 space-y-2">
-            <%= link_to root_path, class: "sidebar-nav-item flex items-center gap-3 px-2 lg:px-3 py-2 rounded-lg text-text-primary hover:bg-background-secondary transition-colors #{'bg-background-secondary' if current_page?(root_path)}" do %>
-              <svg class="w-5 h-5 flex-shrink-0 sidebar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
-              </svg>
-              <span class="font-medium sidebar-text">Dashboard</span>
-            <% end %>
-
-            <%= link_to entries_path, class: "sidebar-nav-item flex items-center gap-3 px-2 lg:px-3 py-2 rounded-lg text-text-secondary hover:bg-background-secondary hover:text-text-primary transition-colors #{'bg-background-secondary text-text-primary' if current_page?(entries_path)}" do %>
-              <svg class="w-5 h-5 flex-shrink-0 sidebar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-              </svg>
-              <span class="font-medium sidebar-text">Entries</span>
-            <% end %>
-
-
-            <%= link_to insights_path, class: "sidebar-nav-item flex items-center gap-3 px-2 lg:px-3 py-2 rounded-lg text-text-secondary hover:bg-background-secondary hover:text-text-primary transition-colors #{'bg-background-secondary text-text-primary' if current_page?(insights_path)}" do %>
-              <svg class="w-5 h-5 flex-shrink-0 sidebar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
-              </svg>
-              <span class="font-medium sidebar-text">AI Insights</span>
-            <% end %>
-
-            <%= link_to new_feedback_path, class: "sidebar-nav-item flex items-center gap-3 px-2 lg:px-3 py-2 rounded-lg text-text-secondary hover:bg-background-secondary hover:text-text-primary transition-colors #{'bg-background-secondary text-text-primary' if current_page?(new_feedback_path)}" do %>
-              <svg class="w-5 h-5 flex-shrink-0 sidebar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
-              </svg>
-              <span class="font-medium sidebar-text">Feedback</span>
-            <% end %>
-          </nav>
-
-          <!-- Upgrade Banner for Free Users (hidden when collapsed) -->
-          <div class="px-2 lg:px-4 pb-4">
-            <div class="sidebar-upgrade-banner">
-              <%= render UpgradeBannerSimpleComponent.new(user: current_user, sidebar: true) %>
-            </div>
-          </div>
-
-          <!-- User section at bottom -->
-          <div class="absolute bottom-0 left-0 right-0 border-t border-border">
-            <div class="sidebar-bottom-section p-4 space-y-1">
-              <!-- Profile/Settings link with user info -->
-              <%= link_to edit_user_registration_path, class: "sidebar-user-link flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-background-secondary transition-colors" do %>
-                <div class="w-10 h-10 bg-accent text-white font-semibold rounded-full flex items-center justify-center flex-shrink-0">
-                  <%= current_user.email[0].upcase %>
-                </div>
-                <div class="flex-1 min-w-0 sidebar-text">
-                  <p class="text-sm font-medium text-text-primary truncate"><%= current_user.email %></p>
-                  <p class="text-xs text-text-secondary">Settings</p>
-                </div>
-                <svg class="w-4 h-4 text-text-tertiary sidebar-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                </svg>
-              <% end %>
-
-              <!-- Logout link -->
-              <%= link_to destroy_user_session_path, method: :delete, data: { turbo_method: :delete }, class: "sidebar-logout-link flex items-center gap-3 px-3 py-2 rounded-lg text-text-secondary hover:bg-background-secondary hover:text-text-primary transition-colors" do %>
-                <svg class="sidebar-logout-icon w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-                </svg>
-                <span class="font-medium sidebar-text">Logout</span>
-              <% end %>
-            </div>
-          </div>
-        </div>
-
-        <!-- Main content area -->
-        <div class="flex-1 flex flex-col lg:ml-64" data-sidebar-target="mainContent">
-          <!-- Top bar for mobile -->
-          <header class="bg-white border-b border-border px-4 py-3 lg:hidden">
-            <div class="flex items-center justify-between">
-              <button data-action="click->sidebar#toggle"
-                      data-sidebar-target="toggleButton"
-                      class="p-2 rounded-lg hover:bg-background-secondary transition-colors">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                </svg>
-              </button>
-              <span class="font-mono font-bold text-lg"><span class="text-accent">Jot</span>Chain</span>
-              <div class="w-10"></div>
-            </div>
-          </header>
-
-          <!-- Page content -->
-          <main class="flex-1 overflow-auto bg-background">
-            <div class="px-4 sm:px-6 lg:px-8 py-8">
-              <%= yield %>
-            </div>
-          </main>
+          <!-- Expandable Right Sidebar -->
+          <%= render 'shared/expandable_sidebar' %>
         </div>
       </div>
     <% else %>

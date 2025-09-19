@@ -1,14 +1,17 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["sidebar", "overlay", "toggleButton", "mainContent", "collapseButton"]
+  static targets = ["sidebar", "overlay", "toggleButton", "mainContent", "collapseButton",
+                   "calendarSidebar", "calendarToggle", "calendarOverlay"]
   static values = {
     open: Boolean,
-    collapsed: Boolean
+    collapsed: Boolean,
+    calendarOpen: Boolean
   }
 
   connect() {
     this.openValue = false
+    this.calendarOpenValue = false
 
     // Load collapsed state from localStorage
     this.collapsedValue = localStorage.getItem('sidebarCollapsed') === 'true'
@@ -211,6 +214,9 @@ export default class extends Controller {
   handleResize() {
     const isDesktop = window.innerWidth >= 1024
 
+    // Update calendar sidebar responsive behavior
+    this.updateCalendarSidebar()
+
     if (isDesktop) {
       // Desktop - always show sidebar
       if (this.hasSidebarTarget) {
@@ -240,6 +246,48 @@ export default class extends Controller {
       if (!this.openValue && this.hasSidebarTarget) {
         this.sidebarTarget.classList.add('-translate-x-full')
         this.sidebarTarget.classList.remove('translate-x-0')
+      }
+    }
+  }
+
+  // Calendar sidebar methods
+  toggleCalendar() {
+    this.calendarOpenValue = !this.calendarOpenValue
+    this.updateCalendarSidebar()
+  }
+
+  closeCalendar() {
+    this.calendarOpenValue = false
+    this.updateCalendarSidebar()
+  }
+
+  updateCalendarSidebar() {
+    if (this.hasCalendarSidebarTarget) {
+      if (this.calendarOpenValue) {
+        this.calendarSidebarTarget.classList.remove('translate-x-full')
+        this.calendarSidebarTarget.classList.add('translate-x-0')
+        this.calendarSidebarTarget.setAttribute('data-sidebar-expanded', 'true')
+      } else {
+        this.calendarSidebarTarget.classList.add('translate-x-full')
+        this.calendarSidebarTarget.classList.remove('translate-x-0')
+        this.calendarSidebarTarget.setAttribute('data-sidebar-expanded', 'false')
+      }
+    }
+
+    if (this.hasCalendarOverlayTarget) {
+      if (this.calendarOpenValue && window.innerWidth < 1024) {
+        this.calendarOverlayTarget.classList.remove('hidden')
+      } else {
+        this.calendarOverlayTarget.classList.add('hidden')
+      }
+    }
+
+    // Adjust main content margin when calendar is open on desktop
+    if (this.hasMainContentTarget) {
+      if (this.calendarOpenValue && window.innerWidth >= 1024) {
+        this.mainContentTarget.classList.add('lg:mr-80')
+      } else {
+        this.mainContentTarget.classList.remove('lg:mr-80')
       }
     }
   }
