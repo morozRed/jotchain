@@ -20,6 +20,7 @@ RUN apt-get update -qq && \
     curl \
     libjemalloc2 \
     libvips \
+    libffi-dev \
     postgresql-client \
     libproj-dev \
     libgeos-dev \
