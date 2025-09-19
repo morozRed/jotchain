@@ -80,7 +80,7 @@ class EntriesController < ApplicationController
 
     if @entry.save
       respond_to do |format|
-        format.html { redirect_to dashboard_path, notice: 'Entry was successfully created.' }
+        format.html { redirect_to authenticated_root_path, notice: 'Entry was successfully created.' }
         format.turbo_stream
       end
     else
@@ -97,7 +97,7 @@ class EntriesController < ApplicationController
 
     if @entry.update(entry_params)
       respond_to do |format|
-        format.html { redirect_to dashboard_path, notice: 'Entry was successfully updated.' }
+        format.html { redirect_to authenticated_root_path, notice: 'Entry was successfully updated.' }
         format.turbo_stream
       end
     else
@@ -108,7 +108,7 @@ class EntriesController < ApplicationController
   def destroy
     @entry.destroy
     respond_to do |format|
-      format.html { redirect_to dashboard_path, notice: 'Entry was successfully deleted.' }
+      format.html { redirect_to authenticated_root_path, notice: 'Entry was successfully deleted.' }
       format.turbo_stream
     end
   end

@@ -3,20 +3,10 @@
     <!-- Logo and current date -->
     <div class="flex items-center gap-4">
       <a href="<%= root_path %>" class="hover:opacity-80 transition-opacity duration-150">
-        <span class="text-xl font-mono font-bold text-primary">
-          <span class="text-accent">Jot</span>Chain
+        <span class="text-xl font-mono font-bold">
+          JotChain
         </span>
       </a>
-      <div class="hidden sm:block text-sm text-text-secondary">
-        <%= Date.current.strftime("%A, %B %d, %Y") %>
-      </div>
-    </div>
-  </div>
-
-  <!-- Simplified Center Area -->
-  <div class="flex-1 flex justify-center">
-    <div class="text-sm text-text-secondary">
-      Focus on your daily progress
     </div>
   </div>
 
@@ -53,7 +43,7 @@
           </span>
         </div>
       </button>
-      
+
       <!-- Dropdown menu -->
       <div data-dropdown-target="menu"
            class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-border z-50">

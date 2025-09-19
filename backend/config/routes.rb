@@ -19,8 +19,6 @@ Rails.application.routes.draw do
         end
       end
 
-      resource :dashboard, only: [:show], controller: 'dashboard'
-
       # Billing routes
       resource :billing, only: [:show], controller: 'billing' do
         member do

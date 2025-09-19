@@ -30,8 +30,4 @@ class DashboardController < ApplicationController
       name_part.capitalize
     end
   end
-
-  def show
-    redirect_to action: :index
-  end
 end
