@@ -1,6 +1,12 @@
 <% content_for :title, "AI Insights - JotChain" %>
 
-<div class="max-w-4xl mx-auto">
+<div class="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8 py-4 sm:py-8">
+  <div class="max-w-4xl mx-auto">
+  <!-- Upgrade Banner for Free Users -->
+  <% unless current_user.can_use_ai_insights? %>
+    <%= render UpgradeBannerComponent.new(user: current_user, context: :ai_insights) %>
+  <% end %>
+
   <!-- Header -->
   <div class="mb-8">
     <h1 class="text-3xl font-mono font-bold text-text-primary mb-2">AI Insights</h1>
@@ -8,22 +14,6 @@
   </div>
 
   <% if @has_entries %>
-    <!-- Stats -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-      <div class="card">
-        <div class="text-2xl font-bold text-text-primary"><%= @entries_count %></div>
-        <div class="text-sm text-text-secondary">Total Entries</div>
-      </div>
-      <div class="card">
-        <div class="text-2xl font-bold text-wins-major"><%= @wins_count %></div>
-        <div class="text-sm text-text-secondary">Total Wins</div>
-      </div>
-      <div class="card">
-        <div class="text-2xl font-bold text-accent"><%= current_user.current_streak %></div>
-        <div class="text-sm text-text-secondary">Current Streak</div>
-      </div>
-    </div>
-
     <!-- Generation Options -->
     <div class="card mb-6" data-controller="insights">
       <div class="flex justify-between items-start mb-4">
@@ -141,4 +131,5 @@
       <%= link_to "Create Your First Entry", new_entry_path, class: "btn-primary" %>
     </div>
   <% end %>
+  </div>
 </div>

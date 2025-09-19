@@ -1,16 +1,19 @@
 # Name of your application. Used to uniquely configure containers.
-service: backend
+service: jotchain
 
 # Name of the container image.
-image: your-user/backend
+image: jotchain/app
+
+ssh:
+  keys: [ "~/.ssh/jotchain_hetzner_ed25519" ]
 
 # Deploy to these servers.
 servers:
   web:
-    - 192.168.0.1
+    - jotchain-web
   # job:
   #   hosts:
-  #     - 192.168.0.1
+  #     - jotchain-web
   #   cmd: bin/jobs
 
 # Enable SSL auto certification via Let's Encrypt and allow for multiple apps on a single web server.
@@ -19,13 +22,13 @@ servers:
 # Note: If using Cloudflare, set encryption mode in SSL/TLS setting to "Full" to enable CF-to-app encryption.
 proxy:
   ssl: true
-  host: app.example.com
+  host: app.jotchain.com
 
 # Credentials for your image host.
 registry:
   # Specify the registry server, if you're not using Docker Hub
   # server: registry.digitalocean.com / ghcr.io / ...
-  username: your-user
+  username: morozgrigory
 
   # Always use an access token rather than real password when possible.
   password:
@@ -92,25 +95,30 @@ builder:
 #   user: app
 
 # Use accessory services (secrets come from .kamal/secrets).
-# accessories:
-#   db:
-#     image: mysql:8.0
-#     host: 192.168.0.2
-#     # Change to 3306 to expose port to the world instead of just local network.
-#     port: "127.0.0.1:3306:3306"
-#     env:
-#       clear:
-#         MYSQL_ROOT_HOST: '%'
-#       secret:
-#         - MYSQL_ROOT_PASSWORD
-#     files:
-#       - config/mysql/production.cnf:/etc/mysql/my.cnf
-#       - db/production.sql:/docker-entrypoint-initdb.d/setup.sql
-#     directories:
-#       - data:/var/lib/mysql
-#   redis:
-#     image: redis:7.0
-#     host: 192.168.0.2
-#     port: 6379
-#     directories:
-#       - data:/data
+accessories:
+  db:
+    image: postgis/postgis:16-3.4
+    host: jotchain-accessories  # Private network server (no public IP)
+    port: 5432  # Safe to expose port on private network
+    env:
+      clear:
+        POSTGRES_DB: jotchain_production
+        POSTGRES_USER: jotchain
+        # Bind to all interfaces on private network
+        POSTGRES_HOST_AUTH_METHOD: scram-sha-256
+      secret:
+        - POSTGRES_PASSWORD
+    directories:
+      - /var/lib/postgresql/data:/var/lib/postgresql/data
+    cmd: postgres -c shared_buffers=512MB -c max_connections=120 -c effective_cache_size=1536MB -c maintenance_work_mem=128MB -c work_mem=2MB -c random_page_cost=1.1 -c wal_buffers=16MB -c checkpoint_timeout=15min -c checkpoint_completion_target=0.9 -c max_wal_size=1GB -c min_wal_size=80MB -c autovacuum=on -c autovacuum_vacuum_threshold=50 -c autovacuum_vacuum_scale_factor=0.1 -c autovacuum_analyze_threshold=50 -c autovacuum_analyze_scale_factor=0.05 -c autovacuum_max_workers=3 -c autovacuum_naptime=30s -c autovacuum_vacuum_cost_limit=400 -c autovacuum_vacuum_insert_threshold=1000 -c autovacuum_vacuum_insert_scale_factor=0.01 -c log_min_duration_statement=1000 -c log_checkpoints=on -c log_connections=on -c log_disconnections=on -c log_lock_waits=on -c deadlock_timeout=1s -c track_io_timing=on -c track_functions=all -c temp_file_limit=5GB -c statement_timeout=1800000 -c idle_in_transaction_session_timeout=300000
+
+  redis:
+    image: redis:7.2-alpine
+    host: jotchain-accessories  # Private network server (no public IP)
+    port: 6379  # Safe to expose port on private network
+    env:
+      secret:
+        - REDIS_PASSWORD
+    directories:
+      - /var/lib/redis:/data
+    cmd: sh -c 'redis-server --requirepass "${REDIS_PASSWORD}" --bind 0.0.0.0 --protected-mode yes --maxmemory 512mb --maxmemory-policy allkeys-lru'

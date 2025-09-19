@@ -3,7 +3,7 @@ class DashboardController < ApplicationController
 
   def index
     @today = Date.current
-    @entry = current_user.entries.for_date(@today).first_or_initialize(entry_date: @today)
+    @entry = current_user.entries.where(entry_date: @today).first_or_initialize
     @yesterday_entry = current_user.yesterdays_entry
     @recent_entries = current_user.recent_entries(5)
     @current_streak = current_user.current_streak

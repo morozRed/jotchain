@@ -77,6 +77,13 @@
             <% end %>
           </nav>
 
+          <!-- Upgrade Banner for Free Users (hidden when collapsed) -->
+          <div class="px-2 lg:px-4 pb-4">
+            <div class="sidebar-upgrade-banner">
+              <%= render UpgradeBannerSimpleComponent.new(user: current_user, sidebar: true) %>
+            </div>
+          </div>
+
           <!-- User section at bottom -->
           <div class="absolute bottom-0 left-0 right-0 border-t border-border">
             <div class="sidebar-bottom-section p-4 space-y-1">

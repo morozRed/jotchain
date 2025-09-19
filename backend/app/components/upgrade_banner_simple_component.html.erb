@@ -1,0 +1,21 @@
+<% if sidebar %>
+  <div class="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-lg p-3 sidebar-text">
+    <p class="text-xs font-medium text-amber-900 mb-2">
+      <%= message %>
+    </p>
+    <%= link_to cta_text, billing_path, class: "w-full inline-flex items-center justify-center px-3 py-1.5 bg-accent text-white text-sm font-medium rounded-lg hover:bg-accent-hover transition-colors" %>
+  </div>
+<% else %>
+  <div class="mb-6 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-lg p-2">
+    <div class="flex items-center justify-between flex-wrap gap-4">
+      <div class="flex items-start gap-3">
+        <div>
+          <p class="text-sm font-medium text-amber-900">
+            <%= message %>
+          </p>
+        </div>
+      </div>
+      <%= link_to cta_text, billing_path, class: "inline-flex items-center px-6 py-2 bg-accent text-white font-medium rounded-lg hover:bg-accent-hover transition-colors" %>
+    </div>
+  </div>
+<% end %>

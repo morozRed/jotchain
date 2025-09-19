@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_18_105550) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_18_193338) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -53,6 +53,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_18_105550) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "ai_usage_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.string "insight_type", null: false
+    t.integer "tokens_used", default: 0
+    t.json "metadata"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["insight_type"], name: "index_ai_usage_logs_on_insight_type"
+    t.index ["user_id", "created_at"], name: "index_ai_usage_logs_on_user_id_and_created_at"
+    t.index ["user_id"], name: "index_ai_usage_logs_on_user_id"
+  end
+
   create_table "entries", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id", null: false
     t.text "content_ciphertext"
@@ -71,6 +83,25 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_18_105550) do
     t.index ["user_id"], name: "index_entries_on_user_id"
   end
 
+  create_table "subscriptions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.string "stripe_subscription_id"
+    t.string "stripe_customer_id"
+    t.string "stripe_price_id"
+    t.string "status", default: "inactive", null: false
+    t.string "plan_name", default: "free", null: false
+    t.datetime "current_period_start"
+    t.datetime "current_period_end"
+    t.datetime "canceled_at"
+    t.boolean "cancel_at_period_end", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["status"], name: "index_subscriptions_on_status"
+    t.index ["stripe_customer_id"], name: "index_subscriptions_on_stripe_customer_id"
+    t.index ["stripe_subscription_id"], name: "index_subscriptions_on_stripe_subscription_id", unique: true
+    t.index ["user_id"], name: "index_subscriptions_on_user_id"
+  end
+
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -79,10 +110,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_18_105550) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "stripe_customer_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["stripe_customer_id"], name: "index_users_on_stripe_customer_id", unique: true
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "ai_usage_logs", "users"
+  add_foreign_key "subscriptions", "users"
 end

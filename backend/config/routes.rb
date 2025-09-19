@@ -1,7 +1,12 @@
 Rails.application.routes.draw do
+  # Stripe webhooks (no subdomain constraint)
+  post '/stripe/webhooks', to: 'stripe_webhooks#create'
+
   # Application routes (app.jotchain.com or localhost)
   constraints subdomain: /app|^$/ do
-    devise_for :users
+    devise_for :users, controllers: {
+      registrations: 'users/registrations'
+    }
 
     # Authentication required routes
     authenticated :user do
@@ -15,6 +20,17 @@ Rails.application.routes.draw do
 
       resource :dashboard, only: [:show], controller: 'dashboard'
 
+      # Billing routes
+      resource :billing, only: [:show], controller: 'billing' do
+        member do
+          post :checkout
+          get :success
+          get :cancel
+          post :portal
+          post :cancel_subscription
+          post :reactivate_subscription
+        end
+      end
 
       resources :streaks, only: [:index]
 

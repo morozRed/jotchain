@@ -1,9 +1,12 @@
 class EntriesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_entry, only: [:show, :edit, :update, :destroy]
+  before_action :check_entry_access, only: [:show, :edit, :update, :destroy]
+  before_action :check_export_access, only: [:export]
 
   def index
-    @entries = current_user.entries.recent
+    @entries = current_user.accessible_entries.recent
+    @show_upgrade_banner = !current_user.has_active_subscription? || current_user.subscription&.free?
 
     # Apply filters
     case params[:filter]
@@ -19,7 +22,7 @@ class EntriesController < ApplicationController
   end
 
   def export
-    @entries = current_user.entries.recent
+    @entries = current_user.accessible_entries.recent
 
     # Apply same filters as index
     case params[:filter]
@@ -90,6 +93,20 @@ class EntriesController < ApplicationController
 
   def set_entry
     @entry = current_user.entries.find(params[:id])
+  end
+
+  def check_entry_access
+    unless current_user.can_access_entries_before?(@entry.entry_date)
+      flash[:alert] = "This entry is older than 3 days. Upgrade to Pro for unlimited history access."
+      redirect_to billing_path
+    end
+  end
+
+  def check_export_access
+    unless current_user.can_export?
+      flash[:alert] = "Export functionality is only available for Pro users."
+      redirect_to billing_path
+    end
   end
 
   def entry_params

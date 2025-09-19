@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
   allow_browser versions: :modern
 
   before_action :configure_permitted_parameters, if: :devise_controller?
+  before_action :ensure_user_has_subscription, if: :user_signed_in?
 
   protected
 
@@ -17,5 +18,14 @@ class ApplicationController < ActionController::Base
 
   def after_sign_out_path_for(resource_or_scope)
     new_user_session_path
+  end
+
+  private
+
+  def ensure_user_has_subscription
+    return if current_user.subscription.present?
+    current_user.create_subscription!(plan_name: 'free', status: 'active')
+  rescue ActiveRecord::RecordInvalid => e
+    Rails.logger.error "Failed to create subscription for user #{current_user.id}: #{e.message}"
   end
 end

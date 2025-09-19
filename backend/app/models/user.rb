@@ -7,13 +7,49 @@ class User < ApplicationRecord
   # Associations
   has_many :entries, dependent: :destroy
   has_one :subscription, dependent: :destroy
+  has_many :ai_usage_logs, dependent: :destroy
 
   # Validations
   validates :email, presence: true, uniqueness: true
 
+  # Callbacks
+  after_create :create_default_subscription
+
   # Methods
   def has_active_subscription?
-    subscription&.active?
+    subscription&.active? || false
+  end
+
+  def subscription_plan
+    subscription&.plan_name || 'free'
+  end
+
+  def can_access_entries_before?(date)
+    return true if subscription&.unlimited_history?
+
+    days_allowed = subscription&.days_of_history_allowed || 3
+    date >= days_allowed.days.ago.to_date
+  end
+
+  def can_use_ai_insights?
+    subscription&.ai_insights_allowed? || false
+  end
+
+  def can_export?
+    subscription&.export_allowed? || false
+  end
+
+  def ai_usage_this_month
+    AiUsageLog.monthly_count_for_user(self)
+  end
+
+  def accessible_entries
+    if subscription&.unlimited_history?
+      entries
+    else
+      days_allowed = subscription&.days_of_history_allowed || 3
+      entries.where('entry_date >= ?', days_allowed.days.ago.to_date)
+    end
   end
 
   def current_streak
@@ -22,7 +58,7 @@ class User < ApplicationRecord
     streak = 0
     date = Date.current
 
-    while entries.for_date(date).exists?
+    while entries.where(entry_date: date).exists?
       streak += 1
       date -= 1.day
     end
@@ -52,11 +88,11 @@ class User < ApplicationRecord
   end
 
   def todays_entry
-    entries.for_date(Date.current).first
+    entries.where(entry_date: Date.current).first
   end
 
   def yesterdays_entry
-    entries.for_date(Date.current - 1.day).first
+    entries.where(entry_date: Date.current - 1.day).first
   end
 
   def recent_entries(limit = 6)
@@ -69,5 +105,11 @@ class User < ApplicationRecord
 
   def wins_by_level
     entries.wins.group(:win_level).count
+  end
+
+  private
+
+  def create_default_subscription
+    build_subscription(plan_name: 'free', status: 'active').save
   end
 end

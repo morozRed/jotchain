@@ -44,7 +44,7 @@
 
   /* Streak calendar with accent colors */
   .streak-day {
-    @apply w-5 h-5 rounded-sm transition-all duration-200 cursor-pointer hover:ring-1 hover:ring-gray-400;
+    @apply w-4 h-4 rounded-sm streak-day transition-all duration-200 cursor-pointer hover:ring-1 hover:ring-gray-400;
   }
 
   .streak-day-empty {
@@ -56,7 +56,7 @@
   }
 
   .streak-day-today {
-    @apply bg-accent bg-opacity-20 border border-accent;
+    @apply bg-accent bg-opacity-20;
   }
 
   /* Lexxy Editor Styles */
@@ -118,6 +118,7 @@
   .lexxy-editor pre code {
     @apply bg-transparent p-0;
   }
+
 }
 
 @layer utilities {
@@ -171,6 +172,10 @@
 
   .sidebar-collapsed .sidebar-logo {
     @apply justify-center;
+  }
+
+  .sidebar-collapsed .sidebar-upgrade-banner {
+    @apply hidden;
   }
 
   /* Bottom section in collapsed state */

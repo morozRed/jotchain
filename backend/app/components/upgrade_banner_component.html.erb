@@ -1,0 +1,18 @@
+<div class="mb-6 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-lg p-4">
+  <div class="flex items-center justify-between flex-wrap gap-4">
+    <div class="flex items-start gap-3">
+      <svg class="w-6 h-6 text-amber-600 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+      </svg>
+      <div>
+        <p class="text-sm font-medium text-amber-900">
+          <%= message %>
+        </p>
+        <p class="text-xs text-amber-700 mt-1">
+          Only $5/month or $50/year (save $10!)
+        </p>
+      </div>
+    </div>
+    <%= link_to cta_text, billing_path, class: "inline-flex items-center px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white text-sm font-medium rounded-lg transition-colors" %>
+  </div>
+</div>

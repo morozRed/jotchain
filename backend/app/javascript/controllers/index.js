@@ -27,3 +27,6 @@ application.register("tabs", TabsController)
 
 import TooltipController from "controllers/tooltip_controller"
 application.register("tooltip", TooltipController)
+
+import UnifiedEntryController from "controllers/unified_entry_controller"
+application.register("unified-entry", UnifiedEntryController)
