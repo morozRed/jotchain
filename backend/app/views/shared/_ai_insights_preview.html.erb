@@ -4,12 +4,12 @@
     <!-- Header -->
     <div class="flex items-center justify-between mb-4">
       <div class="flex items-center gap-3">
-        <div class="p-2 bg-gradient-to-br from-purple-100 to-blue-100 rounded-lg">
-          <%= heroicon "sparkles", options: { class: "w-5 h-5 text-purple-600" } %>
+        <div class="p-2 bg-accent/10 rounded-lg">
+          <%= heroicon "sparkles", options: { class: "w-5 h-5 text-accent" } %>
         </div>
         <div>
-          <h3 class="text-lg font-semibold text-gray-900">AI Insights</h3>
-          <p class="text-sm text-gray-500">Generate content from your journal entries</p>
+          <h3 class="text-lg font-semibold text-text-primary">AI Insights</h3>
+          <p class="text-sm text-text-secondary">Generate content from your journal entries</p>
         </div>
       </div>
       <% if can_use_ai_insights %>
@@ -23,30 +23,30 @@
       <% if has_entries %>
         <!-- Quick Actions for Pro Users -->
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <%= link_to insights_path(preset: 'tweets'), class: "group p-4 border border-gray-200 rounded-lg hover:border-accent hover:bg-accent/5 transition-all text-center" do %>
+          <%= link_to insights_path(preset: 'tweets'), class: "group p-4 border border-border rounded-lg hover:border-accent hover:bg-accent/5 transition-all text-center" do %>
             <div class="w-8 h-8 mx-auto mb-2 text-accent font-bold text-2xl flex items-center justify-center group-hover:scale-110 transition-transform">𝕏</div>
-            <span class="text-xs font-medium text-gray-700 group-hover:text-accent">X Posts</span>
+            <span class="text-xs font-medium text-text-primary group-hover:text-accent">X Posts</span>
           <% end %>
 
-          <%= link_to insights_path(preset: 'blog'), class: "group p-4 border border-gray-200 rounded-lg hover:border-accent hover:bg-accent/5 transition-all text-center" do %>
+          <%= link_to insights_path(preset: 'blog'), class: "group p-4 border border-border rounded-lg hover:border-accent hover:bg-accent/5 transition-all text-center" do %>
             <svg class="w-8 h-8 mx-auto mb-2 text-accent group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
             </svg>
-            <span class="text-xs font-medium text-gray-700 group-hover:text-accent">Blog Ideas</span>
+            <span class="text-xs font-medium text-text-primary group-hover:text-accent">Blog Ideas</span>
           <% end %>
 
-          <%= link_to insights_path(preset: 'wins'), class: "group p-4 border border-gray-200 rounded-lg hover:border-accent hover:bg-accent/5 transition-all text-center" do %>
+          <%= link_to insights_path(preset: 'wins'), class: "group p-4 border border-border rounded-lg hover:border-accent hover:bg-accent/5 transition-all text-center" do %>
             <svg class="w-8 h-8 mx-auto mb-2 text-accent group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            <span class="text-xs font-medium text-gray-700 group-hover:text-accent">Wins Summary</span>
+            <span class="text-xs font-medium text-text-primary group-hover:text-accent">Wins Summary</span>
           <% end %>
 
-          <%= link_to insights_path(preset: 'meeting'), class: "group p-4 border border-gray-200 rounded-lg hover:border-accent hover:bg-accent/5 transition-all text-center" do %>
+          <%= link_to insights_path(preset: 'meeting'), class: "group p-4 border border-border rounded-lg hover:border-accent hover:bg-accent/5 transition-all text-center" do %>
             <svg class="w-8 h-8 mx-auto mb-2 text-accent group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
             </svg>
-            <span class="text-xs font-medium text-gray-700 group-hover:text-accent">Meeting Prep</span>
+            <span class="text-xs font-medium text-text-primary group-hover:text-accent">Meeting Prep</span>
           <% end %>
         </div>
 
@@ -60,7 +60,7 @@
         <!-- Empty State for Pro Users -->
         <div class="text-center py-8">
           <div class="text-4xl mb-3">💡</div>
-          <p class="text-sm text-gray-600 mb-4">Start journaling to unlock AI-powered insights!</p>
+          <p class="text-sm text-text-secondary mb-4">Start journaling to unlock AI-powered insights!</p>
           <%= link_to new_entry_path, class: "inline-flex items-center px-4 py-2 bg-accent text-white text-sm font-medium rounded-lg hover:bg-accent/90 transition-colors" do %>
             Create Your First Entry
           <% end %>
@@ -68,7 +68,7 @@
       <% end %>
     <% else %>
       <!-- Upgrade Banner for Free Users -->
-      <div class="bg-gradient-to-br from-purple-50 to-blue-50 border border-purple-200 rounded-lg p-6">
+      <div class="bg-accent/5 border border-accent/20 rounded-lg p-6">
         <div class="flex items-start gap-3">
           <svg class="w-6 h-6 text-purple-600 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
             <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>

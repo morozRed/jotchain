@@ -2,7 +2,7 @@
 service: jotchain
 
 # Name of the container image.
-image: jotchain/app
+image: morozgrigory/jotchain
 
 ssh:
   keys: [ "~/.ssh/jotchain_hetzner_ed25519" ]
