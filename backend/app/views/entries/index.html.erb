@@ -1,0 +1,10 @@
+<h1>Recent Entries</h1>
+<p><%= link_to "New Entry", new_entry_path %></p>
+<ul id="entries">
+  <% @entries.each do |entry| %>
+    <li>
+      <%= link_to entry.entry_date, entry %>
+    </li>
+  <% end %>
+</ul>
+

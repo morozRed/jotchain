@@ -1,0 +1,19 @@
+<h1>Entry <%= @entry.entry_date %></h1>
+<p>
+  <strong>Day Log</strong><br/>
+  <pre><%= @entry.day_log %></pre>
+</p>
+<p>
+  <strong>Next Actions</strong><br/>
+  <pre><%= @entry.next_actions %></pre>
+</p>
+<p>
+  <strong>Win</strong><br/>
+  <pre><%= @entry.win %></pre>
+</p>
+<p>
+  <%= link_to "Edit", edit_entry_path(@entry) %> |
+  <%= link_to "Back", entries_path %> |
+  <%= button_to "Delete", @entry, method: :delete, data: { turbo_confirm: "Are you sure?" } %>
+</p>
+

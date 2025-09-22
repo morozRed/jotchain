@@ -1,0 +1,12 @@
+<h1>Categories</h1>
+
+<%= link_to "New Category", new_category_path, data: { turbo_frame: "_top" } %>
+
+<ul id="categories">
+  <% @categories.each do |category| %>
+    <li>
+      <%= link_to category.name, category %>
+    </li>
+  <% end %>
+</ul>
+

@@ -1,0 +1,29 @@
+<%= form_with(model: @entry, data: { controller: "prefill-previous" }) do |f| %>
+  <% if @entry.errors.any? %>
+    <div class="errors"><%= @entry.errors.full_messages.to_sentence %></div>
+  <% end %>
+  <div>
+    <%= f.label :entry_date %>
+    <%= f.date_field :entry_date %>
+  </div>
+  <div>
+    <%= f.label :category_id %>
+    <%= f.collection_select :category_id, Category.all, :id, :name, include_blank: true %>
+  </div>
+  <div>
+    <%= f.label :day_log %>
+    <%= f.text_area :day_log, rows: 6, data: { prefill_previous_target: "dayLog" } %>
+  </div>
+  <div>
+    <%= f.label :next_actions %>
+    <%= f.text_area :next_actions, rows: 6, data: { prefill_previous_target: "nextActions" } %>
+  </div>
+  <div>
+    <%= f.label :win %>
+    <%= f.text_area :win, rows: 4, data: { prefill_previous_target: "win" } %>
+  </div>
+  <div>
+    <%= f.submit %>
+  </div>
+<% end %>
+
