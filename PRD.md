@@ -1,392 +1,493 @@
-# Product Requirements Document (PRD)
-
-## Product: **JotChain**
+Product Requirements Document (PRD)
+Product: JotChain
 A lightweight, privacy-first web app for daily work journaling, context handover, and professional growth tracking.
 
----
+1. Objective
+Build a secure, simple tool where users can log what they did, what they'll do next, and their wins, while enabling them to:
 
-## 1. Objective
-Build a secure, simple tool where users can **log what they did and what they'll do next**, while enabling them to:
-- Maintain continuity between work sessions with intelligent context recall
-- Track and showcase professional wins for career growth
-- Build consistent habits through visual streaks
-- Keep all data end-to-end encrypted for complete privacy
-- Export wins for performance reviews and job applications
+Maintain continuity between work sessions with intelligent context recall
+Track and showcase professional wins for career growth
+Build consistent habits through visual streaks
+Keep all data encrypted at rest in the database for privacy
+Export wins for performance reviews and job applications
 
----
 
-## 2. Target Users
-- **Individual developers & professionals** who need daily context switching
-- **Privacy-conscious knowledge workers** who want secure journaling
-- **Career-focused individuals** building a portfolio of achievements
-- **Remote workers** who need to track daily accomplishments
-- **Small teams** who need lightweight async handoffs (future)
+2. Target Users
 
----
+Individual developers & professionals who need daily context switching
+Privacy-conscious knowledge workers who want secure journaling
+Career-focused individuals building a portfolio of achievements
+Remote workers who need to track daily accomplishments
+Small teams who need lightweight async handoffs (future)
 
-## 3. Core Value Propositions
-1. **"Start tomorrow where you left off"** - Intelligent context recall
-2. **"Your wins, ready for reviews"** - One-click formatted exports
-3. **"Truly private"** - End-to-end encryption, zero-knowledge architecture
-4. **"Build momentum"** - Visual streaks and habit tracking
-5. **"Works instantly"** - No app download, fast web experience
 
----
+3. Core Value Propositions
 
-## 4. Technical Stack
+"Your notes are everywhere, your context is nowhere" - Intelligent context recall with secure storage
+"Your wins, ready for reviews" - One-click formatted exports
+"Truly private" - Data encrypted at rest in the database
+"Build momentum" - Visual streaks and habit tracking
+"Works instantly" - No app download, fast web experience
+"AI-powered insights" - Generate actionable content and summaries from your journals (Pro tier)
 
-### Backend
-- **Rails 7.2+** with PostgreSQL
-- **Hotwire** (Turbo + Stimulus) for real-time updates
-- **Redis** for ActionCable and caching
-- **Sidekiq** for background jobs
 
-### Frontend
-- **ViewComponents** for reusable UI
-- **ActionText** with custom Stimulus controllers
-- **Tailwind CSS** with custom design tokens
-- **Web Crypto API** for client-side encryption
+4. Key Assumptions
 
-### Key Gems
-```ruby
-gem 'rails', '~> 7.2'
-gem 'devise'  # Authentication
-gem 'lockbox'  # Encryption helpers
-gem 'blind_index'  # Encrypted search
-gem 'view_component'  # Component architecture
-```
+Market demand for privacy-focused journaling tools remains high in 2025, with users prioritizing secure storage over feature-rich alternatives like Notion.
+xAI Grok API (v4) costs will be manageable (~$0.01-0.05 per insight generation, based on 2025 pricing), with volume discounts for scale.
+Users will convert to Pro at 5% rate due to hitting retention limits and needing unlimited access/AI.
+Development timeline assumes a small team (2-3 devs) with Rails expertise; total MVP cost ~$50K (including audit and hosting).
 
-__
 
-## 5. MVP Features (Launch Ready)
+5. MVP Features (Launch Ready)
+5.1 Authentication
 
-### 5.1 Authentication
-- **Magic link email** (passwordless primary)
-- OAuth secondary (Google/GitHub)
-- Secure session management with auto-lock
+OAuth (Google/GitHub)
+Email/password signup
+Secure session management with auto-lock
 
-### 5.2 Entry System
-- **Quick Capture Mode**: Single field with natural language
-- **Structured Mode**: Split "Done Today" / "Next Up" sections
-- **Markdown support** with live preview
-- **Auto-save** every 10 seconds to encrypted local storage
-- **Win marking** with three levels (Minor/Major/Career-Defining)
+5.2 Entry System
 
-### 5.3 Context Display
-- **Previous Entry** card shown on homepage (your last entry, whenever it was)
-- **Recent entries** list (last 6 entries)
-- **"Continue from previous"** quick action to carry over unfinished items
-- Collapsible cards to reduce clutter
+Quick Capture Mode: Single field with natural language for day log, next actions, or win
+Structured Mode: Split "Day Log" / "Next Actions" / "Win" sections
+Markdown support with live preview
+Auto-save every 10 seconds to local storage
+Custom Categories: Users can create, edit, and delete custom categories for organizing entries (e.g., "1-1 Meetings", "Side Projects"). Each entry is assigned to one category. Defaults: "Personal" and "Work" (removable by user). Category management via dashboard settings.
 
-### 5.4 Streak Visualization
-- **Vertical calendar heatmap** (mobile-optimized)
-- Current streak with flame animation (🔥)
-- Best streak achievement display
-- Activity intensity based on completeness
+5.3 Context Display
 
-### 5.5 Wins System (Simplified)
-- **No categories** - users describe impact in their own words
-- **Three importance levels**: Minor, Major, Career-Defining
-- **One-click copy** as formatted text for reviews/LinkedIn
-- **Wins dashboard** with level filtering
-- Export wins as markdown
+Previous Entry card shown on homepage (your last entry, whenever it was)
+Recent entries list (last 6 entries)
+"Continue from previous" quick action to carry over unfinished items
+Collapsible cards to reduce clutter
+Filter recent entries by category
 
-### 5.6 Navigation
-- **Calendar date picker** to jump to any date
-- **Previous/Next day** arrows
-- **Keyboard shortcuts** (Cmd+N new, Cmd+Enter save)
-- **Today button** to return to current date
+5.4 Streak Visualization
 
-### 5.7 Data & Security
-- **End-to-end encryption** using Web Crypto API
-- **Zero-knowledge architecture** - we can't read user data
-- **Recovery phrase** during signup
-- **6-day retention** for free tier with clear countdown
-- **Export all data** as encrypted JSON or markdown
+Vertical calendar heatmap (mobile-optimized)
+Current streak with subtle animation
+Best streak achievement display
+Activity intensity based on completeness
+Streaks per category (if multiple categories used)
 
----
+5.5 Wins System (Simplified)
 
-## 6. UI Design System
+Users enter wins directly in the "Win" section of the entry system
+No importance levels - all wins treated equally
+One-click copy as formatted text for reviews/LinkedIn
+Wins dashboard with simple list view and date-based filtering
+Export wins as markdown
+Filter wins by category
 
-### Color Palette
-```css
-/* Deep space navy background with electric amber accent */
---background-primary: #0A0E1B
---background-secondary: #111827
---background-tertiary: #1A1F36
+5.6 Navigation
 
-/* Electric Amber - Primary Accent */
---accent-primary: #FFA116
---accent-hover: #FFB84D
---accent-muted: #FFA11620
---accent-glow: 0 0 20px #FFA11640
+Calendar date picker to jump to any date
+Previous/Next day arrows
+Keyboard shortcuts (Cmd+N new, Cmd+Enter save)
+Today button to return to current date
+Category selector dropdown in navigation bar
+
+5.7 Data & Security
+
+Database encryption using Lockbox or similar for at-rest protection
+Recovery phrase during signup (optional for account recovery)
+4-day retention for free tier with clear countdown
+Export all data as JSON or markdown (including categories)
+
+5.8 AI Insights (Pro Tier)
+
+Dashboard card on main screen for generating AI insights
+Availability: Shown only if user has sufficient entries (e.g., at least 7 days)
+Generation options (selectable dropdown): Prepare for daily call, Generate ideas for X posts, Generate ideas for blog posts, Generate ideas for LinkedIn posts, Summarize wins
+Timeframe selector (dropdown): Last week, Last month, Last 3 months, Last 6 months, Last year, All time
+Process: Opt-in feature; selected entries sent to Grok AI (via xAI API) for processing; results returned and displayed in a modal or expandable section; no data stored by AI service
+Output: Generated text based on user's entries, with copy/export buttons
+Option to filter insights by category
+
+
+6. UI Design System
+Color Palette
+/* Slate blue base with vibrant teal and coral accents for a modern, professional look */
+--background-primary: #1E293B /* Deep slate blue */
+--background-secondary: #334155 /* Mid-tone slate */
+--background-tertiary: #475569 /* Light slate */
+
+/* Primary Accent - Vibrant Teal */
+--accent-primary: #2DD4BF
+--accent-hover: #5EEAD4
+--accent-muted: #2DD4BF20
+--accent-glow: 0 0 15px #2DD4BF30
+
+/* Secondary Accent - Coral */
+--accent-secondary: #F472B6
+--accent-secondary-hover: #F9A8D4
 
 /* Text Colors */
---text-primary: #F7F8FA
---text-secondary: #94A3B8
---text-tertiary: #64748B
+--text-primary: #F8FAFC
+--text-secondary: #CBD5E1
+--text-tertiary: #94A3B8
 
 /* Semantic Colors */
---success: #10B981 (streaks)
---wins-minor: #60A5FA
---wins-major: #FFA116
---wins-career: #F97316
-```
+--success: #34D399 /* Streaks */
+--wins: #2DD4BF /* Unified win color */
+--ai-insights: #F472B6 /* AI feature accents */
 
-### Typography
-- **Headers**: JetBrains Mono
-- **Body**: Inter
-- **Code/Logs**: JetBrains Mono
+Typography
 
-### Core UI Components
+Headers: Roboto Mono (modern, clean, tech-focused)
+Body: Open Sans (highly legible, professional)
+Code/Logs: Source Code Pro (optimized for code clarity)
 
-#### Daily Entry Card
-- Split textarea with Done/Next sections
-- Floating win toggle (star icon)
-- Auto-save indicator
-- Amber glow on focus
-- Markdown preview toggle
+Core UI Components
+Daily Entry Card
 
-#### Streak Grid
-- 7×5 week view (vertical on mobile)
-- Color intensity based on completion
-- Today highlighted with pulse
-- Streak stats below grid
+Split textarea with Day Log/Next Actions/Win sections
+Subtle teal accent border on active section
+Auto-save indicator (minimal progress bar)
+Teal focus state with soft glow
+Markdown preview toggle (clean slide-out panel)
+Category selector dropdown above sections
 
-#### Context Cards
-- Collapsed by default
-- Strike-through for completed items
-- "Continue" buttons for unfinished tasks
-- Subtle left border accent
+Streak Grid
 
----
+7×5 week view (vertical on mobile)
+Color intensity based on completion (teal gradients)
+Today highlighted with subtle pulse animation
+Streak stats below grid (clean, numeric display)
+Toggle to view per category
 
-## 7. Database Schema
+Context Cards
 
-```ruby
-# Encrypted entries table
-create_table :entries, id: :uuid do |t|
+Collapsed by default
+Strike-through for completed items
+"Continue" buttons for unfinished tasks
+Coral accent for interactive elements
+Category label displayed on card
+
+AI Insights Card
+
+Prominent card on dashboard with dropdowns for generation type and timeframe
+"Generate" button with coral accent
+Conditional visibility based on entry count
+Result display: Expandable section below with generated text, copy button, and subtle loading spinner
+Opt-in consent checkbox/modal on first use
+Category filter dropdown
+
+Accessibility
+
+Ensure WCAG 2.2 compliance: Minimum 4.5:1 contrast ratios for text (e.g., --text-primary on --background-primary).
+Keyboard navigation support for all interactive elements.
+ARIA labels for cards, heatmaps, and animations.
+Alt text for any icons or generated images (future).
+
+
+7. Database Schema
+# Categories table
+create_table :categories, id: :uuid do |t|
   t.references :user, type: :uuid
-
-  # Encrypted fields
-  t.text :content_ciphertext
-  t.text :next_actions_ciphertext
-
-  # Blind indexes for search
-  t.string :content_bidx
-
-  # Unencrypted metadata
-  t.date :entry_date, null: false
-  t.boolean :is_win, default: false
-  t.string :win_level  # minor|major|career
+  t.string :name  # Category name (encrypted at rest)
 
   t.timestamps
 
-  t.index [:user_id, :entry_date], unique: true
+  t.index [:user_id, :name], unique: true
 end
-```
 
----
+# Entries table
+create_table :entries, id: :uuid do |t|
+  t.references :user, type: :uuid
+  t.references :category, type: :uuid  # Link to category
 
-## 8. Security Architecture
+  # Fields (encrypted at rest)
+  t.text :day_log
+  t.text :next_actions
+  t.text :win
 
-### Encryption Flow
-1. **Key Derivation**: PBKDF2 from user password (100k iterations)
-2. **Client-side encryption**: All content encrypted in browser
-3. **Server storage**: Only encrypted blobs stored
-4. **Search**: Blind indexing for encrypted search
-5. **Recovery**: 12-word phrase for account recovery
+  # Metadata
+  t.date :entry_date, null: false
 
-### Security Features
-- Auto-lock after 15 minutes
-- Encrypted local drafts
-- Security status indicators
-- Audit log for exports
-- Memory clearing after operations
+  t.timestamps
 
----
+  t.index [:user_id, :entry_date, :category_id], unique: true
+end
 
-## 9. Monetization
 
-### Free Tier
-- 6-day rolling retention
-- Basic streak view
-- 3 wins per month
-- In-app weekly summary
+8. Security Architecture
+Encryption Flow
 
-### Pro Tier ($6/month or $60/year)
-- **Unlimited history**
-- **Unlimited wins tracking**
-- **Weekly email summaries**
-- **Export wins** (PDF/LinkedIn format)
-- **Advanced search**
-- **API access** (future)
+Server-side encryption: All sensitive data (notes, category names) encrypted at rest in the database using Lockbox or PostgreSQL encryption features.
+Server storage: Encrypted data stored securely; server manages decryption for authorized access.
 
-### Team Tier ($5/user/month) - Future
-- Shared team dashboards
-- Manager summaries
-- Team streaks
-- SSO/SAML
+Security Features
 
----
+Auto-lock after 15 minutes
+Local drafts (unencrypted locally, encrypted on save)
+Security status indicators
+Audit log for exports
+Memory clearing after operations
+AI Insights: Opt-in only; users explicitly consent to sending selected data to Grok AI service; data not retained post-processing
 
-## 10. Success Metrics
 
-### Activation
-- **Day 1**: User creates first entry
-- **Day 3**: User has 3+ consecutive days
-- **Day 7**: User marks first win
+9. Monetization
+Free Tier
 
-### Retention
-- **Weekly Active**: 5+ logs per week
-- **Monthly Active**: 20+ logs per month
-- **Streak Length**: Average consecutive days
+4-day rolling retention for entries
+Basic entry creation and viewing only
+Limited to 2 categories (defaults: Personal/Work)
 
-### Conversion
-- **Free → Pro**: 5% within 30 days
-- **Trigger**: Hit 6-day limit or need wins export
-- **Annual upgrade**: 40% of monthly subscribers
+Pro Tier ($5/month or $50/year)
 
-### Engagement
-- **Daily entries**: 80% completion rate
-- **Wins marked**: 2-3 per week average
-- **Context used**: 60% click "continue from yesterday"
+Unlimited history
+Unlimited wins tracking
+Weekly email summaries (basic, non-AI)
+Export wins (PDF/LinkedIn format)
+Advanced search
+AI Insights (unlimited generations)
+Unlimited custom categories
+API access (future)
 
----
 
-## 11. Launch Plan (90 Days)
+1.  Success Metrics
+Activation
 
-### Month 1: Foundation
-- [ ] Rails app setup with Hotwire
-- [ ] Authentication (magic link + OAuth)
-- [ ] Basic entry CRUD with encryption
-- [ ] Streak visualization
-- [ ] Deploy to production
+Day 1: User creates first entry
+Day 3: User has 3+ consecutive days
+Day 7: User enters first win
 
-### Month 2: Core Features
-- [ ] Smart context display
-- [ ] Wins system (no categories)
-- [ ] Search with blind indexing
-- [ ] Data retention logic
-- [ ] Export functionality
+Retention
 
-### Month 3: Polish & Launch
-- [ ] Email reminders
-- [ ] Keyboard shortcuts
-- [ ] Mobile optimizations
-- [ ] Security audit
-- [ ] Public launch
+Weekly Active: 5+ logs per week
+Monthly Active: 20+ logs per month
+Streak Length: Average consecutive days
 
-### Post-Launch Roadmap
-- Git commit integration
-- AI-powered weekly summaries
-- Team features
-- Mobile apps (PWA first)
-- Calendar integration
+Conversion
 
----
+Free → Pro: 5% within 30 days
+Trigger: Hit 4-day limit or need wins export/streaks/AI
+Annual upgrade: 40% of monthly subscribers
 
-## 12. Technical Decisions
+Engagement
 
-### Why These Choices
+Daily entries: 80% completion rate
+Wins entered: 2-3 per week average
+Context used: 60% click "continue from yesterday"
+AI Insights used: 50% of Pro users generate at least once per week
+Categories used: Average 3+ custom categories per Pro user
 
-**Rails + Hotwire over SPA**
-- Faster time to market
-- Simpler state management
-- Better SEO potential
-- Lower hosting costs
-- Progressive enhancement built-in
 
-**End-to-end encryption from Day 1**
-- Major differentiator
-- Builds trust immediately
-- Reduces liability
-- Premium positioning
+11. Launch Plan (90 Days)
+Month 1: Foundation (~$15K: Dev time, setup)
 
-**No categories for wins**
-- Reduces friction
-- More authentic voice
-- Simpler UI
-- Better for exports
+ Rails app setup with Hotwire
+ Authentication (OAuth + email/password)
+ Basic entry CRUD with encryption
+ Streak visualization
+ Deploy to production
 
-**Vertical streak grid**
-- Mobile-first design
-- Unique visual identity
-- Better for thumbs
-- More compact
+Month 2: Core Features (~$20K: Feature dev, testing)
 
----
+ Smart context display
+ Wins system (direct entry in Win section)
+ Search with blind indexing
+ Data retention logic
+ Export functionality
+ Custom categories implementation
 
-## 13. Risks & Mitigations
+Month 3: Polish & Launch (~$15K: Audit, optimizations)
 
-| Risk | Mitigation |
-|------|------------|
-| Low daily habit formation | Streak system, email reminders, quick capture mode |
-| Encryption complexity | Recovery phrases, clear UX, help docs |
-| Free tier abuse | 6-day limit, no API access |
-| Competition from Notion/Obsidian | Focus on simplicity, privacy, wins portfolio |
-| Password loss = data loss | Clear warnings, recovery phrase, export reminders |
+ Email reminders
+ Keyboard shortcuts
+ Mobile optimizations
+ AI Insights integration (Grok API)
+ Security audit
+ Public launch
 
----
+Post-Launch Roadmap
 
-## 14. Differentiation
+Git commit integration
+AI-enhanced weekly summaries
+Team features
+Mobile apps (PWA first)
+Calendar integration
+Expanded AI options (e.g., custom prompts)
 
-### Why JotChain Wins
 
-**vs. Notion/Obsidian**
-- Purpose-built for work journaling
-- No feature bloat
-- Encrypted by default
-- Wins-focused
+12. Technical Decisions
+Why These Choices
+Rails + Hotwire over SPA
 
-**vs. Generic Journals**
-- Work context specific
-- Professional wins tracking
-- Export for reviews
-- Team features (future)
+Faster time to market
+Simpler state management
+Better SEO potential
+Lower hosting costs
+Progressive enhancement built-in
 
-**vs. Project Management Tools**
-- Personal-first
-- No overhead
-- Quick capture
-- Individual habits
+Database encryption from Day 1
 
----
+Provides at-rest protection
+Builds trust with secure storage
+Reduces liability
+Premium positioning
 
-## 15. Core Design Principles
+No categories for wins (initially)
 
-1. **Speed is a feature** - Every interaction under 100ms
-2. **Privacy by default** - Encryption isn't optional
-3. **Reduce friction** - Maximum 2 clicks to log
-4. **Show progress** - Visual feedback everywhere
-5. **Mobile-first** - Touch-friendly, thumb-reachable
-6. **Export anything** - Users own their data
+Reduces friction
+More authentic voice
+Simpler UI
+Better for exports
 
----
+Grok AI for Insights
 
-## 16. Definition of Done for MVP
+Leverages xAI's powerful models (Grok 4) for high-quality generations
+Opt-in integration maintains privacy focus
+Easy API access for text-based insights
+Future-proof for advanced features
 
-- [ ] User can sign up with email magic link
-- [ ] User can create encrypted daily entries
-- [ ] User sees yesterday's context on login
-- [ ] User can mark and filter wins
-- [ ] User sees streak visualization
-- [ ] User can search their entries
-- [ ] User can export their data
-- [ ] 6-day retention works for free tier
-- [ ] All data is end-to-end encrypted
-- [ ] Mobile responsive design
-- [ ] Page load under 1 second
-- [ ] Security audit passed
-- [ ] Privacy policy and terms published
-- [ ] Stripe integration for Pro tier
+Custom Categories in MVP
 
----
+Enhances flexibility for user-specific logging (e.g., 1-1 meetings)
+Defaults provide immediate value while allowing customization
 
-**JotChain** — *Log today. Start tomorrow ahead. Your wins, encrypted & ready.*
 
-**Tech Stack Summary**: Rails 7.2, PostgreSQL, Hotwire, Stimulus, ViewComponents, Lockbox encryption, Tailwind CSS, Redis, Sidekiq
+13. Risks & Mitigations
 
-**Primary Metric**: Daily Active Users with 5+ day streaks
 
-**Launch Goal**: 100 paying customers in first 90 days
+
+Risk
+Mitigation
+
+
+
+Low daily habit formation
+Streak system, email reminders, quick capture mode
+
+
+Encryption complexity
+Use established libraries like Lockbox, clear docs
+
+
+Free tier abuse
+4-day limit, no API access
+
+
+Competition from Notion/Obsidian
+Focus on simplicity, privacy, wins portfolio
+
+
+Password loss = data loss
+Clear warnings, optional recovery phrase, export reminders
+
+
+Privacy concerns with AI Insights
+Opt-in consent, temporary data transmission only, clear user education, no retention by AI service
+
+
+AI API downtime/costs
+Fallback to error messages, monitor usage, budget for $0.01-0.05 per call
+
+
+Category management overload
+Limit free tier to 2 categories; intuitive UI for creation/deletion
+
+
+
+14. Differentiation
+Why JotChain Wins
+vs. Notion/Obsidian
+
+Purpose-built for work journaling
+No feature bloat
+Encrypted at rest by default
+Wins-focused
+
+vs. Generic Journals
+
+Work context specific
+Professional wins tracking
+Export for reviews
+Team features (future)
+
+vs. Project Management Tools
+
+Personal-first
+No overhead
+Quick capture
+Individual habits
+
+
+15. Core Design Principles
+
+Speed is a feature - Every interaction under 100ms
+Privacy by default - Encryption at rest isn't optional
+Reduce friction - Maximum 2 clicks to log
+Show progress - Visual feedback everywhere
+Mobile-first - Touch-friendly, thumb-reachable
+Export anything - Users own their data
+
+
+16. Definition of Done for MVP
+
+ User can sign up with email/password or OAuth
+ User can create daily entries (day log, next actions, wins)
+ User sees yesterday's context on login
+ User can enter and filter wins
+ User sees streak visualization
+ User can search their entries
+ User can export their data
+ 4-day retention works for free tier
+ All data is encrypted at rest
+ Mobile responsive design
+ Page load under 1 second
+ AI Insights card with options, timeframe, and generation (opt-in)
+ Security audit passed
+ Privacy policy and terms published
+ Stripe integration for Pro tier
+ Unit/integration tests for encryption, AI flows, and retention logic
+ End-to-end QA testing on desktop/mobile
+
+
+17. User Flows
+Signup → First Entry
++----------+     +----------------+     +-------------+
+| Start   | --> | Signup Screen | --> | Dashboard   |
++----------+     +----------------+     +-------------+
+                       |                      |
+                       v                      v
+                 (OAuth/Email)          (Create Entry: Day Log/Next/Win)
+
+Daily Entry → Context Recall
++-------------+     +-----------------+     +----------------+
+| Dashboard  | --> | Entry Screen    | --> | Context Card  |
++-------------+     +-----------------+     +----------------+
+                       |                           |
+                       v                           v
+                 (Auto-save)               ("Continue from previous")
+
+Pro User → AI Insight
++-------------+     +-----------------+     +-----------------+
+| Dashboard  | --> | AI Insights Card| --> | Generation Modal|
++-------------+     +-----------------+     +-----------------+
+                       |                           |
+                       v                           v
+                 (Select type/timeframe)     (View/Copy Output)
+
+Export Data
++-------------+     +----------------+     +----------------+
+| Dashboard  | --> | Export Options | --> | Download File |
++-------------+     +----------------+     +----------------+
+                       |                        |
+                       v                        v
+                 (Select format)          (JSON/MD)
+
+
+18. Market Validation
+
+Conduct 20-30 user interviews with target personas (developers, remote workers) pre-launch to validate free tier harshness and willingness to pay $5/month.
+Run a beta test with 50 users for 2 weeks: Measure activation (first entry rate), retention (daily logs), and conversion (hits 4-day limit → upgrades).
+A/B test onboarding messaging around privacy and AI to optimize signups.
+Survey feedback on competitors: Focus on pain points like data security and export ease.
+
+
+JotChain — Log today. Start tomorrow ahead. Your wins, encrypted & ready.
+Tech Stack Summary: Rails 7.2, PostgreSQL, Hotwire, Stimulus, ViewComponents, Lockbox encryption, Tailwind CSS, Redis, Sidekiq, xAI Grok 4 API (for AI Insights)
+Primary Metric: Daily Active Users with 5+ day streaks
+Launch Goal: 100 paying customers in first 90 days
