@@ -1,0 +1,62 @@
+<turbo-frame id="<%= dom_id(link, :form) %>">
+  <%= form_with model: [chain, link], class: "space-y-5" do |form| %>
+    <% if link.errors.present? %>
+      <div class="rounded-xl border border-rose-400/30 bg-rose-500/10 p-4 text-sm text-rose-200">
+        <p class="font-semibold">We couldn’t save this yet:</p>
+        <ul class="mt-2 list-inside list-disc space-y-1">
+          <% link.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="grid gap-4 md:grid-cols-3">
+      <div class="space-y-2">
+        <%= form.label :recorded_on, class: "block text-xs font-semibold uppercase tracking-wide text-slate-300" %>
+        <%= form.date_field :recorded_on, class: "block w-full rounded-xl border border-white/10 bg-slate-950/60 px-3 py-2 text-sm text-white focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-400/40" %>
+      </div>
+      <div class="space-y-2">
+        <%= form.label :category, class: "block text-xs font-semibold uppercase tracking-wide text-slate-300" %>
+        <%= form.select :category, options_for_select(Link.categories.keys.map { |key| [key.titleize, key] }, link.category), {}, class: "block w-full rounded-xl border border-white/10 bg-slate-950/60 px-3 py-2 text-sm text-white focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-400/40" %>
+      </div>
+      <div class="space-y-2">
+        <%= form.label :sentiment, class: "block text-xs font-semibold uppercase tracking-wide text-slate-300" %>
+        <%= form.select :sentiment, options_for_select(Link.sentiments.keys.map { |key| [key.titleize, key] }, link.sentiment), {}, class: "block w-full rounded-xl border border-white/10 bg-slate-950/60 px-3 py-2 text-sm text-white focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-400/40" %>
+      </div>
+    </div>
+
+    <div class="space-y-2">
+      <%= form.label :title, class: "block text-xs font-semibold uppercase tracking-wide text-slate-300" %>
+      <%= form.text_field :title, placeholder: "Headline (optional)", class: "block w-full rounded-xl border border-white/10 bg-slate-950/60 px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-400/40" %>
+    </div>
+
+    <div class="space-y-2">
+      <%= form.label :body, "Details", class: "block text-xs font-semibold uppercase tracking-wide text-slate-300" %>
+      <%= form.text_area :body, rows: 6, placeholder: "Capture the highlight, context, and outcome.", class: "block w-full rounded-2xl border border-white/10 bg-slate-950/60 px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-400/40" %>
+    </div>
+
+    <div class="grid gap-4 md:grid-cols-2">
+      <div class="space-y-2">
+        <%= form.label :tag_list, "Tags", class: "block text-xs font-semibold uppercase tracking-wide text-slate-300" %>
+        <%= form.text_field :tag_list, value: link.tag_list, placeholder: "Leadership, Launch, Customer Win", class: "block w-full rounded-xl border border-white/10 bg-slate-950/60 px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-400/40" %>
+        <p class="text-[0.7rem] text-slate-500">Comma separated. We’ll split into individual tags.</p>
+      </div>
+      <div class="space-y-2">
+        <%= form.label :mention_list, "Mentions", class: "block text-xs font-semibold uppercase tracking-wide text-slate-300" %>
+        <%= form.text_field :mention_list, value: link.mention_list, placeholder: "Andrew Chen, Exec Staff", class: "block w-full rounded-xl border border-white/10 bg-slate-950/60 px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-400/40" %>
+      </div>
+    </div>
+
+    <% other_chains = chain.space.chains.where.not(id: chain.id) %>
+    <% if other_chains.any? %>
+      <div class="space-y-2">
+        <%= form.label :linked_chain_ids, "Connect to other chains", class: "block text-xs font-semibold uppercase tracking-wide text-slate-300" %>
+        <%= form.collection_select :linked_chain_ids, other_chains, :id, :name, { selected: link.linked_chain_ids }, multiple: true, class: "block w-full rounded-xl border border-white/10 bg-slate-950/60 px-4 py-3 text-sm text-white focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-400/40" %>
+        <p class="text-[0.7rem] text-slate-500">Hold Command (⌘) or Control to select multiple chains. This builds the graph for future insights.</p>
+      </div>
+    <% end %>
+
+    <%= form.submit link.persisted? ? "Update note" : "Log note", class: "w-full rounded-xl bg-indigo-500 px-4 py-3 text-sm font-semibold text-slate-950 shadow-sm hover:bg-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:ring-offset-2 focus:ring-offset-slate-950" %>
+  <% end %>
+</turbo-frame>

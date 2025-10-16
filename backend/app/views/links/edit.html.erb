@@ -1,0 +1,19 @@
+<% if turbo_frame_request? %>
+  <%= render "form", chain: @chain, link: @link %>
+<% else %>
+  <% content_for :title, "Edit Note" %>
+
+  <section class="mx-auto max-w-4xl space-y-6">
+    <header>
+      <p class="text-xs uppercase tracking-[0.35em] text-indigo-200/70">Edit Note</p>
+      <h1 class="mt-2 text-3xl font-semibold text-white">Update note in <%= @chain.name %></h1>
+      <p class="mt-2 text-sm text-slate-400">
+        Keep the structure tight—categories, tags, and mentions make it easier to synthesize context later.
+      </p>
+    </header>
+
+    <div class="rounded-2xl border border-white/10 bg-slate-900/70 p-6">
+      <%= render "form", chain: @chain, link: @link %>
+    </div>
+  </section>
+<% end %>

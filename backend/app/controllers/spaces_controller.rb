@@ -1,0 +1,77 @@
+require "ostruct"
+
+class SpacesController < ApplicationController
+  before_action :set_space, only: %i[show edit update destroy]
+
+  def index
+    @spaces = Space.includes(chains: :links).order(:name)
+    @space = Space.new
+  end
+
+  def show
+    @chains = @space.chains.includes(:links)
+    @link_filters = OpenStruct.new(
+      category: params[:category],
+      tag: params[:tag],
+      mention: params[:mention]
+    )
+    scoped_links = @space.links.recent
+    scoped_links = scoped_links.with_category(@link_filters.category)
+    scoped_links = scoped_links.tagged_with(@link_filters.tag)
+    scoped_links = scoped_links.mentioning(@link_filters.mention)
+    @recent_links = scoped_links.limit(12)
+    @chain = @space.chains.build
+  end
+
+  def create
+    @space = Space.new(space_params)
+
+    respond_to do |format|
+      if @space.save
+        flash.now[:notice] = "Space created."
+        @new_space = Space.new
+
+        format.turbo_stream
+        format.html { redirect_to @space, notice: "Space created." }
+      else
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.update(
+            "new_space",
+            partial: "spaces/form",
+            locals: { space: @space }
+          ), status: :unprocessable_entity
+        end
+
+        format.html do
+          @spaces = Space.includes(chains: :links).order(:name)
+          render :index, status: :unprocessable_entity
+        end
+      end
+    end
+  end
+
+  def edit; end
+
+  def update
+    if @space.update(space_params)
+      redirect_to @space, notice: "Space updated."
+    else
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    @space.destroy
+    redirect_to spaces_path, notice: "Space removed."
+  end
+
+  private
+
+  def set_space
+    @space = Space.find(params[:id])
+  end
+
+  def space_params
+    params.require(:space).permit(:name, :description, :color)
+  end
+end

@@ -1,0 +1,15 @@
+<% content_for :title, "New Chain" %>
+
+<section class="mx-auto max-w-3xl space-y-6">
+  <header>
+    <p class="text-xs uppercase tracking-[0.35em] text-indigo-200/70">Create Chain</p>
+    <h1 class="mt-2 text-3xl font-semibold text-white">Add a new chain to <%= @space.name %></h1>
+    <p class="mt-2 text-sm text-slate-400">
+      Chains keep related notes together. Start with a clear name and optional purpose so future summaries have context.
+    </p>
+  </header>
+
+  <div class="rounded-2xl border border-white/10 bg-slate-900/70 p-6">
+    <%= render "form", chain: @chain, space: @space %>
+  </div>
+</section>

@@ -1,0 +1,4 @@
+<%= turbo_stream.remove "empty_chains_state" %>
+<%= turbo_stream.prepend "chains_list", partial: "chains/card", locals: { chain: @chain } %>
+<%= turbo_stream.replace "chain_form", partial: "chains/form", locals: { chain: @new_chain, space: @space } %>
+<%= turbo_stream.replace "flash_messages", partial: "shared/flash_container" %>

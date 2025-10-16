@@ -1,0 +1,17 @@
+<div class="space-y-3">
+  <% flash.each do |type, message| %>
+    <% next if message.blank? %>
+    <% tone =
+         case type.to_sym
+         when :notice then "border-emerald-400/30 bg-emerald-500/10 text-emerald-200"
+         when :alert then "border-rose-400/30 bg-rose-500/10 text-rose-200"
+         else "border-slate-400/30 bg-slate-500/10 text-slate-200"
+         end %>
+    <div data-controller="flash" class="flex items-center justify-between gap-4 rounded-xl border px-4 py-3 text-sm <%= tone %>">
+      <span><%= message %></span>
+      <button data-action="click->flash#dismiss" class="rounded-full bg-white/10 px-2 py-1 text-xs uppercase tracking-wide text-white/70 hover:bg-white/20">
+        Close
+      </button>
+    </div>
+  <% end %>
+</div>

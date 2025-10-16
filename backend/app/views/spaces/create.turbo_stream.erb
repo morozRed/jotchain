@@ -1,0 +1,4 @@
+<%= turbo_stream.remove "empty_spaces_state" %>
+<%= turbo_stream.prepend "spaces_list", partial: "spaces/card", locals: { space: @space } %>
+<%= turbo_stream.update "new_space", partial: "spaces/form", locals: { space: @new_space } %>
+<%= turbo_stream.replace "flash_messages", partial: "shared/flash_container" %>
