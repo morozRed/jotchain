@@ -15,7 +15,8 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :chains, only: %i[show edit update destroy]
+  resources :chains, only: %i[show edit update destroy create]
+  resources :links, only: %i[create]
 
   root "spaces#index"
 end

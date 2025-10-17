@@ -7,7 +7,12 @@ class LinksController < ApplicationController
   before_action :set_link, only: %i[edit update destroy]
 
   def create
-    @link = @chain.links.build(link_params)
+    # If chain_id is passed directly (from modal), use that
+    if params[:link][:chain_id].present?
+      @chain = Chain.find(params[:link][:chain_id])
+    end
+
+    @link = @chain.links.build(link_params.except(:chain_id, :space_id))
 
     if @link.save
       message = "Note captured in #{@chain.name}."
@@ -95,6 +100,8 @@ class LinksController < ApplicationController
       :summary,
       :tag_list,
       :mention_list,
+      :chain_id,
+      :space_id,
       linked_chain_ids: []
     )
   end

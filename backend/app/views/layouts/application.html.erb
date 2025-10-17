@@ -22,39 +22,21 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="min-h-full text-slate-100 antialiased">
-    <div class="flex min-h-full flex-col">
-      <header class="border-b border-white/10 bg-slate-950/90 backdrop-blur">
-        <div class="mx-auto flex w-full max-w-6xl items-center justify-between gap-6 px-4 py-4 sm:px-6">
-          <div class="flex items-center gap-3">
-            <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-500/20 text-indigo-300">
-              <span class="text-lg font-semibold">JC</span>
-            </div>
-            <div>
-              <p class="text-sm tracking-wide text-indigo-300">JotChain Workbench</p>
-              <p class="text-xs text-slate-400">Chain your notes into momentum</p>
-            </div>
-          </div>
-          <nav class="hidden items-center gap-4 text-sm font-medium text-slate-300 sm:flex">
-            <%= link_to "Spaces", spaces_path, class: "rounded-lg px-3 py-2 hover:bg-white/5 hover:text-white" %>
-            <%= link_to "Timeline", "#", class: "rounded-lg px-3 py-2 text-slate-500 hover:bg-white/5 hover:text-white" %>
-            <%= link_to "Insights", "#", class: "rounded-lg px-3 py-2 text-slate-500 hover:bg-white/5 hover:text-white" %>
-          </nav>
-          <div class="flex items-center gap-3">
-            <button type="button" class="rounded-full border border-white/20 px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-slate-300 shadow-sm hover:border-indigo-400 hover:text-white">
-              Coming Soon
-            </button>
-            <div class="h-9 w-9 rounded-full border border-white/20 bg-gradient-to-br from-indigo-600/20 to-blue-500/20"></div>
-          </div>
-        </div>
-      </header>
+  <body class="min-h-screen text-slate-100 antialiased">
+    <%= render "shared/sidebar" %>
 
+    <div class="flex min-h-screen flex-col pl-64">
       <main class="flex-1 bg-slate-950/90">
-        <div class="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+        <div class="mx-auto w-full max-w-7xl px-6 py-8 lg:px-8">
           <%= render "shared/flash_container" %>
           <%= yield %>
         </div>
       </main>
     </div>
+
+    <!-- Modals -->
+    <%= render "spaces/modal" %>
+    <%= render "chains/modal" %>
+    <%= render "links/modal" %>
   </body>
 </html>

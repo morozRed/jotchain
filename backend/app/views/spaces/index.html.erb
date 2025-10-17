@@ -7,41 +7,19 @@
         <p class="text-xs uppercase tracking-[0.3em] text-indigo-300/70">Spaces</p>
         <h1 class="mt-1 text-3xl font-semibold text-white">Where your chains live</h1>
       </div>
-      <%= link_to "Create space", "#new-space", class: "hidden rounded-lg border border-white/10 px-4 py-2 text-sm font-medium text-white/80 hover:border-indigo-400/60 hover:text-white sm:inline-flex" %>
     </div>
     <p class="max-w-2xl text-sm text-slate-400">
       Spaces are high-level closets for your workstreams—keep 1-1s, launches, hiring loops, and personal growth logs organized before layering on AI summaries.
     </p>
   </header>
 
-  <div class="flex flex-col gap-8 lg:flex-row">
-    <div class="flex-1">
-      <div id="spaces_list" class="space-y-4">
-        <% if @spaces.any? %>
-          <%= render partial: "spaces/card", collection: @spaces, as: :space %>
-        <% else %>
-          <div id="empty_spaces_state" class="rounded-xl border border-dashed border-slate-700/70 bg-slate-900/40 p-8 text-center text-sm text-slate-400">
-            No spaces yet. Use the form to create your first workspace.
-          </div>
-        <% end %>
+  <div id="spaces_list" class="space-y-4">
+    <% if @spaces.any? %>
+      <%= render partial: "spaces/card", collection: @spaces, as: :space %>
+    <% else %>
+      <div id="empty_spaces_state" class="rounded-xl border border-dashed border-slate-700/70 bg-slate-900/40 p-8 text-center text-sm text-slate-400">
+        No spaces yet. Click "New Space" in the sidebar to create your first workspace.
       </div>
-    </div>
-
-    <aside id="new-space" class="lg:w-80">
-      <div class="rounded-xl border border-white/10 bg-slate-900/70 p-6">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-xs uppercase tracking-[0.35em] text-indigo-300/70">New space</p>
-            <h2 class="mt-1 text-lg font-semibold text-white">Name the closet</h2>
-          </div>
-        </div>
-        <p class="mt-2 text-sm text-slate-400">
-          Spaces give structure to the AI context we assemble later. Start with a single focus like your current org role.
-        </p>
-        <turbo-frame id="new_space" class="mt-5 block">
-          <%= render "form", space: @space %>
-        </turbo-frame>
-      </div>
-    </aside>
+    <% end %>
   </div>
 </section>

@@ -1,0 +1,6 @@
+<%= render layout: "shared/modal", locals: { modal_id: "space_modal", modal_title: "Create New Space", modal_size: "max-w-xl" } do %>
+  <p class="mb-6 text-sm text-slate-400">
+    Spaces give structure to the AI context we assemble later. Start with a single focus like your current org role.
+  </p>
+  <%= render "spaces/form", space: Space.new %>
+<% end %>

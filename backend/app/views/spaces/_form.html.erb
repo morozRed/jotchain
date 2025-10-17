@@ -1,4 +1,4 @@
-<%= form_with model: space, class: "space-y-5" do |form| %>
+<%= form_with model: space, class: "space-y-5", data: { turbo: false } do |form| %>
   <% if space.errors.present? %>
     <div class="rounded-xl border border-rose-400/30 bg-rose-500/10 p-4 text-sm text-rose-200">
       <p class="font-semibold">Please fix the following:</p>

@@ -9,7 +9,12 @@ class ChainsController < ApplicationController
   end
 
   def create
-    @chain = @space.chains.build(chain_params)
+    # If space_id is passed directly (from modal), use that
+    if params[:chain][:space_id].present?
+      @space = Space.find(params[:chain][:space_id])
+    end
+
+    @chain = @space.chains.build(chain_params.except(:space_id))
 
     if @chain.save
       flash.now[:notice] = "Chain created."
@@ -77,6 +82,6 @@ class ChainsController < ApplicationController
   end
 
   def chain_params
-    params.require(:chain).permit(:name, :description, :purpose, :status, :color)
+    params.require(:chain).permit(:name, :description, :purpose, :status, :color, :space_id)
   end
 end

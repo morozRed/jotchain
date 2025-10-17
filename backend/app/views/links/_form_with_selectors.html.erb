@@ -1,0 +1,80 @@
+<%
+  # Build chains data structure for JavaScript
+  chains_by_space = Space.includes(:chains).map do |space|
+    [space.id, space.chains.map { |c| { id: c.id, name: c.name } }]
+  end.to_h
+%>
+
+<div data-controller="chain-selector" data-chain-selector-chains-value="<%= chains_by_space.to_json %>">
+  <%= form_with model: link, url: links_path, class: "space-y-5", data: { turbo: false } do |form| %>
+    <% if link.errors.present? %>
+      <div class="rounded-xl border border-rose-400/30 bg-rose-500/10 p-4 text-sm text-rose-200">
+        <p class="font-semibold">We couldn't save this yet:</p>
+        <ul class="mt-2 list-inside list-disc space-y-1">
+          <% link.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="grid gap-4 md:grid-cols-2">
+      <div class="space-y-2">
+        <%= form.label :space_id, "Space", class: "block text-xs font-semibold uppercase tracking-wide text-slate-300" %>
+        <%= form.select :space_id,
+                        options_for_select(Space.order(:name).map { |s| [s.name, s.id] }, nil),
+                        { prompt: "Select a space" },
+                        class: "block w-full rounded-xl border border-white/10 bg-slate-950/60 px-4 py-3 text-sm text-white focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-400/40",
+                        data: { chain_selector_target: "space", action: "change->chain-selector#updateChains" } %>
+      </div>
+      <div class="space-y-2">
+        <%= form.label :chain_id, "Chain", class: "block text-xs font-semibold uppercase tracking-wide text-slate-300" %>
+        <%= form.select :chain_id,
+                        [],
+                        { prompt: "Select a chain" },
+                        class: "block w-full rounded-xl border border-white/10 bg-slate-950/60 px-4 py-3 text-sm text-white focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-400/40",
+                        disabled: true,
+                        data: { chain_selector_target: "chain" } %>
+      </div>
+    </div>
+
+    <div class="grid gap-4 md:grid-cols-3">
+      <div class="space-y-2">
+        <%= form.label :recorded_on, class: "block text-xs font-semibold uppercase tracking-wide text-slate-300" %>
+        <%= form.date_field :recorded_on, value: Date.current, class: "block w-full rounded-xl border border-white/10 bg-slate-950/60 px-3 py-2 text-sm text-white focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-400/40" %>
+      </div>
+      <div class="space-y-2">
+        <%= form.label :category, class: "block text-xs font-semibold uppercase tracking-wide text-slate-300" %>
+        <%= form.select :category, options_for_select(Link.categories.keys.map { |key| [key.titleize, key] }, link.category), {}, class: "block w-full rounded-xl border border-white/10 bg-slate-950/60 px-3 py-2 text-sm text-white focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-400/40" %>
+      </div>
+      <div class="space-y-2">
+        <%= form.label :sentiment, class: "block text-xs font-semibold uppercase tracking-wide text-slate-300" %>
+        <%= form.select :sentiment, options_for_select(Link.sentiments.keys.map { |key| [key.titleize, key] }, link.sentiment), {}, class: "block w-full rounded-xl border border-white/10 bg-slate-950/60 px-3 py-2 text-sm text-white focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-400/40" %>
+      </div>
+    </div>
+
+    <div class="space-y-2">
+      <%= form.label :title, class: "block text-xs font-semibold uppercase tracking-wide text-slate-300" %>
+      <%= form.text_field :title, placeholder: "Headline (optional)", class: "block w-full rounded-xl border border-white/10 bg-slate-950/60 px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-400/40" %>
+    </div>
+
+    <div class="space-y-2">
+      <%= form.label :body, "Details", class: "block text-xs font-semibold uppercase tracking-wide text-slate-300" %>
+      <%= form.text_area :body, rows: 6, placeholder: "Capture the highlight, context, and outcome.", class: "block w-full rounded-2xl border border-white/10 bg-slate-950/60 px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-400/40" %>
+    </div>
+
+    <div class="grid gap-4 md:grid-cols-2">
+      <div class="space-y-2">
+        <%= form.label :tag_list, "Tags", class: "block text-xs font-semibold uppercase tracking-wide text-slate-300" %>
+        <%= form.text_field :tag_list, value: link.tag_list, placeholder: "Leadership, Launch, Customer Win", class: "block w-full rounded-xl border border-white/10 bg-slate-950/60 px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-400/40" %>
+        <p class="text-[0.7rem] text-slate-500">Comma separated. We'll split into individual tags.</p>
+      </div>
+      <div class="space-y-2">
+        <%= form.label :mention_list, "Mentions", class: "block text-xs font-semibold uppercase tracking-wide text-slate-300" %>
+        <%= form.text_field :mention_list, value: link.mention_list, placeholder: "Andrew Chen, Exec Staff", class: "block w-full rounded-xl border border-white/10 bg-slate-950/60 px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-400/40" %>
+      </div>
+    </div>
+
+    <%= form.submit "Log note", class: "w-full rounded-xl bg-indigo-500 px-4 py-3 text-sm font-semibold text-slate-950 shadow-sm hover:bg-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:ring-offset-2 focus:ring-offset-slate-950" %>
+  <% end %>
+</div>

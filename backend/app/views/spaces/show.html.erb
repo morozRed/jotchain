@@ -33,7 +33,6 @@
           <p class="text-xs uppercase tracking-[0.35em] text-indigo-300/70">Chains</p>
           <h2 class="mt-1 text-2xl font-semibold text-white">Threads inside this space</h2>
         </div>
-        <%= link_to "New chain", "#chain_form", class: "inline-flex items-center justify-center rounded-xl border border-white/10 px-4 py-2 text-sm font-medium text-white/80 hover:border-indigo-400/50 hover:text-white" %>
       </div>
 
       <div id="chains_list" class="space-y-4">
@@ -41,19 +40,9 @@
           <%= render partial: "chains/card", collection: @chains, as: :chain %>
         <% else %>
           <div id="empty_chains_state" class="rounded-xl border border-dashed border-slate-700/70 bg-slate-900/40 p-6 text-sm text-slate-400">
-            No chains yet. Use the form below to create your first thread and start logging notes.
+            No chains yet. Click "New Chain" in the sidebar to create your first thread and start logging notes.
           </div>
         <% end %>
-      </div>
-
-      <div class="rounded-2xl border border-dashed border-slate-700/70 bg-slate-900/50 p-6">
-        <h3 class="text-sm font-semibold text-white">Create a new chain</h3>
-        <p class="mt-2 text-sm text-slate-400">
-          Chains bundle related notes—think “Weekly wins”, “1-1 with Andrew”, or “Q4 Launch”. They become the context window for AI insights later.
-        </p>
-        <turbo-frame id="chain_form" class="mt-4 block">
-          <%= render "chains/form", chain: @chain, space: @space %>
-        </turbo-frame>
       </div>
     </div>
 
