@@ -8,6 +8,31 @@ export default class extends Controller {
 
   connect() {
     this.updateChains()
+
+    this.boundPresetHandler = this.handlePreset.bind(this)
+    window.addEventListener('modal:preset', this.boundPresetHandler)
+  }
+
+  handlePreset(event) {
+    const { modalId, spaceId, chainId } = event.detail || {}
+    if (modalId !== 'link_modal') return
+
+    if (spaceId !== undefined && spaceId !== null && this.hasSpaceTarget) {
+      this.spaceTarget.value = String(spaceId)
+      this.updateChains()
+
+      // If chainId is provided, select it after chains are populated
+      if (chainId !== undefined && chainId !== null && this.hasChainTarget) {
+        setTimeout(() => {
+          this.chainTarget.value = String(chainId)
+        }, 10)
+      } else if (this.hasChainTarget) {
+        this.chainTarget.value = ""
+      }
+    } else if (this.hasSpaceTarget) {
+      this.spaceTarget.value = ""
+      this.updateChains()
+    }
   }
 
   updateChains() {
@@ -40,5 +65,11 @@ export default class extends Controller {
     })
 
     chainSelect.disabled = false
+  }
+
+  disconnect() {
+    if (this.boundPresetHandler) {
+      window.removeEventListener('modal:preset', this.boundPresetHandler)
+    }
   }
 }

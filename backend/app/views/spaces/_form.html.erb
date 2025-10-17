@@ -20,10 +20,5 @@
     <%= form.text_area :description, rows: 4, placeholder: "Track 1-1s, launches, and growth signals for the product org.", class: "block w-full rounded-xl border border-white/10 bg-slate-950/60 px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-400/40" %>
   </div>
 
-  <div class="space-y-2">
-    <%= form.label :color, "Accent color (optional)", class: "block text-xs font-semibold uppercase tracking-wide text-slate-300" %>
-    <%= form.color_field :color, class: "h-11 w-16 rounded-xl border border-white/10 bg-slate-950/70 p-1" %>
-  </div>
-
   <%= form.submit space.persisted? ? "Update space" : "Create space", class: "w-full rounded-xl bg-indigo-500 px-4 py-3 text-sm font-semibold text-slate-950 shadow-sm transition hover:bg-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:ring-offset-2 focus:ring-offset-slate-950" %>
 <% end %>

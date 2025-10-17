@@ -1,3 +1,4 @@
+<div data-controller="chain-form">
 <%= form_with model: chain, url: chains_path, class: "space-y-5", data: { turbo: false } do |form| %>
   <% if chain.errors.present? %>
     <div class="rounded-xl border border-rose-400/30 bg-rose-500/10 p-4 text-sm text-rose-200">
@@ -12,7 +13,7 @@
 
   <div class="space-y-2">
     <%= form.label :space_id, "Space", class: "block text-xs font-semibold uppercase tracking-wide text-slate-300" %>
-    <%= form.collection_select :space_id, Space.order(:name), :id, :name, { prompt: "Select a space" }, class: "block w-full rounded-xl border border-white/10 bg-slate-950/60 px-4 py-3 text-sm text-white focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-400/40" %>
+    <%= form.collection_select :space_id, Space.order(:name), :id, :name, { prompt: "Select a space" }, class: "block w-full rounded-xl border border-white/10 bg-slate-950/60 px-4 py-3 text-sm text-white focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-400/40", data: { chain_form_target: "spaceSelect" } %>
   </div>
 
   <div class="space-y-2">
@@ -35,11 +36,8 @@
       <%= form.label :status, class: "block text-xs font-semibold uppercase tracking-wide text-slate-300" %>
       <%= form.select :status, options_for_select(Chain.statuses.keys.map { |key| [key.titleize, key] }, chain.status), {}, class: "block w-full rounded-xl border border-white/10 bg-slate-950/60 px-4 py-3 text-sm text-white focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-400/40" %>
     </div>
-    <div class="space-y-2">
-      <%= form.label :color, "Accent color", class: "block text-xs font-semibold uppercase tracking-wide text-slate-300" %>
-      <%= form.color_field :color, class: "h-11 w-16 rounded-xl border border-white/10 bg-slate-950/70 p-1" %>
-    </div>
   </div>
 
   <%= form.submit "Create chain", class: "w-full rounded-xl bg-indigo-500 px-4 py-3 text-sm font-semibold text-slate-950 shadow-sm hover:bg-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:ring-offset-2 focus:ring-offset-slate-950" %>
 <% end %>
+</div>

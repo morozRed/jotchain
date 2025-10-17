@@ -51,9 +51,19 @@
     <% other_chains = chain.space.chains.where.not(id: chain.id) %>
     <% if other_chains.any? %>
       <div class="space-y-2">
-        <%= form.label :linked_chain_ids, "Connect to other chains", class: "block text-xs font-semibold uppercase tracking-wide text-slate-300" %>
-        <%= form.collection_select :linked_chain_ids, other_chains, :id, :name, { selected: link.linked_chain_ids }, multiple: true, class: "block w-full rounded-xl border border-white/10 bg-slate-950/60 px-4 py-3 text-sm text-white focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-400/40" %>
-        <p class="text-[0.7rem] text-slate-500">Hold Command (⌘) or Control to select multiple chains. This builds the graph for future insights.</p>
+        <div class="flex items-center gap-2">
+          <svg class="h-4 w-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+          </svg>
+          <%= form.label :linked_chain_ids, "Connect to other chains", class: "block text-xs font-semibold uppercase tracking-wide text-indigo-300" %>
+        </div>
+        <%= form.collection_select :linked_chain_ids, other_chains, :id, :name, { selected: link.linked_chain_ids }, multiple: true, class: "block w-full min-h-[120px] rounded-xl border-2 border-indigo-400/30 bg-indigo-950/30 px-4 py-3 text-sm text-white shadow-lg shadow-indigo-500/10 transition focus:border-indigo-400 focus:bg-indigo-950/50 focus:outline-none focus:ring-4 focus:ring-indigo-400/20" %>
+        <div class="flex items-start gap-2 rounded-lg bg-indigo-500/10 p-3">
+          <svg class="h-4 w-4 text-indigo-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <p class="text-xs text-indigo-200">Hold <kbd class="rounded bg-indigo-500/20 px-1.5 py-0.5 font-mono text-[0.65rem] font-semibold">⌘</kbd> or <kbd class="rounded bg-indigo-500/20 px-1.5 py-0.5 font-mono text-[0.65rem] font-semibold">Ctrl</kbd> to select multiple chains. This builds the graph for future insights.</p>
+        </div>
       </div>
     <% end %>
 

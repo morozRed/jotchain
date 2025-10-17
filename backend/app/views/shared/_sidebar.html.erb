@@ -1,4 +1,6 @@
 <aside class="fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-white/10 bg-slate-950/95 backdrop-blur">
+  <% modal_space_id = modal_context_space_id %>
+  <% modal_chain_id = modal_context_chain_id %>
   <!-- Logo and Branding -->
   <div class="flex items-center gap-3 border-b border-white/10 px-6 py-5">
     <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-500/20 text-indigo-300">
@@ -66,7 +68,7 @@
           <span>New Space</span>
         </button>
         <button type="button"
-                onclick="window.openModal('chain_modal')"
+                onclick="window.openModal('chain_modal', { spaceId: <%= modal_space_id || 'null' %> })"
                 class="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-slate-300 transition-colors hover:bg-indigo-500/10 hover:text-indigo-300">
           <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
@@ -74,7 +76,7 @@
           <span>New Chain</span>
         </button>
         <button type="button"
-                onclick="window.openModal('link_modal')"
+                onclick="window.openModal('link_modal', { spaceId: <%= modal_space_id || 'null' %>, chainId: <%= modal_chain_id || 'null' %> })"
                 class="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-slate-300 transition-colors hover:bg-indigo-500/10 hover:text-indigo-300">
           <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>

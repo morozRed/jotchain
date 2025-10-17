@@ -1,11 +1,42 @@
 <% content_for :title, "#{@chain.name} · #{@chain.space.name}" %>
+<% content_for :current_space_id, @chain.space.id %>
+<% content_for :current_chain_id, @chain.id %>
 
 <section class="space-y-10">
   <header class="rounded-3xl border border-white/10 bg-gradient-to-br from-slate-900/80 via-slate-900/40 to-slate-950/90 p-8">
-    <div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
-      <div>
-        <p class="text-xs uppercase tracking-[0.35em] text-indigo-200/70">Chain</p>
-        <h1 class="mt-2 text-4xl font-semibold text-white"><%= @chain.name %></h1>
+    <div class="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
+      <!-- Left Column: Chain Info & Stats -->
+      <div class="flex-1 flex flex-col justify-between">
+        <div>
+          <p class="text-xs uppercase tracking-[0.35em] text-indigo-200/70">Chain</p>
+          <div class="mt-2 flex items-center gap-4">
+            <h1 class="text-4xl font-semibold text-white"><%= @chain.name %></h1>
+            <div class="flex items-center gap-3 rounded-full border border-white/10 bg-slate-900/50 px-4 py-1.5 text-sm text-slate-300">
+              <span class="flex items-center gap-1.5">
+                <svg class="h-4 w-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="font-medium"><%= @chain.links.count %></span>
+              </span>
+              <span class="text-slate-600">·</span>
+              <% if (last = @chain.last_activity_on) %>
+                <span class="flex items-center gap-1.5">
+                  <svg class="h-4 w-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  <span><%= last.strftime("%b %d") %></span>
+                </span>
+              <% else %>
+                <span class="flex items-center gap-1.5">
+                  <svg class="h-4 w-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  <span>No activity</span>
+                </span>
+              <% end %>
+            </div>
+          </div>
+        </div>
         <p class="mt-3 text-sm leading-6 text-slate-300/90">
           <%= @chain.description.presence || "Use this chain to track a specific ritual, project, or relationship. Notes captured here fuel future summaries." %>
         </p>
@@ -16,79 +47,82 @@
           </div>
         <% end %>
       </div>
-      <div class="grid w-full max-w-xs grid-cols-2 gap-4 rounded-2xl border border-white/10 bg-slate-950/80 p-4 text-center text-xs text-slate-300/70">
+
+      <!-- Right Column: Filters -->
+      <div class="w-full lg:w-auto lg:min-w-[400px] space-y-5">
         <div>
-          <p class="uppercase tracking-[0.35em] text-slate-500">Notes</p>
-          <p class="mt-2 text-2xl font-semibold text-white"><%= @chain.links.count %></p>
-        </div>
-        <div>
-          <p class="uppercase tracking-[0.35em] text-slate-500">Last update</p>
-          <% if (last = @chain.last_activity_on) %>
-            <p class="mt-2 text-base font-semibold text-white"><%= last.strftime("%b %d") %></p>
-          <% else %>
-            <p class="mt-2 text-base font-semibold text-white">–</p>
-          <% end %>
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <div class="grid gap-8 lg:grid-cols-[minmax(0,420px)_minmax(0,1fr)]">
-    <aside class="space-y-5">
-      <div class="rounded-2xl border border-white/10 bg-slate-900/70 p-5">
-        <p class="text-xs uppercase tracking-[0.35em] text-indigo-200/70">Log a note</p>
-        <h2 class="mt-2 text-xl font-semibold text-white">Add a link to this chain</h2>
-        <p class="mt-2 text-sm text-slate-400">
-          Capture the punchline, add tags, mention collaborators, and connect to other chains. We’ll use this structure to unlock AI insights next.
-        </p>
-        <div class="mt-6">
-          <%= render "links/form", chain: @chain, link: @link %>
-        </div>
-      </div>
-
-      <div class="rounded-2xl border border-white/10 bg-slate-900/70 p-5 text-sm text-slate-400">
-        <p class="font-semibold text-slate-200">Structure as you go</p>
-        <ul class="mt-3 list-disc space-y-2 pl-4">
-          <li>Use tags for themes like Leadership, Revenue, or Product Quality.</li>
-          <li>Mentions help surface who is involved when summarizing later.</li>
-          <li>Linked chains weave context across spaces for deeper insights.</li>
-        </ul>
-      </div>
-    </aside>
-
-    <div class="space-y-5">
-      <div class="flex flex-col gap-4 rounded-2xl border border-white/10 bg-slate-900/70 p-5">
-        <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-          <div>
-            <p class="text-xs uppercase tracking-[0.35em] text-indigo-200/70">Timeline</p>
-            <h2 class="mt-2 text-2xl font-semibold text-white">Notes in this chain</h2>
-          </div>
-          <div class="flex flex-wrap gap-2 text-xs">
+          <p class="text-xs uppercase tracking-[0.35em] text-indigo-200/70">Filter by category</p>
+          <div class="mt-2 flex flex-wrap gap-2 text-xs">
             <% Link.categories.keys.each do |category| %>
               <% active = @filters.category == category %>
-              <%= link_to category.titleize, chain_path(@chain, request.query_parameters.merge(category: active ? nil : category)), class: [
+              <%= link_to category.titleize, chain_path(@chain, chain_filter_params(category: active ? nil : category)), class: [
                     "rounded-full border px-3 py-1 font-semibold transition",
                     active ? "border-indigo-400/40 bg-indigo-500/20 text-indigo-100" : "border-white/10 text-slate-300/80 hover:border-indigo-400/40 hover:text-white"
                   ].join(" ") %>
             <% end %>
-            <%= link_to "Clear", chain_path(@chain), class: "rounded-full border border-white/10 px-3 py-1 font-semibold text-slate-400 hover:border-indigo-400/40 hover:text-white" %>
+            <%= link_to "Clear filters", chain_path(@chain), class: "rounded-full border border-white/10 px-3 py-1 font-semibold text-slate-400 hover:border-indigo-400/40 hover:text-white" %>
           </div>
         </div>
 
-        <%= form_with url: chain_path(@chain), method: :get, local: true, class: "grid gap-3 md:grid-cols-3" do |form| %>
+        <%= form_with url: chain_path(@chain), method: :get, local: true, class: "space-y-3" do |form| %>
           <%= form.hidden_field :category, value: @filters.category if @filters.category.present? %>
-          <div>
-            <%= form.label :tag, "Filter by tag", class: "text-xs font-semibold uppercase tracking-wide text-slate-400" %>
-            <%= form.text_field :tag, value: @filters.tag, placeholder: "Leadership", class: "mt-1 block w-full rounded-xl border border-white/10 bg-slate-950/60 px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-400/40" %>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <%= form.label :tag, "Filter by tag", class: "text-xs font-semibold uppercase tracking-wide text-slate-400" %>
+              <%= form.text_field :tag, value: @filters.tag, placeholder: "Leadership", class: "mt-1 block w-full rounded-xl border border-white/10 bg-slate-950/60 px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-400/40" %>
+            </div>
+            <div>
+              <%= form.label :mention, "Filter by mention", class: "text-xs font-semibold uppercase tracking-wide text-slate-400" %>
+              <%= form.text_field :mention, value: @filters.mention, placeholder: "Andrew Chen", class: "mt-1 block w-full rounded-xl border border-white/10 bg-slate-950/60 px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-400/40" %>
+            </div>
           </div>
+
           <div>
-            <%= form.label :mention, "Filter by mention", class: "text-xs font-semibold uppercase tracking-wide text-slate-400" %>
-            <%= form.text_field :mention, value: @filters.mention, placeholder: "Andrew Chen", class: "mt-1 block w-full rounded-xl border border-white/10 bg-slate-950/60 px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-400/40" %>
-          </div>
-          <div class="flex items-end">
             <%= form.submit "Apply", class: "w-full rounded-xl bg-indigo-500 px-4 py-2 text-sm font-semibold text-slate-950 shadow-sm hover:bg-indigo-400" %>
           </div>
         <% end %>
+      </div>
+    </div>
+  </header>
+
+  <div class="space-y-5">
+      <div class="rounded-2xl border border-white/10 bg-slate-900/70 p-5">
+        <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+          <div>
+            <p class="text-xs uppercase tracking-[0.35em] text-indigo-200/70">Timeline</p>
+            <h2 class="mt-2 text-2xl font-semibold text-white">Notes in this chain</h2>
+          </div>
+          <div class="flex items-center gap-3">
+            <button type="button"
+                    onclick="window.openModal('link_modal', { spaceId: <%= @chain.space.id %>, chainId: <%= @chain.id %> })"
+                    class="flex items-center gap-2 rounded-lg bg-indigo-500 px-4 py-2 text-sm font-semibold text-slate-950 shadow-sm transition hover:bg-indigo-400">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+              </svg>
+              <span>Add Note</span>
+            </button>
+            <% if @filters.category.present? || @filters.tag.present? || @filters.mention.present? %>
+              <div class="flex flex-wrap gap-2 text-xs">
+              <% if @filters.category.present? %>
+                <span class="rounded-full border border-indigo-400/30 bg-indigo-500/10 px-3 py-1 font-semibold text-indigo-100/90">
+                  Category: <%= @filters.category.titleize %>
+                </span>
+              <% end %>
+              <% if @filters.tag.present? %>
+                <span class="rounded-full border border-indigo-400/30 bg-indigo-500/10 px-3 py-1 font-semibold text-indigo-100/90">
+                  Tag: <%= @filters.tag %>
+                </span>
+              <% end %>
+              <% if @filters.mention.present? %>
+                <span class="rounded-full border border-indigo-400/30 bg-indigo-500/10 px-3 py-1 font-semibold text-indigo-100/90">
+                  Mention: <%= @filters.mention %>
+                </span>
+              <% end %>
+              </div>
+            <% end %>
+          </div>
+        </div>
       </div>
 
       <div id="links_timeline" class="space-y-4">
@@ -98,10 +132,9 @@
 
         <% if @links.empty? %>
           <div class="rounded-2xl border border-dashed border-slate-700/80 bg-slate-900/50 p-8 text-center text-sm text-slate-400">
-            No notes yet. Capture your first link using the form on the left to start building momentum.
+            <p>No notes yet. Click the <span class="font-semibold text-white">"Add Note"</span> button above or use the quick action in the sidebar to capture your first note.</p>
           </div>
         <% end %>
       </div>
     </div>
-  </div>
 </section>

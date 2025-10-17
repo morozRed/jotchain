@@ -48,16 +48,43 @@ export default class extends Controller {
     this.boundEscapeHandler = this.closeWithEscape.bind(this)
     document.addEventListener("keydown", this.boundEscapeHandler)
 
-    // Register global helper to open modals
+    // Register global helper to open modals with context
     if (!window.openModal) {
-      window.openModal = (modalId) => {
+      window.openModal = (modalId, context = {}) => {
         const modal = document.getElementById(modalId)
-        if (modal) {
-          const controller = this.application.getControllerForElementAndIdentifier(modal, 'modal')
-          if (controller) {
-            controller.open()
+        if (!modal) return
+
+        const presetContext = context || {}
+        modal.dataset.modalContext = JSON.stringify(presetContext)
+
+        const presetEvent = new CustomEvent('modal:preset', {
+          detail: presetContext,
+          bubbles: true
+        })
+
+        // Dispatch for legacy listeners on the modal element
+        modal.dispatchEvent(presetEvent)
+        // Dispatch globally so child controllers can react
+        window.dispatchEvent(new CustomEvent('modal:preset', { detail: { modalId, ...presetContext } }))
+
+        // Show the modal
+        modal.classList.remove('hidden')
+        document.body.style.overflow = 'hidden'
+
+        // Trigger animations on next frame
+        requestAnimationFrame(() => {
+          const backdrop = modal.querySelector('[data-modal-target="backdrop"]')
+          const dialog = modal.querySelector('[data-modal-target="dialog"]')
+
+          if (backdrop) {
+            backdrop.classList.remove('opacity-0')
+            backdrop.classList.add('opacity-100')
           }
-        }
+          if (dialog) {
+            dialog.classList.remove('opacity-0', 'scale-95')
+            dialog.classList.add('opacity-100', 'scale-100')
+          }
+        })
       }
     }
   }

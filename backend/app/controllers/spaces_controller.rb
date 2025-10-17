@@ -10,16 +10,18 @@ class SpacesController < ApplicationController
 
   def show
     @chains = @space.chains.includes(:links)
-    @link_filters = OpenStruct.new(
-      category: params[:category],
-      tag: params[:tag],
-      mention: params[:mention]
-    )
-    scoped_links = @space.links.recent
-    scoped_links = scoped_links.with_category(@link_filters.category)
-    scoped_links = scoped_links.tagged_with(@link_filters.tag)
-    scoped_links = scoped_links.mentioning(@link_filters.mention)
-    @recent_links = scoped_links.limit(12)
+
+    # Apply chain filters
+    if params[:search].present?
+      @chains = @chains.where("name ILIKE ?", "%#{params[:search]}%")
+    end
+
+    if params[:status].present?
+      @chains = @chains.where(status: params[:status])
+    end
+
+    # Recent links (unfiltered)
+    @recent_links = @space.links.recent.limit(12)
     @chain = @space.chains.build
   end
 
@@ -72,6 +74,6 @@ class SpacesController < ApplicationController
   end
 
   def space_params
-    params.require(:space).permit(:name, :description, :color)
+    params.require(:space).permit(:name, :description)
   end
 end
