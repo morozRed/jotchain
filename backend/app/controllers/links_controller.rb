@@ -6,6 +6,14 @@ class LinksController < ApplicationController
   before_action :set_chain
   before_action :set_link, only: %i[edit update destroy]
 
+  def new
+    if @chain
+      @link = @chain.links.build(recorded_on: Date.current)
+    else
+      @link = Link.new(recorded_on: Date.current)
+    end
+  end
+
   def create
     # If chain_id is passed directly (from modal), use that
     if params[:link][:chain_id].present?

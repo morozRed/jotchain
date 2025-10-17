@@ -1,5 +1,5 @@
 <% form_scope = chain.persisted? ? chain : [space, chain] %>
-<%= form_with model: form_scope, class: "space-y-5", data: { turbo_frame: "chain_form" } do |form| %>
+<%= form_with model: form_scope, class: "space-y-5" do |form| %>
   <% if chain.errors.present? %>
     <div class="rounded-xl border border-rose-400/30 bg-rose-500/10 p-4 text-sm text-rose-200">
       <p class="font-semibold">Cannot save chain yet:</p>
@@ -8,6 +8,13 @@
           <li><%= message %></li>
         <% end %>
       </ul>
+    </div>
+  <% end %>
+
+  <% if !chain.persisted? && !space&.persisted? %>
+    <div class="space-y-2">
+      <%= form.label :space_id, "Space", class: "block text-xs font-semibold uppercase tracking-wide text-slate-300" %>
+      <%= form.collection_select :space_id, Space.all, :id, :name, { prompt: "Select a space" }, class: "block w-full rounded-xl border border-white/10 bg-slate-950/60 px-4 py-3 text-sm text-white focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-400/40" %>
     </div>
   <% end %>
 

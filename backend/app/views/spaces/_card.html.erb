@@ -1,7 +1,8 @@
-<article class="rounded-xl border border-white/10 bg-slate-900/60 p-6 transition hover:border-indigo-400/40">
+<div id="<%= dom_id(space) %>">
+  <article class="group rounded-xl border border-white/10 bg-slate-900/60 p-6 transition hover:border-indigo-400/40">
   <div class="flex flex-wrap items-start justify-between gap-4">
     <div>
-      <p class="text-xs uppercase tracking-[0.3em] text-slate-500">Space</p>
+      <p class="text-xs uppercase tracking-[0.1em] text-slate-500">Space</p>
       <%= link_to space.name, space_path(space), data: { turbo_frame: "_top" }, class: "mt-1 block text-xl font-semibold text-white hover:text-indigo-200" %>
     </div>
     <div class="flex items-center gap-2 text-xs text-slate-400">
@@ -24,8 +25,15 @@
     </div>
   <% end %>
 
-  <div class="mt-5 flex items-center gap-4 text-xs text-slate-400">
-    <p>Last activity: <%= space.links.order(recorded_on: :desc).limit(1).pluck(:recorded_on).first&.strftime("%b %d") || "–" %></p>
-    <%= link_to "View space", space_path(space), data: { turbo_frame: "_top" }, class: "inline-flex items-center gap-1 text-indigo-300 hover:text-indigo-200" %>
+  <div class="mt-5 flex items-center justify-between gap-4 text-xs text-slate-400">
+    <div class="flex items-center gap-4">
+      <p>Last activity: <%= space.links.order(recorded_on: :desc).limit(1).pluck(:recorded_on).first&.strftime("%b %d") || "–" %></p>
+      <%= link_to "View space", space_path(space), data: { turbo_frame: "_top" }, class: "inline-flex items-center gap-1 text-indigo-300 hover:text-indigo-200" %>
+    </div>
+    <div class="flex items-center gap-2 opacity-0 transition group-hover:opacity-100">
+      <%= link_to "Edit", edit_space_path(space), data: { turbo_frame: "modal" }, class: "rounded-lg border border-white/10 px-3 py-1 text-xs font-medium text-slate-200/80 hover:border-indigo-400/50 hover:text-white" %>
+      <%= button_to "Delete", space_path(space), method: :delete, data: { turbo_confirm: "Remove this space and all its chains?" }, class: "rounded-lg border border-rose-400/40 px-3 py-1 text-xs font-medium text-rose-200/80 hover:bg-rose-500/10" %>
+    </div>
   </div>
-</article>
+  </article>
+</div>

@@ -8,6 +8,10 @@ class SpacesController < ApplicationController
     @space = Space.new
   end
 
+  def new
+    @space = Space.new
+  end
+
   def show
     @chains = @space.chains.includes(:links)
 
@@ -52,13 +56,30 @@ class SpacesController < ApplicationController
     end
   end
 
-  def edit; end
+  def edit
+    respond_to do |format|
+      format.turbo_stream
+      format.html
+    end
+  end
 
   def update
-    if @space.update(space_params)
-      redirect_to @space, notice: "Space updated."
-    else
-      render :edit, status: :unprocessable_entity
+    respond_to do |format|
+      if @space.update(space_params)
+        flash.now[:notice] = "Space updated."
+        flash[:notice] = "Space updated."
+
+        format.turbo_stream
+        format.html { redirect_to @space, notice: "Space updated." }
+      else
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.update(
+            "space_edit_modal",
+            partial: "spaces/edit_modal"
+          ), status: :unprocessable_entity
+        end
+        format.html { render :edit, status: :unprocessable_entity }
+      end
     end
   end
 

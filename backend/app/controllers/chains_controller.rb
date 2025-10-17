@@ -5,7 +5,11 @@ class ChainsController < ApplicationController
   before_action :set_chain, only: %i[show edit update destroy]
 
   def new
-    @chain = @space.chains.build
+    if @space
+      @chain = @space.chains.build
+    else
+      @chain = Chain.new
+    end
   end
 
   def create
@@ -52,13 +56,30 @@ class ChainsController < ApplicationController
     @links = @links.mentioning(@filters.mention)
   end
 
-  def edit; end
+  def edit
+    respond_to do |format|
+      format.turbo_stream
+      format.html
+    end
+  end
 
   def update
-    if @chain.update(chain_params)
-      redirect_to @chain, notice: "Chain updated."
-    else
-      render :edit, status: :unprocessable_entity
+    respond_to do |format|
+      if @chain.update(chain_params)
+        flash.now[:notice] = "Chain updated."
+        flash[:notice] = "Chain updated."
+
+        format.turbo_stream
+        format.html { redirect_to @chain, notice: "Chain updated." }
+      else
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.update(
+            "chain_edit_modal",
+            partial: "chains/edit_modal"
+          ), status: :unprocessable_entity
+        end
+        format.html { render :edit, status: :unprocessable_entity }
+      end
     end
   end
 

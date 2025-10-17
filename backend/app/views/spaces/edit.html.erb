@@ -1,15 +1,6 @@
-<% content_for :title, "Edit Space" %>
-
-<section class="mx-auto max-w-3xl space-y-6">
-  <header>
-    <p class="text-xs uppercase tracking-[0.35em] text-indigo-200/70">Edit Space</p>
-    <h1 class="mt-2 text-3xl font-semibold text-white">Update <%= @space.name %></h1>
-    <p class="mt-2 text-sm text-slate-400">
-      Refresh the description so everyone stays aligned on what belongs in this space.
-    </p>
-  </header>
-
-  <div class="rounded-2xl border border-white/10 bg-slate-900/70 p-6">
-    <%= render "form", space: @space %>
-  </div>
-</section>
+<%= render layout: "shared/modal_wrapper", locals: { modal_title: "Edit Space", modal_size: "max-w-xl" } do %>
+  <p class="mb-6 text-sm text-slate-400">
+    Update your space name or description to better reflect what you're tracking.
+  </p>
+  <%= render "spaces/form", space: @space %>
+<% end %>

@@ -42,7 +42,7 @@
         </p>
         <% if @chain.purpose.present? %>
           <div class="mt-4 rounded-2xl border border-indigo-400/20 bg-indigo-500/10 p-4 text-sm text-indigo-100/80">
-            <p class="text-xs uppercase tracking-[0.3em] text-indigo-200/80">Purpose</p>
+            <p class="text-xs uppercase tracking-[0.1em] text-indigo-200/80">Purpose</p>
             <p class="mt-1"><%= @chain.purpose %></p>
           </div>
         <% end %>
@@ -94,14 +94,12 @@
             <h2 class="mt-2 text-2xl font-semibold text-white">Notes in this chain</h2>
           </div>
           <div class="flex items-center gap-3">
-            <button type="button"
-                    onclick="window.openModal('link_modal', { spaceId: <%= @chain.space.id %>, chainId: <%= @chain.id %> })"
-                    class="flex items-center gap-2 rounded-lg bg-indigo-500 px-4 py-2 text-sm font-semibold text-slate-950 shadow-sm transition hover:bg-indigo-400">
+            <%= link_to new_link_path(chain_id: @chain.id), data: { turbo_frame: "modal" }, class: "flex items-center gap-2 rounded-lg bg-indigo-500 px-4 py-2 text-sm font-semibold text-slate-950 shadow-sm transition hover:bg-indigo-400" do %>
               <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
               </svg>
               <span>Add Note</span>
-            </button>
+            <% end %>
             <% if @filters.category.present? || @filters.tag.present? || @filters.mention.present? %>
               <div class="flex flex-wrap gap-2 text-xs">
               <% if @filters.category.present? %>

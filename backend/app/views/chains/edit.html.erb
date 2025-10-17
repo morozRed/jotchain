@@ -1,15 +1,6 @@
-<% content_for :title, "Edit Chain" %>
-
-<section class="mx-auto max-w-3xl space-y-6">
-  <header>
-    <p class="text-xs uppercase tracking-[0.35em] text-indigo-200/70">Edit Chain</p>
-    <h1 class="mt-2 text-3xl font-semibold text-white">Update <%= @chain.name %></h1>
-    <p class="mt-2 text-sm text-slate-400">
-      Adjust the purpose or status. Notes stay linked so you can continue to build context for AI summaries.
-    </p>
-  </header>
-
-  <div class="rounded-2xl border border-white/10 bg-slate-900/70 p-6">
-    <%= render "form", chain: @chain, space: @chain.space %>
-  </div>
-</section>
+<%= render layout: "shared/modal_wrapper", locals: { modal_title: "Edit Chain", modal_size: "max-w-2xl" } do %>
+  <p class="mb-6 text-sm text-slate-400">
+    Update your chain name, purpose, description, or status.
+  </p>
+  <%= render "chains/form", chain: @chain, space: @chain.space %>
+<% end %>

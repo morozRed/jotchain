@@ -1,13 +1,27 @@
 <turbo-frame id="<%= dom_id(link, :form) %>">
-  <%= form_with model: [chain, link], class: "space-y-5" do |form| %>
+  <% form_scope = if link.persisted?
+                    link
+                  elsif chain&.persisted?
+                    [chain, link]
+                  else
+                    link
+                  end %>
+  <%= form_with model: form_scope, class: "space-y-5" do |form| %>
     <% if link.errors.present? %>
       <div class="rounded-xl border border-rose-400/30 bg-rose-500/10 p-4 text-sm text-rose-200">
-        <p class="font-semibold">We couldn’t save this yet:</p>
+        <p class="font-semibold">We couldn't save this yet:</p>
         <ul class="mt-2 list-inside list-disc space-y-1">
           <% link.errors.full_messages.each do |message| %>
             <li><%= message %></li>
           <% end %>
         </ul>
+      </div>
+    <% end %>
+
+    <% if !link.persisted? && !chain&.persisted? %>
+      <div class="space-y-2">
+        <%= form.label :chain_id, "Chain", class: "block text-xs font-semibold uppercase tracking-wide text-slate-300" %>
+        <%= form.collection_select :chain_id, Chain.all, :id, :name, { prompt: "Select a chain" }, class: "block w-full rounded-xl border border-white/10 bg-slate-950/60 px-4 py-3 text-sm text-white focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-400/40" %>
       </div>
     <% end %>
 
@@ -48,7 +62,7 @@
       </div>
     </div>
 
-    <% other_chains = chain.space.chains.where.not(id: chain.id) %>
+    <% other_chains = chain&.persisted? ? chain.space.chains.where.not(id: chain.id) : [] %>
     <% if other_chains.any? %>
       <div class="space-y-2">
         <div class="flex items-center gap-2">

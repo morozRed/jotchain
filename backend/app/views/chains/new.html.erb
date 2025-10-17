@@ -1,15 +1,6 @@
-<% content_for :title, "New Chain" %>
-
-<section class="mx-auto max-w-3xl space-y-6">
-  <header>
-    <p class="text-xs uppercase tracking-[0.35em] text-indigo-200/70">Create Chain</p>
-    <h1 class="mt-2 text-3xl font-semibold text-white">Add a new chain to <%= @space.name %></h1>
-    <p class="mt-2 text-sm text-slate-400">
-      Chains keep related notes together. Start with a clear name and optional purpose so future summaries have context.
-    </p>
-  </header>
-
-  <div class="rounded-2xl border border-white/10 bg-slate-900/70 p-6">
-    <%= render "form", chain: @chain, space: @space %>
-  </div>
-</section>
+<%= render layout: "shared/modal_wrapper", locals: { modal_title: "Create New Chain", modal_size: "max-w-2xl" } do %>
+  <p class="mb-6 text-sm text-slate-400">
+    Chains bundle related notes—think "Weekly wins", "1-1 with Andrew", or "Q4 Launch". They become the context window for AI insights later.
+  </p>
+  <%= render "chains/form", chain: @chain, space: @space %>
+<% end %>
