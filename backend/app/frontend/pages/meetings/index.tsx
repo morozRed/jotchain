@@ -26,7 +26,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { cn } from "@/lib/utils"
-import { dashboardMeetingsPath } from "@/routes"
+import { meetingsPath } from "@/routes"
 
 type MeetingScheduleOption = {
   value: string
@@ -106,7 +106,7 @@ const TIMEZONE_PRESETS = [
 const breadcrumbs = [
   {
     title: "Meetings",
-    href: dashboardMeetingsPath(),
+    href: meetingsPath(),
   },
 ]
 
@@ -164,7 +164,7 @@ export default function Meetings() {
             <Card className="shadow-sm">
               <CardHeader className="pb-4">
                 <CardTitle className="flex items-center gap-2 text-lg">
-                  <Clock className="size-5 text-[#FF4433]" />
+                  <Clock className="size-5 text-primary" />
                   Upcoming summaries
                 </CardTitle>
                 <CardDescription>
@@ -319,7 +319,7 @@ function MeetingScheduleCard({
                 onCheckedChange={(checked) =>
                   update("enabled", Boolean(checked))
                 }
-                className="data-[state=checked]:bg-[#FF4433] data-[state=checked]:border-[#FF4433]"
+                className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
               />
               <Label htmlFor={`schedule-${schedule.id}-enabled`}>
                 {data.enabled ? "Enabled" : "Paused"}
@@ -469,7 +469,7 @@ function MeetingScheduleCard({
           <Button
             type="submit"
             size="sm"
-            className="bg-[#FF4433] text-white hover:bg-[#d92b1a]"
+            className="bg-primary text-primary-foreground hover:bg-primary/80"
             disabled={form.processing}
           >
             {form.processing ? "Saving..." : "Save cadence"}

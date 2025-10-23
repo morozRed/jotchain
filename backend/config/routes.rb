@@ -15,7 +15,7 @@ Rails.application.routes.draw do
   end
 
   get :dashboard, to: "dashboard#index"
-  get "dashboard/meetings", to: "dashboard#meetings"
+  get :meetings, to: "meetings#index"
 
   namespace :settings do
     resource :profile, only: [:show, :update]

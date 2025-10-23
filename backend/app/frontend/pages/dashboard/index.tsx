@@ -38,6 +38,7 @@ type DashboardEntry = {
 type EntryStats = {
   count: number
   lastLoggedAt?: string | null
+  currentStreak?: number
 }
 
 type PageProps = SharedData & {
@@ -92,26 +93,33 @@ export default function Dashboard() {
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Dashboard" />
 
-      <div className="flex h-full flex-1 flex-col gap-6 px-4 pb-10 pt-6 md:px-6">
+      <div className="flex h-full flex-1 flex-col gap-3 px-4 pb-10 pt-6 md:px-6">
         <header className="flex flex-col gap-2">
-          <Badge className="w-fit bg-[#818cf8] text-white hover:bg-[#d92b1a]">
-            MeetingPrep · Phase 1
-          </Badge>
           <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
             <div>
               <h1 className="text-2xl font-semibold leading-tight text-foreground md:text-3xl">
                 Walk into every stand-up prepared
               </h1>
               <p className="text-muted-foreground mt-2 max-w-2xl text-sm md:text-base">
-                Capture daily wins, tune your meeting cadence, and let MeetingPrep shape the AI brief that hits your inbox before every conversation.
+                Capture daily wins, tune your meeting cadence, and let JotChain shape the AI brief that hits your inbox before every conversation.
               </p>
             </div>
             <div className="flex items-center gap-3 rounded-lg border border-dashed border-primary/30 px-4 py-3 text-sm text-primary">
               <Sparkles className="size-4" />
               <span>
-                {entryStats.count
-                  ? `Logged ${pluralize(entryStats.count, "entry")} so far`
-                  : "First note creates your personal timeline"}
+                {entryStats.count ? (
+                  <>
+                    {pluralize(entryStats.count, "entry")} logged
+                    {entryStats.currentStreak && entryStats.currentStreak > 0 ? (
+                      <>
+                        {" • "}
+                        {pluralize(entryStats.currentStreak, "day")} streak
+                      </>
+                    ) : null}
+                  </>
+                ) : (
+                  "First note creates your personal timeline"
+                )}
               </span>
             </div>
           </div>
@@ -120,7 +128,7 @@ export default function Dashboard() {
         <Card className="shadow-sm">
           <CardHeader className="pb-4">
             <CardTitle className="flex items-center gap-2 text-lg">
-              <PencilLine className="size-5 text-[#818cf8]" />
+              <PencilLine className="size-5 text-primary" />
               Quick entry
             </CardTitle>
             <CardDescription>
@@ -198,7 +206,7 @@ function EntriesCard({ entries }: { entries: DashboardEntry[] }) {
     <Card className="shadow-sm">
       <CardHeader className="pb-4">
         <CardTitle className="flex items-center gap-2 text-lg">
-          <Inbox className="size-5 text-[#818cf8]" />
+          <Inbox className="size-5 text-primary" />
           Recent entries
         </CardTitle>
         <CardDescription>
@@ -208,7 +216,7 @@ function EntriesCard({ entries }: { entries: DashboardEntry[] }) {
       <CardContent className="flex flex-col gap-4">
         {entries.length === 0 && (
           <EmptyState
-            icon={<Sparkles className="size-5 text-[#818cf8]" />}
+            icon={<Sparkles className="size-5 text-primary" />}
             title="No entries yet"
             subtitle="Add your first note above to kick off the chain. We’ll keep it organized."
           />
@@ -222,7 +230,7 @@ function EntriesCard({ entries }: { entries: DashboardEntry[] }) {
             <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
               {entry.loggedAtLabel && (
                 <span className="inline-flex items-center gap-1 font-medium text-foreground">
-                  <CalendarDays className="size-4 text-[#818cf8]" />
+                  <CalendarDays className="size-4 text-primary" />
                   {entry.loggedAtLabel}
                 </span>
               )}
@@ -259,8 +267,8 @@ function EmptyState({
   subtitle: string
 }) {
   return (
-    <div className="flex flex-col items-start gap-3 rounded-lg border border-dashed border-[#818cf8]/40 bg-background/40 p-4 text-left">
-      <span className="flex size-10 items-center justify-center rounded-md bg-[#818cf8]/10 text-[#818cf8]">
+    <div className="flex flex-col items-start gap-3 rounded-lg border border-dashed border-primary/40 bg-background/40 p-4 text-left">
+      <span className="flex size-10 items-center justify-center rounded-md bg-primary/10 text-primary">
         {icon}
       </span>
       <div>

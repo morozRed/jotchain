@@ -18,8 +18,9 @@ export default function AuthSimpleLayout({
   description,
 }: PropsWithChildren<AuthLayoutProps>) {
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#08090c] text-white">
-      <div className="pointer-events-none absolute inset-x-0 top-[-40%] z-0 mx-auto h-[480px] w-[720px] rounded-full bg-[radial-gradient(circle_at_center,#ff5544_0,#ff443300_70%)] opacity-70 blur-3xl" />
+    <div className="relative min-h-screen overflow-hidden bg-background text-white">
+      <div className="pointer-events-none absolute inset-x-0 top-[-40%] z-0 mx-auto h-[480px] w-[720px] rounded-full bg-[radial-gradient(circle_at_center,rgba(129,140,248,0.9),transparent_70%)] opacity-60 blur-3xl" />
+      <div className="pointer-events-none absolute bottom-[-30%] right-[-10%] z-0 h-[480px] w-[480px] rounded-full bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.9),transparent_70%)] opacity-30 blur-3xl" />
 
       <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-12 px-6 py-12 md:flex-row md:items-center md:justify-between md:gap-16 md:px-10 lg:px-12">
         <div className="flex max-w-xl flex-col gap-8">
@@ -30,16 +31,16 @@ export default function AuthSimpleLayout({
             <span className="flex size-11 items-center justify-center rounded-md border border-white/10 bg-white/5 backdrop-blur">
               <AppLogoIcon className="size-6 text-white" />
             </span>
-            MeetingPrep
+            JotChain
           </Link>
 
           <div className="space-y-4">
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-white/90">
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.1em] text-white/90">
               <Sparkles className="size-3.5" />
               AI Stand-Up Co-Pilot
             </span>
             <h1 className="text-pretty text-3xl font-semibold leading-tight text-white md:text-4xl lg:text-[40px]">
-              Prep less, say more. MeetingPrep turns daily notes into meeting-ready briefs.
+              Prep less, say more. <br/> JotChain turns daily notes into meeting-ready briefs.
             </h1>
             <p className="text-pretty text-sm text-white/70 md:text-base">
               Log wins in under a minute, and receive crisp AI summaries before stand-ups, syncs, and reviews. The same playbook powering our landing page now lives inside the product.
@@ -84,8 +85,8 @@ function AuthHighlight({
   description: string
 }) {
   return (
-    <div className="flex items-start gap-3 rounded-xl border border-white/10 bg-white/5 p-4">
-      <span className="mt-1 flex size-9 items-center justify-center rounded-full bg-[#FF4433]/20 text-[#FFB1A8]">
+    <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-4">
+      <span className="mt-1 flex size-9 items-center justify-center rounded-full text-accent-hot">
         <Icon className="size-4" />
       </span>
       <div className="space-y-1">

@@ -12,7 +12,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { dashboardPath, dashboardMeetingsPath } from "@/routes"
+import { dashboardPath, meetingsPath } from "@/routes"
 import type { NavItem } from "@/types"
 
 import AppLogo from "./app-logo"
@@ -25,7 +25,7 @@ const mainNavItems: NavItem[] = [
   },
   {
     title: "Meetings",
-    href: dashboardMeetingsPath(),
+    href: meetingsPath(),
     icon: CalendarDays,
   },
 ]

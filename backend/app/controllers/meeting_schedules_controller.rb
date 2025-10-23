@@ -5,9 +5,9 @@ class MeetingSchedulesController < InertiaController
 
   def update
     if @schedule.update(schedule_params)
-      redirect_to dashboard_path, notice: "Schedule updated"
+      redirect_to meetings_path, notice: "Schedule updated"
     else
-      redirect_to dashboard_path, inertia: inertia_errors(@schedule)
+      redirect_to meetings_path, inertia: inertia_errors(@schedule)
     end
   end
 

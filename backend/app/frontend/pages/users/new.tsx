@@ -18,10 +18,10 @@ const trialHighlights = [
 export default function Register() {
   return (
     <AuthLayout
-      title="Create your MeetingPrep workspace"
+      title="Create your JotChain workspace"
       description="Capture today’s wins and let AI craft tomorrow’s stand-up brief."
     >
-      <Head title="Sign up • MeetingPrep" />
+      <Head title="Sign up • JotChain" />
       <Form
         method="post"
         action={signUpPath()}
@@ -30,21 +30,6 @@ export default function Register() {
       >
         {({ processing, errors }) => (
           <>
-            <div className="rounded-lg border border-white/8 bg-white/5 p-4 text-sm text-white/70">
-              <div className="flex items-center gap-2 font-semibold text-white">
-                <Sparkles className="size-4 text-[#FFB1A8]" />
-                What you unlock
-              </div>
-              <ul className="mt-2 space-y-1.5 text-xs leading-relaxed">
-                {trialHighlights.map((item) => (
-                  <li key={item} className="flex items-start gap-2">
-                    <ArrowRight className="mt-0.5 size-3 text-[#FFB1A8]" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
             <div className="grid gap-5">
               <div className="grid gap-2">
                 <Label htmlFor="name" className="text-sm text-white/80">
@@ -121,7 +106,7 @@ export default function Register() {
 
               <Button
                 type="submit"
-                className="mt-2 w-full bg-[#FF4433] text-white transition hover:bg-[#d92b1a]"
+                className="mt-2 w-full bg-primary text-primary-foreground hover:bg-primary/80"
                 tabIndex={5}
                 disabled={processing}
               >
@@ -133,10 +118,10 @@ export default function Register() {
             </div>
 
             <div className="text-center text-sm text-white/60">
-              Already part of MeetingPrep?{" "}
+              Already part of JotChain?{" "}
               <TextLink
                 href={signInPath()}
-                className="text-[#FFB1A8] hover:text-white"
+                className="text-accent-hot hover:text-white"
                 tabIndex={6}
               >
                 Log in

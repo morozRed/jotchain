@@ -12,10 +12,10 @@ import { newIdentityPasswordResetPath, signInPath, signUpPath } from "@/routes"
 export default function Login() {
   return (
     <AuthLayout
-      title="Log in to MeetingPrep"
+      title="Log in to JotChain"
       description="Pick up where you left off. Your AI summaries are already queued."
     >
-      <Head title="Log in • MeetingPrep" />
+      <Head title="Log in • JotChain" />
       <Form
         method="post"
         action={signInPath()}
@@ -26,7 +26,7 @@ export default function Login() {
           <>
             <div className="rounded-lg border border-white/8 bg-white/5 p-4 text-xs text-white/70">
               <div className="flex items-center gap-2 font-medium text-white">
-                <ShieldCheck className="size-4 text-[#FFB1A8]" />
+                <ShieldCheck className="size-4 text-accent-hot" />
                 Security first
               </div>
               <p className="mt-1 leading-relaxed">
@@ -63,7 +63,7 @@ export default function Login() {
                   </Label>
                   <TextLink
                     href={newIdentityPasswordResetPath()}
-                    className="ml-auto text-sm text-[#FFB1A8] hover:text-white"
+                    className="ml-auto text-sm text-accent-hot hover:text-white"
                     tabIndex={4}
                   >
                     Forgot password?
@@ -84,7 +84,7 @@ export default function Login() {
 
               <Button
                 type="submit"
-                className="mt-2 w-full bg-[#FF4433] text-white transition hover:bg-[#d92b1a]"
+                className="mt-2 w-full bg-primary text-primary-foreground hover:bg-primary/80"
                 tabIndex={3}
                 disabled={processing}
               >
@@ -99,7 +99,7 @@ export default function Login() {
               Need an account?{" "}
               <TextLink
                 href={signUpPath()}
-                className="text-[#FFB1A8] hover:text-white"
+                className="text-accent-hot hover:text-white"
                 tabIndex={5}
               >
                 Start your free trial

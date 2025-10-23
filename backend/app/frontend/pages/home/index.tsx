@@ -24,7 +24,7 @@ const FEATURE_CARDS = [
     icon: CalendarClock,
     title: "Cadence-aware scheduling",
     description:
-      "Configure stand-ups, syncs, and reviews once. MeetingPrep keeps reminders and digests aligned with your calendar.",
+      "Configure stand-ups, syncs, and reviews once. JotChain keeps reminders and digests aligned with your calendar.",
   },
 ]
 
@@ -47,7 +47,7 @@ export default function Welcome() {
 
   return (
     <>
-      <Head title="MeetingPrep · AI-powered meeting summaries">
+      <Head title="JotChain · AI-powered meeting summaries">
         <link rel="preconnect" href="https://fonts.bunny.net" />
         <link
           href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600"
@@ -55,9 +55,9 @@ export default function Welcome() {
         />
       </Head>
 
-      <div className="relative min-h-screen overflow-hidden bg-[#05060f] text-white">
-        <div className="pointer-events-none absolute inset-x-0 top-[-20%] z-0 mx-auto h-[520px] w-[720px] rounded-full bg-[radial-gradient(circle_at_center,#ff5544_0,#ff443300_70%)] opacity-70 blur-3xl" />
-        <div className="pointer-events-none absolute bottom-[-30%] right-[-10%] z-0 h-[480px] w-[480px] rounded-full bg-[radial-gradient(circle_at_center,#3b82f6_0,#3b82f600_70%)] opacity-40 blur-3xl" />
+      <div className="relative min-h-screen overflow-hidden bg-background text-white">
+        <div className="pointer-events-none absolute inset-x-0 top-[-20%] z-0 mx-auto h-[520px] w-[720px] rounded-full bg-[radial-gradient(circle_at_center,rgba(129,140,248,0.9),transparent_70%)] opacity-60 blur-3xl" />
+        <div className="pointer-events-none absolute bottom-[-30%] right-[-10%] z-0 h-[480px] w-[480px] rounded-full bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.9),transparent_70%)] opacity-30 blur-3xl" />
 
         <header className="relative z-10 mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-8 md:px-10 lg:px-12">
           <Link
@@ -67,7 +67,7 @@ export default function Welcome() {
             <span className="flex size-11 items-center justify-center rounded-md border border-white/10 bg-white/5 backdrop-blur">
               <AppLogoIcon className="size-6 text-white" />
             </span>
-            MeetingPrep
+            JotChain
           </Link>
 
           <nav className="hidden items-center gap-8 text-sm text-white/70 md:flex">
@@ -102,7 +102,7 @@ export default function Welcome() {
                 </Button>
                 <Button
                   asChild
-                  className="bg-[#FF4433] text-white hover:bg-[#d92b1a]"
+                  className="bg-primary text-primary-foreground hover:bg-primary/80"
                 >
                   <Link href={signUpPath()}>Start free trial</Link>
                 </Button>
@@ -123,7 +123,7 @@ export default function Welcome() {
                   The fastest path from daily notes to meeting-ready updates.
                 </h1>
                 <p className="text-pretty text-sm text-white/70 md:text-base">
-                  MeetingPrep keeps your highlights organized, understands your
+                  JotChain keeps your highlights organized, understands your
                   cadence, and sends summaries that sound like you. No more blank
                   stares when someone asks &ldquo;what happened this week?&rdquo;
                 </p>
@@ -131,7 +131,7 @@ export default function Welcome() {
               <ul className="space-y-3 text-sm text-white/75">
                 {HIGHLIGHTS.map((item) => (
                   <li key={item} className="flex items-start gap-3">
-                    <CheckCircle2 className="mt-0.5 size-4 text-[#FFB1A8]" />
+                    <CheckCircle2 className="mt-0.5 size-4 text-accent-hot" />
                     <span>{item}</span>
                   </li>
                 ))}
@@ -140,7 +140,7 @@ export default function Welcome() {
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
                 <Button
                   asChild
-                  className="bg-[#FF4433] px-6 text-white shadow-[0_16px_40px_rgba(255,68,51,0.45)] hover:bg-[#d92b1a]"
+                  className="bg-primary px-6 text-primary-foreground shadow-[0_16px_40px_rgba(129,140,248,0.45)] hover:bg-primary/80"
                 >
                   <Link href={isAuthenticated ? dashboardPath() : signUpPath()}>
                     {isAuthenticated ? "Open dashboard" : "Start capturing today"}
@@ -161,12 +161,12 @@ export default function Welcome() {
             </div>
 
             <div className="relative mx-auto w-full max-w-xl">
-              <div className="absolute inset-0 -translate-x-6 translate-y-6 rounded-3xl bg-gradient-to-br from-[#ff7b67]/40 via-[#1e1f2a]/60 to-[#191a24]/0 blur-3xl" />
+              <div className="absolute inset-0 -translate-x-6 translate-y-6 rounded-3xl bg-gradient-to-br from-primary/30 via-card/60 to-transparent blur-3xl" />
               <div className="relative grid gap-4">
                 <div className="rounded-2xl border border-white/10 bg-white/10 p-6 shadow-[0_20px_60px_rgba(8,9,15,0.55)] backdrop-blur">
                   <div className="flex items-center justify-between text-xs text-white/60">
                     <span className="inline-flex items-center gap-2 text-sm font-medium text-white">
-                      <Sparkles className="size-4 text-[#FFB1A8]" />
+                      <Sparkles className="size-4 text-accent-hot" />
                       Daily stand-up brief
                     </span>
                     <span>7:30 AM · PST</span>
@@ -201,7 +201,7 @@ export default function Welcome() {
                   </footer>
                 </div>
 
-                <div className="ml-auto w-[84%] rounded-2xl border border-white/10 bg-[#0B0C14] p-6 shadow-[0_14px_32px_rgba(5,7,15,0.5)]">
+                <div className="ml-auto w-[84%] rounded-2xl border border-white/10 bg-card p-6 shadow-[0_14px_32px_rgba(5,7,15,0.5)]">
                   <div className="flex items-center justify-between text-xs text-white/60">
                     <span className="font-semibold uppercase tracking-wide text-white/80">
                       Meeting schedule
@@ -237,7 +237,7 @@ export default function Welcome() {
 
           <section
             id="cta"
-            className="rounded-3xl border border-white/10 bg-gradient-to-br from-[#FF4433]/90 to-[#8a1d15]/80 p-8 text-white shadow-[0_24px_80px_rgba(255,68,51,0.35)]"
+            className="rounded-3xl border border-white/10 bg-gradient-to-br from-primary/90 to-primary/60 p-8 text-white shadow-[0_24px_80px_rgba(129,140,248,0.35)]"
           >
             <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
               <div className="space-y-2">
@@ -245,14 +245,14 @@ export default function Welcome() {
                   Ready for effortless meeting prep?
                 </h2>
                 <p className="text-sm text-white/80">
-                  Try MeetingPrep free for 14 days. Switch to Pro for $12/month
+                  Try JotChain free for 14 days. Switch to Pro for $12/month
                   when you&apos;re ready.
                 </p>
               </div>
               <div className="flex flex-col gap-3 sm:flex-row">
                 <Button
                   asChild
-                  className="bg-white text-[#1b1b1f] hover:bg-white/90"
+                  className="bg-white text-primary-foreground hover:bg-white/90"
                 >
                   <Link href={isAuthenticated ? dashboardPath() : signUpPath()}>
                     {isAuthenticated ? "Manage plan" : "Start free trial"}
@@ -287,7 +287,7 @@ function FeatureCard({
 }) {
   return (
     <div className="rounded-2xl border border-white/10 bg-white/5 p-6 text-white/80 transition hover:border-white/30 hover:bg-white/10">
-      <span className="flex size-10 items-center justify-center rounded-full bg-[#FF4433]/20 text-[#FFB1A8]">
+      <span className="flex size-10 items-center justify-center rounded-full bg-primary/20 text-accent-hot">
         <Icon className="size-5" />
       </span>
       <h3 className="mt-4 text-lg font-semibold text-white">{title}</h3>
@@ -303,7 +303,7 @@ function ScheduleRow({ meeting, time }: { meeting: string; time: string }) {
         <p className="text-sm font-semibold text-white">{meeting}</p>
         <p className="text-xs text-white/60">{time}</p>
       </div>
-      <span className="text-xs text-[#FFB1A8]">Enabled</span>
+      <span className="text-xs text-accent-hot">Enabled</span>
     </div>
   )
 }

@@ -36,6 +36,40 @@ class User < ApplicationRecord
     meeting_schedules.find_by(meeting_type:)
   end
 
+  def current_streak
+    return 0 if entries.empty?
+
+    # Get all unique dates with entries, sorted descending
+    entry_dates = entries
+      .pluck(:logged_at)
+      .map { |dt| dt.in_time_zone(Time.zone).to_date }
+      .uniq
+      .sort
+      .reverse
+
+    return 0 if entry_dates.empty?
+
+    today = Time.current.in_time_zone(Time.zone).to_date
+
+    # If the most recent entry is not today or yesterday, streak is 0
+    return 0 unless [today, today - 1.day].include?(entry_dates.first)
+
+    # Count consecutive days backward from the most recent entry
+    streak = 0
+    current_date = entry_dates.first
+
+    entry_dates.each do |date|
+      if date == current_date
+        streak += 1
+        current_date -= 1.day
+      else
+        break
+      end
+    end
+
+    streak
+  end
+
   private
 
   def ensure_default_meeting_schedules
