@@ -1,6 +1,0 @@
-<%= render layout: "shared/modal_wrapper", locals: { modal_title: "Edit Chain", modal_size: "max-w-2xl" } do %>
-  <p class="mb-6 text-sm text-slate-400">
-    Update your chain name, purpose, description, or status.
-  </p>
-  <%= render "chains/form", chain: @chain, space: @chain.space %>
-<% end %>

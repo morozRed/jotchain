@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html class="h-full bg-slate-950">
+<html>
   <head>
-    <title><%= content_for(:title) || "JotChain" %></title>
+    <title inertia><%= content_for(:title) || "JotChain" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
+    <%= capybara_lockstep if defined?(Capybara::Lockstep) %>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
@@ -17,24 +18,27 @@
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio"></script>
-    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
-    <%= javascript_importmap_tags %>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <script>
+      <%# Enable dark mode based on localStorage or system preference. Inline to avoid FOUC. %>
+      document.documentElement.classList.toggle(
+        "dark",
+        localStorage.appearance === "dark" ||
+          (!("appearance" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches),
+      );
+    </script>
+
+    <%= vite_stylesheet_tag "application" %>
+    <%= vite_react_refresh_tag %>
+    <%= vite_client_tag %>
+    <%= vite_typescript_tag "inertia" %>
+    <%= inertia_ssr_head %>
   </head>
 
-  <body class="min-h-screen text-slate-100 antialiased">
-    <%= render "shared/sidebar" %>
-
-    <div class="flex min-h-screen flex-col pl-64">
-      <main class="flex-1 bg-slate-950/90">
-        <div class="mx-auto w-full max-w-7xl px-6 py-8 lg:px-8">
-          <%= render "shared/flash_container" %>
-          <%= yield %>
-        </div>
-      </main>
-    </div>
-
-    <!-- Single Modal Turbo Frame -->
-    <%= turbo_frame_tag "modal" %>
+  <body>
+    <%= yield %>
   </body>
 </html>

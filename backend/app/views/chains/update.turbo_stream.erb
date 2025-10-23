@@ -1,5 +1,0 @@
-<%= turbo_stream.update dom_id(@chain) do %>
-  <%= render "chains/card", chain: @chain %>
-<% end %>
-<%= turbo_stream.update "modal", "" %>
-<%= render "shared/flash" %>

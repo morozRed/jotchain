@@ -1,5 +1,0 @@
-<%= turbo_stream.update dom_id(@space) do %>
-  <%= render "spaces/card", space: @space %>
-<% end %>
-<%= turbo_stream.update "modal", "" %>
-<%= render "shared/flash" %>

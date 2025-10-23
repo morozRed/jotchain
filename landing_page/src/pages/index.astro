@@ -3,100 +3,110 @@ import Layout from '../layouts/Layout.astro';
 
 const features = [
 	{
-		label: 'Capture wins fast',
-		title: 'Quick note capture that keeps up with your day',
+		label: 'Quick daily logging',
+		title: 'Capture what you did in under 2 minutes',
 		description:
-			'Record accomplishments, 1-1 feedback, and customer updates in seconds. JotChain auto-tags every note so nothing gets lost.',
+			'Simple text field for end-of-day entries. No complex forms, no friction. Tag with projects or just free-form—it all works.',
 	},
 	{
-		label: 'AI summaries on demand',
-		title: 'Performance reviews and stand-ups in 10 seconds',
+		label: 'AI email summaries',
+		title: 'Get prepared before every meeting',
 		description:
-			'Generate review packets, stand-up updates, and interview prep with a single click. Summaries keep your voice while highlighting real impact.',
+			'AI generates clean, readable summaries from your entries and delivers them 30 minutes before your meetings. No more "what did I do yesterday?"',
 	},
 	{
-		label: 'Automated digests',
-		title: 'Daily and weekly recaps delivered where you work',
+		label: 'Meeting scheduler',
+		title: 'Configure your meeting cadence once',
 		description:
-			'Inbox and Slack digests arrive before stand-up, exec syncs, or deal reviews so you walk in prepared every time.',
+			'Set up daily stand-ups, weekly syncs, and monthly reviews. JotChain sends summaries automatically before each one.',
 	},
 	{
-		label: 'Security you can trust',
-		title: 'Encrypted storage with audit-ready controls',
+		label: 'Mobile friendly',
+		title: 'Log on the go, get summaries anywhere',
 		description:
-			'Encryption at rest, role-based access, and export logs make it safe to centralize sensitive feedback and wins.',
+			'Works perfectly on mobile. Log your day on the commute home, receive summaries in your inbox wherever you are.',
 	},
 ];
 
 const workflow = [
 	{
 		step: '01',
-		title: 'Capture wins as they happen',
+		title: 'Log what you did today',
 		description:
-			'Drop a note right after a productive meeting or launch. Tags, templates, and search make everything easy to find later.',
+			'At the end of your day, spend 2 minutes jotting down what you worked on. No complex forms—just write naturally.',
 	},
 	{
 		step: '02',
-		title: 'Let AI connect the dots',
+		title: 'AI creates your summary overnight',
 		description:
-			'Overnight, JotChain chains context across product, engineering, and revenue work to surface the leadership signals that matter.',
+			'JotChain analyzes your recent entries and generates a clean, concise summary tailored for your upcoming meeting.',
 	},
 	{
 		step: '03',
-		title: 'Show up ready for every conversation',
+		title: 'Receive email before your meeting',
 		description:
-			'Wake up to daily digests, weekly recaps, and resume-ready exports so reviews, stand-ups, and interviews take minutes—not hours.',
+			'Get a summary in your inbox 30 minutes before stand-ups, syncs, or reviews. Walk in prepared, every time.',
 	},
 ];
 
 const audience = [
 	{
 		name: 'Alex · Engineering Manager',
-		note: '"JotChain saved me hours during review season. The weekly summaries sound like me, just sharper."',
+		note: '"I never blank in 1-on-1s anymore. The weekly summaries help me remember what each person accomplished."',
 	},
 	{
-		name: 'Jordan · Tech Lead',
-		note: '"Daily digests hit my inbox before stand-up so I bring the right metrics and blockers every time."',
+		name: 'Jordan · Software Engineer',
+		note: '"Daily summaries arrive before stand-up. I show up with clear updates instead of scrambling to remember."',
 	},
 	{
-		name: 'Maya · Product Lead',
-		note: '"Finally a tool that connects product launches to revenue wins. Exec updates practically write themselves."',
+		name: 'Maya · Tech Lead',
+		note: '"Monthly recaps make status reports trivial. I just copy the summary and I\'m done in 5 minutes."',
 	},
 ];
 
 const commitments = [
 	{
-		title: 'Always available',
+		title: 'Privacy first',
 		description:
-			'99% uptime targets with proactive monitoring. SSO and OAuth keep logins painless but protected.',
+			'Your entries are encrypted and private. We never train AI models on your data. You own your information.',
 	},
 	{
-		title: 'Scale at your pace',
+		title: 'Simple pricing',
 		description:
-			'Start with a 14-day trial and keep the same $9/month plan as you grow. Invite collaborators when team workspaces roll out.',
+			'Start with a 14-day free trial. Continue at $12/month with unlimited entries and email delivery. No hidden fees.',
 	},
 	{
 		title: 'Transparent AI',
 		description:
-			'Every summary includes source notes and edit controls so you keep a human in the loop and avoid hallucinations.',
+			'Every summary shows the source entries it was based on. Edit before sending if needed. You stay in control.',
 	},
 ];
 
 const pricing = [
 	{
-		name: 'JotChain Pro',
-		price: '$9 / month',
+		name: 'Monthly',
+		price: '$6 / month',
 		tagline: '14-day free trial · cancel anytime',
-		details: ['Unlimited notes & AI summaries', 'Inbox + Slack digests', 'Resume-ready exports'],
+		details: ['Unlimited entries & AI summaries', 'Email delivery before meetings', 'All meeting types (daily, weekly, monthly)', 'Mobile-friendly logging'],
+		cta: 'Start 14-day trial',
+		highlighted: false,
+	},
+	{
+		name: 'Yearly',
+		price: '$36 / year',
+		tagline: '14-day free trial · cancel anytime',
+		subtitle: 'Just $3/month, billed annually',
+		details: ['Unlimited entries & AI summaries', 'Email delivery before meetings', 'All meeting types (daily, weekly, monthly)', 'Mobile-friendly logging'],
 		cta: 'Start 14-day trial',
 		highlighted: true,
+		badge: 'Best Value · Save 50% · Limited time',
 	},
 ];
 ---
 
 <Layout
-	title="JotChain · AI Career OS for Modern Leaders"
-	description="JotChain helps product, engineering, and revenue leaders capture wins, generate AI summaries, and arrive prepared for every review."
+	title="JotChain · Never Blank in Stand-Ups Again"
+	description="Quick daily logging, AI-powered summaries, delivered before every meeting. JotChain helps engineers show up prepared for stand-ups, syncs, and reviews."
 >
 	<div class="shell">
 		<header class="nav">
@@ -119,10 +129,10 @@ const pricing = [
 		<section class="hero" id="top">
 			<div class="hero__content">
 				<span class="hero__pill">14-day free trial · No credit card required</span>
-				<h1>Your AI career OS for modern leaders</h1>
+				<h1>Never blank in stand-ups again</h1>
 				<p>
-					Stop combing through scattered docs. JotChain captures every win, chains your notes overnight,
-					and delivers ready-to-send summaries for reviews, stand-ups, and interviews.
+					Log what you did in 2 minutes. Get AI-generated summaries before every meeting.
+					JotChain turns your daily work into clear, professional updates for stand-ups, syncs, and reviews.
 				</p>
 				<div class="hero__actions">
 					<a class="button button--primary" href="#cta">Start free trial</a>
@@ -130,63 +140,62 @@ const pricing = [
 				</div>
 				<ul class="hero__metrics">
 					<li>
-						<strong>80%</strong>
-						<span>Time saved prepping performance reviews</span>
+						<strong>2 minutes</strong>
+						<span>Daily logging takes less time than your coffee break</span>
 					</li>
 					<li>
-						<strong>10 seconds</strong>
-						<span>To generate review-ready AI summaries</span>
+						<strong>30 mins before</strong>
+						<span>Summaries arrive in your inbox before each meeting</span>
 					</li>
 					<li>
-						<strong>99% uptime</strong>
-						<span>Reliability for the notes you cannot afford to lose</span>
+						<strong>Zero friction</strong>
+						<span>Simple text field, no complex forms or setup</span>
 					</li>
 				</ul>
 			</div>
 			<div class="hero__visual">
 				<div class="panel panel--standup">
 					<header>
-						<span class="chip chip--glow">Daily stand-up draft</span>
-						<span class="panel__time">7:00 AM · PST</span>
+						<span class="chip chip--glow">Your daily stand-up prep</span>
+						<span class="panel__time">8:30 AM · Inbox</span>
 					</header>
 					<ul>
-						<li>
+						<li class="flex items-center">
 							<span class="dot dot--accent"></span>
-							<span>Shipped usage-based billing — increased NRR by 6.4%.</span>
+							<span>Finished API authentication refactor</span>
 						</li>
-						<li>
+						<li class="flex items-center">
 							<span class="dot"></span>
-							<span>Coaching note: Casey unblocked migrations; flag for recognition.</span>
+							<span>Fixed bug in payment flow</span>
 						</li>
-						<li>
+						<li class="flex items-center">
 							<span class="dot"></span>
-							<span>Upcoming risk: API latency trending up; include mitigation in next exec sync.</span>
+							<span>Code reviewed 3 PRs for Sarah's team</span>
 						</li>
 					</ul>
 					<footer>
-						<span class="panel__footer-label">Sources</span>
+						<span class="panel__footer-label">Based on your entries</span>
 						<div class="panel__tags">
-							<span class="tag">1-1 Note</span>
-							<span class="tag">Release Retro</span>
-							<span class="tag">Accomplishment</span>
+							<span class="tag">Yesterday</span>
+							<span class="tag">Engineering</span>
 						</div>
 					</footer>
 				</div>
 				<div class="panel panel--summary">
 					<header>
-						<span class="chip">Monthly recap</span>
-						<span class="panel__time">Ready to export · PDF & Markdown</span>
+						<span class="chip">Weekly sync prep</span>
+						<span class="panel__time">Friday 1:30 PM · Inbox</span>
 					</header>
 					<p>
-						JotChain highlighted 12 leadership signals, 3 coaching moments, and 5 metrics to headline
-						in your next review or resume refresh.
+						This week you completed the auth refactor, fixed 5 production bugs,
+						and reviewed 12 PRs. Blocker: database performance on staging needs attention.
 					</p>
 					<div class="panel__progress">
 						<span style="width: 78%"></span>
 					</div>
 					<div class="panel__actions">
-						<button type="button">Send to stakeholders</button>
-						<button type="button" class="ghost">Open in workspace</button>
+						<button type="button">Ready for meeting ✓</button>
+						<button type="button" class="ghost">View all entries</button>
 					</div>
 				</div>
 			</div>
@@ -194,10 +203,10 @@ const pricing = [
 
 		<section class="section section--features" id="features">
 			<div class="section__intro">
-				<h2>Everything you need to track your impact</h2>
+				<h2>Everything you need to prep for meetings</h2>
 				<p>
-					Purpose-built for cross-functional leaders who move fast and need to show results without chasing
-					old notes.
+					Purpose-built for engineers and managers who want to show up prepared
+					without spending hours trying to remember what they did.
 				</p>
 			</div>
 			<div class="feature-grid">
@@ -213,9 +222,10 @@ const pricing = [
 
 		<section class="section section--workflow" id="workflow">
 			<div class="section__intro">
-				<h2>Your daily workflow, simplified</h2>
+				<h2>How it works</h2>
 				<p>
-					Three steps to ensure you never forget an accomplishment—or scramble before a review—again.
+					Three simple steps to never blank in a meeting again.
+					It takes 2 minutes a day and runs on autopilot.
 				</p>
 			</div>
 			<div class="workflow">
@@ -231,10 +241,10 @@ const pricing = [
 
 		<section class="section section--audience" id="audience">
 			<div class="section__intro">
-				<h2>Built for high performers across the org chart</h2>
+				<h2>Loved by engineers and engineering managers</h2>
 				<p>
-					Leaders across engineering, product, and revenue already rely on JotChain to stay prepared and
-					communicate impact with confidence.
+					From individual contributors to team leads, JotChain helps technical professionals
+					stay prepared and communicate clearly.
 				</p>
 			</div>
 			<div class="audience">
@@ -260,18 +270,22 @@ const pricing = [
 
 		<section class="section section--pricing" id="pricing">
 			<div class="section__intro">
-				<h2>Start with a 14-day trial, continue at $9/mo</h2>
+				<h2>Start with a 14-day trial, continue at $6/mo</h2>
 				<p>
-					Enjoy full product access during your trial. When it ends, stay on JotChain Pro for $9/month and
-					keep every note, summary, and automation active.
+					Full access during your trial. No credit card required.
+					After 14 days, choose monthly at $6/month or save 50% with our yearly plan at just $3/month.
 				</p>
 			</div>
 			<div class="pricing">
 				{pricing.map((plan) => (
 					<article class={`pricing-card${plan.highlighted ? ' pricing-card--highlighted' : ''}`}>
 						<header>
-							<h3>{plan.name}</h3>
+							<div class="pricing-card__header-row">
+								<h3>{plan.name}</h3>
+								{plan.badge && <span class="pricing-card__badge">{plan.badge}</span>}
+							</div>
 							{plan.price && <span class="pricing-card__price">{plan.price}</span>}
+							{plan.subtitle && <span class="pricing-card__subtitle">{plan.subtitle}</span>}
 							<p>{plan.tagline}</p>
 						</header>
 						<ul>
@@ -292,10 +306,10 @@ const pricing = [
 
 		<section class="cta" id="cta">
 			<div class="cta__content">
-				<h2>Ready to ace your next review?</h2>
+				<h2>Ready to never blank in meetings again?</h2>
 				<p>
-					Join modern leaders using AI to track accomplishments, stay ready for every meeting, and accelerate
-					their careers.
+					Join engineers using JotChain to log daily work, receive AI summaries,
+					and walk into every stand-up prepared.
 				</p>
 				<form class="cta__form">
 					<label class="sr-only" for="email">Email</label>
@@ -312,7 +326,7 @@ const pricing = [
 				<span class="brand__name">JotChain</span>
 			</div>
 			<div class="footer__meta">
-				<span>© {new Date().getFullYear()} JotChain. AI career OS for tech leads.</span>
+				<span>© {new Date().getFullYear()} JotChain. Never blank in meetings again.</span>
 				<nav>
 					<a href="#features">Product</a>
 					<a href="#workflow">Workflow</a>
@@ -330,7 +344,7 @@ const pricing = [
 		max-width: var(--max-width);
 		display: flex;
 		flex-direction: column;
-		gap: 6rem;
+		gap: 7rem;
 	}
 
 	.nav {
@@ -361,7 +375,7 @@ const pricing = [
 		width: 28px;
 		height: 28px;
 		border-radius: 10px;
-		background: rgba(129, 140, 248, 0.85);
+		background: url('/favicon.svg') center/cover;
 		box-shadow: 0 4px 14px rgba(129, 140, 248, 0.25);
 	}
 
@@ -433,6 +447,8 @@ const pricing = [
 
 	.hero h1 {
 		font-size: clamp(2.5rem, 5vw, 3.6rem);
+		line-height: 1.1;
+		letter-spacing: -0.03em;
 	}
 
 	.hero p {
@@ -469,6 +485,12 @@ const pricing = [
 
 	.button--primary:hover {
 		transform: translateY(-2px);
+		box-shadow: 0 18px 38px -20px rgba(129, 140, 248, 0.7);
+	}
+
+	.button--secondary:hover {
+		border-color: rgba(148, 163, 184, 0.35);
+		background: rgba(15, 20, 32, 0.9);
 	}
 
 	.button--secondary {
@@ -519,6 +541,12 @@ const pricing = [
 		border: 1px solid rgba(129, 140, 248, 0.14);
 		box-shadow: 0 24px 48px -36px rgba(6, 9, 16, 0.9);
 		backdrop-filter: blur(20px);
+		transition: transform 0.3s ease, box-shadow 0.3s ease;
+	}
+
+	.panel:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 28px 56px -32px rgba(6, 9, 16, 0.95), 0 0 0 1px rgba(129, 140, 248, 0.25);
 	}
 
 	.panel header {
@@ -664,7 +692,7 @@ const pricing = [
 	.section {
 		display: flex;
 		flex-direction: column;
-		gap: 3rem;
+		gap: 3.5rem;
 	}
 
 	.section__intro {
@@ -695,6 +723,14 @@ const pricing = [
 		flex-direction: column;
 		gap: 1.1rem;
 		box-shadow: inset 0 1px 0 rgba(148, 163, 184, 0.06);
+		transition: all 0.3s ease;
+	}
+
+	.feature-card:hover {
+		background: rgba(13, 18, 28, 0.92);
+		border-color: rgba(129, 140, 248, 0.25);
+		transform: translateY(-2px);
+		box-shadow: inset 0 1px 0 rgba(148, 163, 184, 0.1), 0 12px 32px -16px rgba(129, 140, 248, 0.35);
 	}
 
 	.feature-card__label {
@@ -729,19 +765,31 @@ const pricing = [
 		gap: 0.9rem;
 		position: relative;
 		overflow: hidden;
+		transition: all 0.3s ease;
 	}
 
 	.workflow__step::after {
 		content: '';
 		position: absolute;
 		inset: 0;
-		background: rgba(129, 140, 248, 0.12);
+		background: rgba(129, 140, 248, 0.08);
 		opacity: 0;
 		transition: opacity 0.3s ease;
+		z-index: 0;
+	}
+
+	.workflow__step:hover {
+		transform: translateY(-3px);
+		border-color: rgba(129, 140, 248, 0.35);
 	}
 
 	.workflow__step:hover::after {
 		opacity: 1;
+	}
+
+	.workflow__step > * {
+		position: relative;
+		z-index: 1;
 	}
 
 	.workflow__index {
@@ -778,6 +826,13 @@ const pricing = [
 		display: flex;
 		flex-direction: column;
 		gap: 1rem;
+		transition: all 0.3s ease;
+	}
+
+	.persona:hover {
+		background: rgba(15, 18, 28, 0.75);
+		border-color: rgba(129, 140, 248, 0.28);
+		transform: translateY(-2px);
 	}
 
 	.persona header {
@@ -839,6 +894,12 @@ const pricing = [
 		flex-direction: column;
 		gap: 1.4rem;
 		position: relative;
+		transition: all 0.3s ease;
+	}
+
+	.pricing-card:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 16px 40px -24px rgba(129, 140, 248, 0.4);
 	}
 
 	.pricing-card--highlighted {
@@ -847,16 +908,48 @@ const pricing = [
 		box-shadow: 0 22px 46px -30px rgba(129, 140, 248, 0.55);
 	}
 
+	.pricing-card__header-row {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+	}
+
+	.pricing-card__badge {
+		display: inline-flex;
+		padding: 0.35rem 0.85rem;
+		border-radius: 999px;
+		background: linear-gradient(135deg, #818cf8, #6366f1);
+		color: #fff;
+		font-size: 0.65rem;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.06em;
+		box-shadow: 0 4px 12px -4px rgba(129, 140, 248, 0.6);
+		white-space: nowrap;
+	}
+
 	.pricing-card header {
 		display: flex;
 		flex-direction: column;
 		gap: 0.4rem;
 	}
 
+	.pricing-card header h3 {
+		margin: 0;
+	}
+
 	.pricing-card__price {
 		font-size: 1.35rem;
 		font-weight: 600;
 		color: var(--text-primary);
+	}
+
+	.pricing-card__subtitle {
+		display: block;
+		font-size: 0.85rem;
+		color: rgba(129, 140, 248, 0.85);
+		font-weight: 500;
+		margin-top: 0.2rem;
 	}
 
 	.pricing-card header p {
@@ -1051,6 +1144,16 @@ const pricing = [
 
 		.cta {
 			padding: 2.5rem 1.6rem;
+		}
+
+		.pricing-card__header-row {
+			flex-wrap: wrap;
+		}
+
+		.pricing-card__badge {
+			font-size: 0.6rem;
+			padding: 0.3rem 0.7rem;
+			letter-spacing: 0.04em;
 		}
 	}
 </style>
