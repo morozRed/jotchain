@@ -1,7 +1,3 @@
-Ah, now we're talking! This is **much clearer**. Let me rewrite the PRD for what you actually want to build:
-
----
-
 ## **JotChain PRD - MVP v1.0**
 
 ### **Problem**
@@ -16,20 +12,80 @@ Log what you do (quick entries), configure when you have meetings, receive AI-ge
 
 ### **Phase 1: JotChain (Week 1-2)**
 
-#### 1. **Quick Entry Form**
+#### 1. **Quick Entry Form with Smart Writing Coach**
 ```
 What did you work on today?
-┌─────────────────────────────┐
-│                             │
-│                             │
-└─────────────────────────────┘
-[Save]
-```
-- Single text field
-- Optional: "Tag with project/area" (dropdown or free text)
-- Mobile-friendly (log on commute home)
+┌─────────────────────────────────────────┐
+│ Fixed auth timeout in @backend          │  <- @-mentions autocomplete
+│ affecting 200+ enterprise users         │
+└─────────────────────────────────────────┘
 
-#### 2. **Email Schedule Configuration**
+[Quality Score: 8/10] ✨ Great! You included impact & specifics.
+
+[@backend]  [Save]
+```
+
+**@-Mentions for Projects:**
+- Type `@` to trigger project autocomplete dropdown
+- Shows existing projects + "Create new project: @{text}"
+- Multiple projects can be mentioned per entry
+- Displayed as colored chips below entry
+
+**Smart Writing Coach (Real-time):**
+- Pattern-based detection of vague phrases:
+  - "fixed bug" → "Which bug? Include ticket number"
+  - "worked on" → "What specifically did you accomplish?"
+  - "had meeting" → "What was decided? Any action items?"
+- Quality score (0-10) based on:
+  - Specific metrics/numbers
+  - Actionable language (shipped, launched, fixed)
+  - Context and impact
+  - Entry length
+- Color-coded: 🔴 <4, 🟡 4-7, 🟢 >7
+- **Never blocks submission** - suggestions only
+
+**Features:**
+- Single text field (keeps it quick)
+- Mobile-friendly (log on commute home)
+- Progressive enhancement - works without JS
+
+#### 2. **Projects (Optional Organization)**
+```
+Your Projects
+
+🔵 Backend        (12 entries)    [Edit]
+🟢 Mobile App     (8 entries)     [Edit]
+🟡 DevOps         (5 entries)     [Edit]
+
+[+ Create New Project]
+```
+
+**Purpose:**
+- Organize entries by work area/product/team
+- Prepare for Phase 2: map GitHub repos to projects
+- Optional - entries can exist without projects
+
+**Data Model:**
+```
+Project {
+  id: uuid
+  name: string (required)
+  description: string (optional)
+  color: hex color
+  user_id: uuid
+}
+
+entry_projects (junction table)
+  entry_id ↔ project_id (many-to-many)
+```
+
+**Features:**
+- Create projects on-the-fly via @-mentions or dashboard
+- Color coding for visual organization
+- Used in AI summaries to group entries
+- Dashboard shows entry count per project
+
+#### 3. **Email Schedule Configuration**
 ```
 When do you have meetings?
 
@@ -48,27 +104,60 @@ When do you have meetings?
 - Time picker (user's timezone)
 - Email sent 30 mins before meeting
 
-#### 3. **AI-Generated Email Summaries**
+#### 4. **AI-Generated Email Summaries (Project-Grouped)**
 Email arrives with:
 ```
-Subject: Your daily stand-up prep - Oct 23
+Subject: Your daily stand-up prep - Oct 24
 
-Yesterday you:
+📦 Backend (2 entries)
 • Finished API authentication refactor
-• Fixed bug in payment flow
+• Fixed auth timeout bug affecting 200+ enterprise users
+
+💳 Payments (1 entry)
+• Resolved payment flow issue causing checkout failures
+
+💡 Team Collaboration
 • Code reviewed 3 PRs for Sarah's team
 
 Blockers mentioned:
 • Database performance on staging
 
+💬 Quality tip: Your entries averaged 7.5/10 this week - keep including
+   specific metrics and impact!
+
 Ready for stand-up? 👍
 ```
 
-#### 4. **Web Dashboard (Minimal)**
-- Past entries (simple list view)
+**Enhancements:**
+- Entries grouped by project (color-coded emoji)
+- Uncategorized entries shown separately
+- Quality score trend included
+- Still focuses on: accomplishments, blockers, context
+
+#### 5. **Web Dashboard (Minimal)**
+```
+Tabs: [Entries] [Projects] [Settings]
+
+Entries View:
+┌────────────────────────────────────────┐
+│ Oct 24 · [@backend] [@payments]        │
+│ Fixed auth timeout affecting 200+...   │
+│ Quality: 🟢 8/10                       │
+└────────────────────────────────────────┘
+
+Projects View:
+🔵 Backend (12 entries)
+🟢 Mobile (8 entries)
+```
+
+**Features:**
+- Past entries with project tags
+- Filter by project
+- Quality scores visible
 - Edit email schedule
 - See upcoming summaries
-- That's it.
+- Project management
+- That's it - keep it minimal
 
 ---
 
@@ -76,15 +165,17 @@ Ready for stand-up? 👍
 
 **Trigger**: After Phase 1 validates
 
-#### 5. **GitHub Integration**
+#### 6. **GitHub Integration**
 - OAuth connect GitHub account
 - Select repos to track
+- **Map repos to projects** (e.g., `backend-api` → @backend project)
 - AI analyzes:
   - Your commits (for self-review)
   - Team's PRs/commits (for manager reviews)
   - Code review activity
+- Automatically creates entries from significant commits
 
-#### 6. **Performance Review Generator**
+#### 7. **Performance Review Generator**
 ```
 Generate review for:
 ☑ Yourself (last 6 months)
@@ -111,11 +202,15 @@ Output:
 ### **Frontend**
 - Next.js (React + API routes)
 - Tailwind CSS
+- **@-mentions autocomplete:** Headless UI Combobox or Radix UI
+- **Quality scoring:** Client-side JS (pattern matching)
 - Deploy: Vercel
 
 ### **Backend**
 - Next.js API routes
 - Database: Supabase (PostgreSQL)
+  - Tables: users, entries, projects, entry_projects
+  - Junction table for many-to-many relationships
 - Auth: Supabase Auth
 
 ### **Scheduling/Email**
@@ -139,13 +234,18 @@ Output:
 ### **First Time User**
 1. Sign up with email
 2. "Add your first entry" prompt
-3. "When do you have meetings?" → configure schedule
-4. "You'll get your first summary before tomorrow's stand-up"
+3. **Optional:** "Create a project to organize your work" (can skip)
+4. See real-time quality coach suggestions as they type
+5. "When do you have meetings?" → configure schedule
+6. "You'll get your first summary before tomorrow's stand-up"
 
 ### **Daily Use**
 1. End of day: quick entry (2 min)
-2. Next morning: email arrives
-3. Walk into meeting prepared
+   - Type naturally, use @-mentions for projects
+   - See quality score and suggestions
+   - Submit when ready (no blocking)
+2. Next morning: email arrives (project-grouped)
+3. Walk into meeting prepared with context
 
 ### **Weekly/Monthly**
 1. Same flow, but longer-form summaries
@@ -192,21 +292,29 @@ Output:
 
 ## **Build Timeline**
 
-### **Week 1:**
+### **Week 1 (Enhanced):**
 - Auth (Supabase): 2 hours
+- **Projects CRUD + data model:** 3 hours *(new)*
 - Entry form + storage: 4 hours
+- **@-Mentions autocomplete UI:** 4 hours *(new)*
 - Email schedule UI: 3 hours
 - Vercel cron setup: 2 hours
-**Total: 11 hours**
+**Total: 18 hours** (was 11 hours)
 
 ### **Week 2:**
-- AI summary generation: 4 hours
-- Email template design: 3 hours
+- **Smart Writing Coach (patterns + scoring):** 5 hours *(new)*
+- AI summary generation (with project grouping): 5 hours (was 4)
+- Email template design (project sections): 4 hours (was 3)
 - Test + polish: 4 hours
 - Deploy + domain setup: 1 hour
-**Total: 12 hours**
+**Total: 19 hours** (was 12 hours)
 
-### **Phase 1 Launch: 23 hours of work (~3 days)**
+### **Phase 1 Launch: 37 hours of work (~5 days)** (was 23 hours / 3 days)
+
+**Worth the extra 2 days for:**
+- Projects foundation for Phase 2
+- Modern @-mentions UX
+- Smart Writing Coach differentiation
 
 ### **Week 3-4 (if validated):**
 - GitHub OAuth: 4 hours
@@ -224,10 +332,20 @@ Output:
 - 20 signups in week 1
 - 10+ people configure email schedule
 - 5+ people log entries for 5 consecutive days
+- **NEW:** 3+ users create at least 2 projects
+- **NEW:** Average entry quality score > 6.0 by end of week 2
+- **NEW:** 70%+ of entries use @-mentions after day 3
+- Email open rate > 60% (validates meeting prep value)
 - **3 paying customers after trial = validated**
+
+**Quality Tracking:**
+- Monitor score distribution (how many <4, 4-7, >7)
+- Track improvement over time (are users learning?)
+- Correlate quality scores with retention
 
 ### **Phase 2 (Performance Reviews):**
 - 50% of paid users connect GitHub
+- 80%+ of GitHub repos mapped to existing projects
 - 10+ reviews generated
 - Retention improves (less churn)
 
@@ -251,22 +369,105 @@ Output:
 
 1. **Clear primary use case**: JotChain (everyone has meetings)
 2. **Immediate value**: First email = "aha moment"
-3. **Natural upsell**: GitHub integration for managers
-4. **Low friction**: Email-first (users don't need to login daily)
-5. **Quick to build**: 3 days for Phase 1
-6. **Easy to validate**: Email open rates tell you everything
+3. **Quality coaching angle**: Teaches better self-reflection, improves over time
+4. **Projects prepare for scale**: Foundation for GitHub integration (Phase 2)
+5. **Modern UX**: @-mentions feel polished, creates memorable demo moments
+6. **Natural upsell**: GitHub integration for managers
+7. **Low friction**: Email-first (users don't need to login daily), projects optional
+8. **Quick to build**: 5 days for Phase 1 (worth the extra 2 days for differentiation)
+9. **Easy to validate**: Email open rates + quality score trends tell you everything
+
+**The Differentiator:** Smart Writing Coach ensures quality input → better AI summaries → stronger meeting prep value prop. Competitors focus on logging; we focus on **learning**.
+
+---
+
+## **Why These 3 Features Make MVP "Catch Eyes"**
+
+### **1. Projects - Foundation & Future-Proofing**
+**Problem Solved:** Users need organization. Competitors have this.
+**Strategic Value:**
+- Table stakes feature (would look incomplete without it)
+- Prepares architecture for Phase 2 GitHub integration
+- Enables better AI summaries (grouped by project)
+- Low effort, high perceived value
+
+**Demo Moment:** "All your backend work in one view, ready for your team sync"
+
+### **2. @-Mentions - Modern UX Signal**
+**Problem Solved:** Tagging projects should be fast, not a separate dropdown step.
+**Strategic Value:**
+- Shows design polish and attention to DX/UX
+- Familiar pattern (Notion, Linear, Slack all use it)
+- Feels more "professional tool" than basic form
+- Creates muscle memory (users remember the experience)
+
+**Demo Moment:** "Just type @ and watch it autocomplete - like Notion, but for your work log"
+
+### **3. Smart Writing Coach - THE Differentiator**
+**Problem Solved:** Vague entries = vague AI summaries = wasted time.
+**Strategic Value:**
+- **Unique positioning:** Teach users to reflect better (not just log)
+- Ensures quality input → guarantees useful output
+- Viral potential: "My self-awareness improved after 2 weeks of JotChain"
+- Creates habit loop: better entries → better summaries → more engagement
+- Can measure improvement (gamification potential)
+
+**Demo Moment:** "See that 8/10? You just wrote a high-quality reflection in 30 seconds. Tomorrow's stand-up is going to be effortless."
+
+---
+
+**Combined Impact:**
+- Projects = credibility (looks complete)
+- @-Mentions = polish (feels premium)
+- Smart Coach = differentiation (actually unique)
+
+Without these, JotChain is "just another logging tool with AI."
+With these, JotChain is "the tool that makes you better at reflecting on your work."
 
 ---
 
 ## **Open Questions to Answer**
 
+### **Original Questions:**
 1. **Do you want users to log entries on weekends?** (probably no, skip weekends)
 2. **Should GitHub integration be automatic or user-selected repos?** (user-selected, more privacy)
 3. **How far back should performance reviews go?** (6 months default, configurable)
 4. **Should emails include GitHub activity or just manual entries in Phase 1?** (just manual, simpler)
 
+### **New Questions (For 3 Features):**
+5. **Should we suggest default projects on signup?** (e.g., "Work", "Personal", "Team")
+   - Pro: Lower barrier to entry
+   - Con: Might clutter; optional is cleaner
+6. **What quality score threshold triggers educational tips?** (<5? <6?)
+   - Pro: Help struggling users improve
+   - Con: Don't want to be annoying
+7. **Should @-mentions work in the middle of words or only after whitespace?**
+   - Example: "worked@backend" vs "worked @backend"
+   - Recommend: whitespace only (cleaner parsing)
+8. **Show quality score history in dashboard?**
+   - Pro: Gamification, shows improvement
+   - Con: Extra scope
+   - Recommend: Phase 1.5
+
 ---
 
-**Does this match your vision?** The key insight is: **Phase 1 = meeting prep (validated in 2 weeks), Phase 2 = performance reviews with GitHub (build only if Phase 1 works).**
+## **Summary: Updated MVP Vision**
 
-This way you're not spending weeks on GitHub integration before knowing if anyone wants the core product.
+**Core Value Prop (Unchanged):**
+Log what you do → Receive AI summaries before meetings → Better meeting prep
+
+**Enhanced With:**
+1. **Projects:** Optional organization, prepares for GitHub integration
+2. **@-Mentions:** Modern UX for fast project tagging
+3. **Smart Writing Coach:** Real-time quality feedback (the differentiator)
+
+**Key Insight:**
+- **Phase 1** (5 days): JotChain with quality coaching → validated via email opens & quality scores
+- **Phase 2** (3 days): GitHub integration + performance reviews → build only if Phase 1 works
+
+**Strategic Trade-off:**
+- Added 2 days to build time (3 days → 5 days)
+- Gained: Differentiation, better summaries, Phase 2 foundation
+- Worth it: "Catch eyes" features that make MVP feel complete and unique
+
+This isn't feature creep - it's **strategic positioning**. We're not just building a logging tool; we're building a **reflection & growth tool** that happens to solve meeting prep.
