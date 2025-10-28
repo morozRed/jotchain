@@ -2,8 +2,8 @@
 
 class CreateEntries < ActiveRecord::Migration[8.0]
   def change
-    create_table :entries do |t|
-      t.references :user, null: false, foreign_key: true
+    create_table :entries, id: :uuid, default: "gen_random_uuid()" do |t|
+      t.references :user, type: :uuid, null: false, foreign_key: true
       t.text :body, null: false
       t.string :tag
       t.datetime :logged_at, null: false

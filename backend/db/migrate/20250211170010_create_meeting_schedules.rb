@@ -2,8 +2,8 @@
 
 class CreateMeetingSchedules < ActiveRecord::Migration[8.0]
   def change
-    create_table :meeting_schedules do |t|
-      t.references :user, null: false, foreign_key: true
+    create_table :meeting_schedules, id: :uuid, default: "gen_random_uuid()" do |t|
+      t.references :user, type: :uuid, null: false, foreign_key: true
       t.string :meeting_type, null: false
       t.boolean :enabled, null: false, default: true
       t.time :time_of_day, null: false
