@@ -136,10 +136,10 @@ export default function Dashboard() {
           <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
             <div>
               <h1 className="text-2xl font-semibold leading-tight text-foreground md:text-3xl">
-                Walk into every stand-up prepared
+                Keep track of what you're building
               </h1>
               <p className="text-muted-foreground mt-2 max-w-2xl text-sm md:text-base">
-                Capture daily wins, tune your meeting cadence, and let JotChain shape the AI brief that hits your inbox before every conversation.
+                Jot down your daily wins, challenges, and ideas. Stay organized and never forget what you worked on.
               </p>
             </div>
             <div className="flex items-center gap-3 rounded-lg border border-dashed border-primary/30 px-4 py-3 text-sm text-primary">
@@ -164,31 +164,44 @@ export default function Dashboard() {
         </header>
 
         <div className="flex flex-col gap-6 lg:grid lg:grid-cols-[minmax(0,1.35fr)_minmax(0,0.85fr)]">
-          <Card className="border-border/30 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
+          <Card className="border-border/30 shadow-[0_1px_3px_rgba(0,0,0,0.06)] flex flex-col">
             <CardHeader className="pb-5">
               <CardTitle className="text-lg font-semibold">
                 What did you work on today?
               </CardTitle>
               <CardDescription className="text-sm">
-                Capture wins, blockers, and progress. Use @ to tag projects.
+                Capture wins, blockers, and progress.
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <form onSubmit={submitEntry} className="flex flex-col gap-5">
-                <div className="space-y-3">
-                  <Textarea
-                    id="entry-body"
-                    value={entryForm.data.entry.body}
-                    onChange={(event) =>
-                      handleEntryChange("body", event.target.value)
-                    }
-                    onKeyDown={handleEntryShortcut}
-                    placeholder="Shipped auth refactor, fixed API timeout issues, reviewed @backend PRs..."
-                    aria-invalid={Boolean(entryForm.errors.body)}
-                    aria-label="Entry content"
-                    autoFocus
-                    className="min-h-[180px] resize-none border-border/30 bg-background px-4 py-3 text-[15px] leading-relaxed shadow-sm transition-all duration-200 focus-visible:border-primary/50 focus-visible:ring-2 focus-visible:ring-primary/20"
-                  />
+            <CardContent className="flex flex-1 flex-col">
+              <form onSubmit={submitEntry} className="flex flex-1 flex-col gap-5">
+                <div className="relative flex flex-1 flex-col space-y-3">
+                  <div className="relative flex flex-1">
+                    <Textarea
+                      id="entry-body"
+                      value={entryForm.data.entry.body}
+                      onChange={(event) =>
+                        handleEntryChange("body", event.target.value)
+                      }
+                      onKeyDown={handleEntryShortcut}
+                      placeholder="Shipped auth refactor, fixed API timeout issues, reviewed @backend PRs..."
+                      aria-invalid={Boolean(entryForm.errors.body)}
+                      aria-label="Entry content"
+                      autoFocus
+                      className="min-h-0 flex-1 resize-none border-border/30 bg-background px-4 py-3 pb-16 text-[15px] leading-relaxed shadow-sm transition-all duration-200 focus-visible:border-primary/50 focus-visible:ring-2 focus-visible:ring-primary/20"
+                    />
+                    <Button
+                      type="submit"
+                      className="absolute bottom-3 right-3 shadow-md transition-all duration-200"
+                      disabled={entryForm.processing}
+                      size="sm"
+                    >
+                      {entryForm.processing && (
+                        <Send className="mr-2 size-4 animate-spin" />
+                      )}
+                      Save entry
+                    </Button>
+                  </div>
                   <InputError message={entryForm.errors.body} />
                 </div>
 
@@ -209,16 +222,6 @@ export default function Dashboard() {
                     />
                     <InputError message={entryForm.errors.tag} />
                   </div>
-                  <Button
-                    type="submit"
-                    className="w-full transition-all duration-200 sm:mt-[22px] sm:w-auto"
-                    disabled={entryForm.processing}
-                  >
-                    {entryForm.processing && (
-                      <Send className="mr-2 size-4 animate-spin" />
-                    )}
-                    Save entry
-                  </Button>
                 </div>
               </form>
             </CardContent>
