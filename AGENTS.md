@@ -9,7 +9,8 @@
 ## Build, Test, and Development Commands
 - From `backend/`, run `bin/setup` once to install gems, npm packages, and prepare the database.
 - Use `bin/dev` to launch the Rails server and Vite dev server together (defined in `Procfile.dev`).
-- Execute `bundle exec rails db:migrate` whenever schema changes ship; include `RAILS_ENV=test` when preparing CI.
+- Create migration: `be rails g migration {migration_name}`
+- Execute `be rake db:migrate` whenever schema changes ship; include `RAILS_ENV=test` when preparing CI.
 - Frontend tooling lives alongside Rails: `npm run lint`, `npm run format`, and `npm run check` operate on `app/frontend`.
 - For the landing site, `cd landing_page && npm install`, `npm run dev` for local preview, and `npm run build` for publishable output.
 

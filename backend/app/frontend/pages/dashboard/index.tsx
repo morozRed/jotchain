@@ -1,4 +1,5 @@
 import { Head, router, useForm, usePage } from "@inertiajs/react"
+import { useState } from "react"
 import {
   CalendarDays,
   ChevronLeft,
@@ -7,6 +8,7 @@ import {
   PencilLine,
   Send,
   Sparkles,
+  Trash2,
 } from "lucide-react"
 
 import InputError from "@/components/input-error"
@@ -22,10 +24,18 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { dashboardPath } from "@/routes"
+import { dashboardPath, entryPath } from "@/routes"
 
 type DashboardEntry = {
   id: number
@@ -93,8 +103,11 @@ export default function Dashboard() {
     })
   }
 
-  const submitEntry: React.FormEventHandler<HTMLFormElement> = (event) => {
-    event.preventDefault()
+  const submitEntryRequest = () => {
+    if (entryForm.processing) {
+      return
+    }
+
     entryForm.post("/entries", {
       preserveScroll: true,
       onSuccess: () => {
@@ -104,11 +117,23 @@ export default function Dashboard() {
     })
   }
 
+  const submitEntry: React.FormEventHandler<HTMLFormElement> = (event) => {
+    event.preventDefault()
+    submitEntryRequest()
+  }
+
+  const handleEntryShortcut: React.KeyboardEventHandler<HTMLTextAreaElement> = (event) => {
+    if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
+      event.preventDefault()
+      submitEntryRequest()
+    }
+  }
+
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Dashboard" />
 
-      <div className="flex h-full flex-1 flex-col gap-3 px-4 pb-10 pt-6 md:px-6">
+      <div className="flex h-full flex-1 flex-col gap-6 px-4 pb-10 pt-6 md:px-6">
         <header className="flex flex-col gap-2">
           <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
             <div>
@@ -140,83 +165,91 @@ export default function Dashboard() {
           </div>
         </header>
 
-        <Card className="shadow-sm">
-          <CardHeader className="pb-4">
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <PencilLine className="size-5 text-primary" />
-              Quick entry
-            </CardTitle>
-            <CardDescription>
-              Log what moved today. Summaries pull directly from this feed.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={submitEntry} className="flex flex-col gap-4">
-              <div className="space-y-3">
-                <Label htmlFor="entry-body">What did you work on?</Label>
-                <Textarea
-                  id="entry-body"
-                  value={entryForm.data.entry.body}
-                  onChange={(event) =>
-                    handleEntryChange("body", event.target.value)
-                  }
-                  placeholder="Ship, fix, support, coach. Capture details your future self will need."
-                  aria-invalid={Boolean(entryForm.errors.body)}
-                  autoFocus
-                />
-                <InputError message={entryForm.errors.body} />
-              </div>
-
-              <div className="flex flex-col gap-2 md:flex-row md:items-center">
-                <div className="flex-1 space-y-3">
-                  <Label htmlFor="entry-tag">Tag with project or area</Label>
-                  <Input
-                    id="entry-tag"
-                    value={entryForm.data.entry.tag}
+        <div className="flex flex-col gap-6 lg:grid lg:grid-cols-[minmax(0,1.35fr)_minmax(0,0.85fr)]">
+          <Card className="shadow-sm">
+            <CardHeader className="pb-4">
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <PencilLine className="size-5 text-primary" />
+                Quick entry
+              </CardTitle>
+              <CardDescription>
+                Log what moved today. Summaries pull directly from this feed.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={submitEntry} className="flex flex-col gap-5">
+                <div className="rounded-xl border border-border/50 bg-muted/30 p-5 shadow-inner">
+                  <Label htmlFor="entry-body" className="text-sm font-medium text-muted-foreground">
+                    What did you work on?
+                  </Label>
+                  <Textarea
+                    id="entry-body"
+                    value={entryForm.data.entry.body}
                     onChange={(event) =>
-                      handleEntryChange("tag", event.target.value)
+                      handleEntryChange("body", event.target.value)
                     }
-                    placeholder="ex: Billing revamp, Platform, Hiring"
-                    aria-invalid={Boolean(entryForm.errors.tag)}
+                    onKeyDown={handleEntryShortcut}
+                    placeholder="Ship, fix, support, coach. Capture details your future self will need."
+                    aria-invalid={Boolean(entryForm.errors.body)}
+                    autoFocus
+                    className="min-h-[220px] resize-none border-none bg-transparent px-0 text-base shadow-none focus-visible:ring-2 focus-visible:ring-primary/40 md:text-sm p-2"
                   />
-                  <InputError message={entryForm.errors.tag} />
+                  <InputError message={entryForm.errors.body} />
+                  <div className="mt-4 flex flex-col gap-3 md:flex-row md:items-end md:gap-4">
+                    <div className="flex-1 space-y-2">
+                      <Label htmlFor="entry-tag" className="text-xs font-medium text-muted-foreground">
+                        Tag with project or area
+                      </Label>
+                      <Input
+                        id="entry-tag"
+                        value={entryForm.data.entry.tag}
+                        onChange={(event) =>
+                          handleEntryChange("tag", event.target.value)
+                        }
+                        placeholder="ex: Billing revamp, Platform, Hiring"
+                        aria-invalid={Boolean(entryForm.errors.tag)}
+                        className="border-border/40 bg-background/70 focus-visible:ring-2 focus-visible:ring-primary/40"
+                      />
+                      <InputError message={entryForm.errors.tag} />
+                    </div>
+                    <Button
+                      type="submit"
+                      className="w-full md:w-auto"
+                      disabled={entryForm.processing}
+                    >
+                      {entryForm.processing && (
+                        <Send className="mr-2 size-4 animate-spin" />
+                      )}
+                      Save entry
+                    </Button>
+                  </div>
                 </div>
-                <Button
-                  type="submit"
-                  className="mt-2 w-full md:mt-6 md:w-auto"
-                  disabled={entryForm.processing}
-                >
-                  {entryForm.processing && (
-                    <Send className="mr-2 size-4 animate-spin" />
-                  )}
-                  Save entry
-                </Button>
-              </div>
-            </form>
-          </CardContent>
-          <CardFooter className="border-t bg-muted/30 text-xs text-muted-foreground">
-            <div className="flex w-full flex-col gap-1 md:flex-row md:items-center md:justify-between">
-              <span>
-                Tips: aim for 2-4 bullet thoughts, include impact, blockers,
-                and recognitions.
-              </span>
-              {entryStats.lastLoggedAt && (
-                <span className="font-medium text-foreground">
-                  Last logged:{" "}
-                  {new Date(entryStats.lastLoggedAt).toLocaleString()}
+              </form>
+            </CardContent>
+            <CardFooter className="border-t bg-muted/30 text-xs text-muted-foreground">
+              <div className="flex w-full flex-col gap-1 md:flex-row md:items-center md:justify-between">
+                <span>
+                  Tips: aim for 2-4 bullet thoughts, include impact, blockers,
+                  and recognitions.
                 </span>
-              )}
-            </div>
-          </CardFooter>
-        </Card>
+                {entryStats.lastLoggedAt && (
+                  <span className="font-medium text-foreground">
+                    Last logged:{" "}
+                    {new Date(entryStats.lastLoggedAt).toLocaleString()}
+                  </span>
+                )}
+              </div>
+            </CardFooter>
+          </Card>
 
-        <EntriesCard
-          entries={entries}
-          selectedDateFormatted={selectedDateFormatted}
-          previousDate={previousDate}
-          nextDate={nextDate}
-          isToday={isToday}
-        />
+          <EntriesCard
+            entries={entries}
+            selectedDateFormatted={selectedDateFormatted}
+            previousDate={previousDate}
+            nextDate={nextDate}
+            isToday={isToday}
+          />
+        </div>
       </div>
     </AppLayout>
   )
@@ -235,6 +268,8 @@ function EntriesCard({
   nextDate: string
   isToday: boolean
 }) {
+  const [entryToDelete, setEntryToDelete] = useState<number | null>(null)
+
   const navigateToDate = (date: string) => {
     router.visit(dashboardPath({ date }), {
       preserveUrl: true,
@@ -243,9 +278,21 @@ function EntriesCard({
     })
   }
 
+  const handleDeleteEntry = () => {
+    if (entryToDelete) {
+      router.delete(entryPath(entryToDelete), {
+        preserveUrl: true,
+        preserveScroll: true,
+        onSuccess: () => {
+          setEntryToDelete(null)
+        },
+      })
+    }
+  }
+
   return (
-    <Card className="shadow-sm">
-      <CardHeader className="pb-4">
+    <Card className="shadow-sm lg:flex lg:h-[580px] lg:flex-col">
+      <CardHeader>
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1">
             <CardTitle className="flex items-center gap-2 text-lg">
@@ -277,7 +324,7 @@ function EntriesCard({
           </div>
         </div>
       </CardHeader>
-      <CardContent className="flex flex-col gap-4">
+      <CardContent className="flex flex-1 flex-col gap-4 overflow-y-auto">
         {entries.length === 0 && (
           <EmptyState
             icon={<Sparkles className="size-5 text-primary" />}
@@ -289,34 +336,66 @@ function EntriesCard({
         {entries.map((entry) => (
           <article
             key={entry.id}
-            className="rounded-lg border border-border/60 bg-background/40 p-4 shadow-xs hover:border-primary/40 hover:shadow-md"
+            className="group relative rounded-lg border border-border/60 bg-background/40 p-4 shadow-xs hover:border-primary/40 hover:shadow-md"
           >
-            <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
-              {entry.loggedAtLabel && (
-                <span className="inline-flex items-center gap-1 font-medium text-foreground">
-                  <CalendarDays className="size-4 text-primary" />
-                  {entry.loggedAtLabel}
-                </span>
-              )}
-              <span aria-hidden className="hidden text-border md:inline">
-                ·
-              </span>
-              <span>{entry.createdAtAgo} ago</span>
-              {entry.tag && (
-                <Badge
-                  variant="outline"
-                  className="border-primary/30 bg-primary/10 text-xs dark:bg-primary/20 dark:border-primary/40"
-                >
-                  #{entry.tag}
-                </Badge>
-              )}
+            <div className="flex items-start justify-between gap-2">
+              <div className="flex-1">
+                <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
+                  {entry.loggedAtLabel && (
+                    <span className="inline-flex items-center gap-1 font-medium text-foreground">
+                      <CalendarDays className="size-4 text-primary" />
+                      {entry.loggedAtLabel}
+                    </span>
+                  )}
+                  <span aria-hidden className="hidden text-border md:inline">
+                    ·
+                  </span>
+                  <span>{entry.createdAtAgo} ago</span>
+                  {entry.tag && (
+                    <Badge
+                      variant="outline"
+                      className="border-primary/30 bg-primary/10 text-xs dark:bg-primary/20 dark:border-primary/40"
+                    >
+                      #{entry.tag}
+                    </Badge>
+                  )}
+                </div>
+                <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-foreground">
+                  {entry.body}
+                </p>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="size-8 p-0 text-muted-foreground opacity-0 transition-opacity hover:text-destructive group-hover:opacity-100"
+                onClick={() => setEntryToDelete(entry.id)}
+              >
+                <Trash2 className="size-4" />
+                <span className="sr-only">Delete entry</span>
+              </Button>
             </div>
-            <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-foreground">
-              {entry.body}
-            </p>
           </article>
         ))}
       </CardContent>
+
+      <Dialog open={entryToDelete !== null} onOpenChange={(open) => !open && setEntryToDelete(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete entry?</DialogTitle>
+            <DialogDescription>
+              This action cannot be undone. This will permanently delete your entry.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEntryToDelete(null)}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={handleDeleteEntry}>
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Card>
   )
 }
