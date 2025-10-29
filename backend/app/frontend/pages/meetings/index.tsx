@@ -180,7 +180,7 @@ export default function Meetings() {
                   <div
                     key={summary.scheduleId}
                     className={cn(
-                      "rounded-xl border p-4 shadow-xs transition hover:border-primary/50 hover:shadow-md",
+                      "rounded-xl border p-4 shadow-xs hover:border-primary/50 hover:shadow-md",
                       MEETING_ACCENTS[summary.meetingType] ||
                         "bg-muted text-foreground",
                     )}
@@ -307,8 +307,8 @@ function MeetingScheduleCard({
   const showMonthlySelector = schedule.meetingType === "monthly_review"
 
   return (
-    <Card className={cn("border shadow-sm transition hover:shadow-md", accentClasses)}>
-      <form onSubmit={onSubmit} className="flex flex-col gap-4">
+    <Card className={cn("border shadow-sm hover:shadow-md", accentClasses)}>
+      <form onSubmit={onSubmit} className="flex flex-1 flex-col gap-4">
         <CardHeader className="pb-2">
           <CardTitle className="flex items-center justify-between gap-3 text-base font-semibold">
             <span>{schedule.name}</span>

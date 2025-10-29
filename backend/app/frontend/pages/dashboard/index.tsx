@@ -225,7 +225,7 @@ function EntriesCard({ entries }: { entries: DashboardEntry[] }) {
         {entries.map((entry) => (
           <article
             key={entry.id}
-            className="rounded-lg border border-border/60 bg-background/40 p-4 shadow-xs transition hover:border-primary/40 hover:shadow-md"
+            className="rounded-lg border border-border/60 bg-background/40 p-4 shadow-xs hover:border-primary/40 hover:shadow-md"
           >
             <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
               {entry.loggedAtLabel && (

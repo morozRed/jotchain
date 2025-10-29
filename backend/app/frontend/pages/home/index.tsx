@@ -161,7 +161,7 @@ export default function Welcome() {
             </div>
 
             <div className="relative mx-auto w-full max-w-xl">
-              <div className="absolute inset-0 -translate-x-6 translate-y-6 rounded-3xl bg-gradient-to-br from-primary/30 via-card/60 to-transparent blur-3xl" />
+              <div className="absolute inset-0 -translate-x-6 rounded-3xl bg-gradient-to-br from-primary/30 via-card/60 to-transparent blur-3xl" />
               <div className="relative grid gap-4">
                 <div className="rounded-2xl border border-white/10 bg-white/10 p-6 shadow-[0_20px_60px_rgba(8,9,15,0.55)] backdrop-blur">
                   <div className="flex items-center justify-between text-xs text-white/60">
@@ -286,7 +286,7 @@ function FeatureCard({
   description: string
 }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/5 p-6 text-white/80 transition hover:border-white/30 hover:bg-white/10">
+    <div className="rounded-2xl border border-white/10 bg-white/5 p-6 text-white/80 hover:border-white/30 hover:bg-white/10">
       <span className="flex size-10 items-center justify-center rounded-full bg-primary/20 text-accent-hot">
         <Icon className="size-5" />
       </span>
