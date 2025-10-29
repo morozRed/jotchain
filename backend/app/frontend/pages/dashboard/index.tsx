@@ -1,19 +1,15 @@
 import { Head, router, useForm, usePage } from "@inertiajs/react"
-import { useState } from "react"
 import {
   CalendarDays,
   ChevronLeft,
   ChevronRight,
-  Inbox,
-  PencilLine,
   Send,
   Sparkles,
   Trash2,
 } from "lucide-react"
+import { type ReactNode, useState } from "react"
 
 import InputError from "@/components/input-error"
-import AppLayout from "@/layouts/app-layout"
-import type { SharedData } from "@/types"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -35,9 +31,11 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
+import AppLayout from "@/layouts/app-layout"
 import { dashboardPath, entryPath } from "@/routes"
+import type { SharedData } from "@/types"
 
-type DashboardEntry = {
+interface DashboardEntry {
   id: number
   body: string
   tag?: string | null
@@ -47,7 +45,7 @@ type DashboardEntry = {
   createdAt: string
 }
 
-type EntryStats = {
+interface EntryStats {
   count: number
   lastLoggedAt?: string | null
   currentStreak?: number
@@ -63,7 +61,7 @@ type PageProps = SharedData & {
   selectedDateFormatted: string
 }
 
-type EntryFormState = {
+interface EntryFormState {
   entry: {
     body: string
     tag: string
@@ -166,22 +164,18 @@ export default function Dashboard() {
         </header>
 
         <div className="flex flex-col gap-6 lg:grid lg:grid-cols-[minmax(0,1.35fr)_minmax(0,0.85fr)]">
-          <Card className="shadow-sm">
-            <CardHeader className="pb-4">
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <PencilLine className="size-5 text-primary" />
-                Quick entry
+          <Card className="border-border/30 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
+            <CardHeader className="pb-5">
+              <CardTitle className="text-lg font-semibold">
+                What did you work on today?
               </CardTitle>
-              <CardDescription>
-                Log what moved today. Summaries pull directly from this feed.
+              <CardDescription className="text-sm">
+                Capture wins, blockers, and progress. Use @ to tag projects.
               </CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={submitEntry} className="flex flex-col gap-5">
-                <div className="rounded-xl border border-border/50 bg-muted/30 p-5 shadow-inner">
-                  <Label htmlFor="entry-body" className="text-sm font-medium text-muted-foreground">
-                    What did you work on?
-                  </Label>
+                <div className="space-y-3">
                   <Textarea
                     id="entry-body"
                     value={entryForm.data.entry.body}
@@ -189,53 +183,53 @@ export default function Dashboard() {
                       handleEntryChange("body", event.target.value)
                     }
                     onKeyDown={handleEntryShortcut}
-                    placeholder="Ship, fix, support, coach. Capture details your future self will need."
+                    placeholder="Shipped auth refactor, fixed API timeout issues, reviewed @backend PRs..."
                     aria-invalid={Boolean(entryForm.errors.body)}
+                    aria-label="Entry content"
                     autoFocus
-                    className="min-h-[220px] resize-none border-none bg-transparent px-0 text-base shadow-none focus-visible:ring-2 focus-visible:ring-primary/40 md:text-sm p-2"
+                    className="min-h-[180px] resize-none border-border/30 bg-background px-4 py-3 text-[15px] leading-relaxed shadow-sm transition-all duration-200 focus-visible:border-primary/50 focus-visible:ring-2 focus-visible:ring-primary/20"
                   />
                   <InputError message={entryForm.errors.body} />
-                  <div className="mt-4 flex flex-col gap-3 md:flex-row md:items-end md:gap-4">
-                    <div className="flex-1 space-y-2">
-                      <Label htmlFor="entry-tag" className="text-xs font-medium text-muted-foreground">
-                        Tag with project or area
-                      </Label>
-                      <Input
-                        id="entry-tag"
-                        value={entryForm.data.entry.tag}
-                        onChange={(event) =>
-                          handleEntryChange("tag", event.target.value)
-                        }
-                        placeholder="ex: Billing revamp, Platform, Hiring"
-                        aria-invalid={Boolean(entryForm.errors.tag)}
-                        className="border-border/40 bg-background/70 focus-visible:ring-2 focus-visible:ring-primary/40"
-                      />
-                      <InputError message={entryForm.errors.tag} />
-                    </div>
-                    <Button
-                      type="submit"
-                      className="w-full md:w-auto"
-                      disabled={entryForm.processing}
-                    >
-                      {entryForm.processing && (
-                        <Send className="mr-2 size-4 animate-spin" />
-                      )}
-                      Save entry
-                    </Button>
+                </div>
+
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:gap-3">
+                  <div className="flex-1 space-y-2">
+                    <Label htmlFor="entry-tag" className="text-xs font-normal text-muted-foreground">
+                      Tag (optional)
+                    </Label>
+                    <Input
+                      id="entry-tag"
+                      value={entryForm.data.entry.tag}
+                      onChange={(event) =>
+                        handleEntryChange("tag", event.target.value)
+                      }
+                      placeholder="Backend, Platform, Hiring..."
+                      aria-invalid={Boolean(entryForm.errors.tag)}
+                      className="border-border/30 bg-background shadow-sm transition-all duration-200 focus-visible:border-primary/50 focus-visible:ring-2 focus-visible:ring-primary/20"
+                    />
+                    <InputError message={entryForm.errors.tag} />
                   </div>
+                  <Button
+                    type="submit"
+                    className="w-full transition-all duration-200 sm:mt-[22px] sm:w-auto"
+                    disabled={entryForm.processing}
+                  >
+                    {entryForm.processing && (
+                      <Send className="mr-2 size-4 animate-spin" />
+                    )}
+                    Save entry
+                  </Button>
                 </div>
               </form>
             </CardContent>
-            <CardFooter className="border-t bg-muted/30 text-xs text-muted-foreground">
-              <div className="flex w-full flex-col gap-1 md:flex-row md:items-center md:justify-between">
-                <span>
-                  Tips: aim for 2-4 bullet thoughts, include impact, blockers,
-                  and recognitions.
+            <CardFooter className="border-t border-border/30 bg-muted/20 text-xs text-muted-foreground">
+              <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                <span className="leading-relaxed">
+                  💡 Aim for 2-4 key points • Include impact and blockers
                 </span>
                 {entryStats.lastLoggedAt && (
-                  <span className="font-medium text-foreground">
-                    Last logged:{" "}
-                    {new Date(entryStats.lastLoggedAt).toLocaleString()}
+                  <span className="font-medium text-foreground/80">
+                    Last entry {formatTimeAgo(entryStats.lastLoggedAt)}
                   </span>
                 )}
               </div>
@@ -291,16 +285,16 @@ function EntriesCard({
   }
 
   return (
-    <Card className="shadow-sm lg:flex lg:h-[580px] lg:flex-col">
-      <CardHeader>
+    <Card className="border-border/30 shadow-[0_1px_3px_rgba(0,0,0,0.06)] lg:flex lg:h-[580px] lg:flex-col">
+      <CardHeader className="pb-4">
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1">
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <Inbox className="size-5 text-primary" />
-              Entries for {selectedDateFormatted}
+            <CardTitle className="flex items-center gap-2 text-lg font-semibold">
+              <CalendarDays className="size-5 text-primary" />
+              {selectedDateFormatted}
             </CardTitle>
-            <CardDescription>
-              Daily notes fuel your stand-up summaries and team updates.
+            <CardDescription className="mt-1 text-sm">
+              Your daily progress and wins
             </CardDescription>
           </div>
           <div className="flex items-center gap-2">
@@ -336,7 +330,7 @@ function EntriesCard({
         {entries.map((entry) => (
           <article
             key={entry.id}
-            className="group relative rounded-lg border border-border/60 bg-background/40 p-4 shadow-xs hover:border-primary/40 hover:shadow-md"
+            className="group relative rounded-lg border border-border/30 bg-background/40 p-4 shadow-sm transition-all duration-200 hover:border-primary/30 hover:bg-background/60 hover:shadow-[0_2px_8px_rgba(0,0,0,0.08)]"
           >
             <div className="flex items-start justify-between gap-2">
               <div className="flex-1">
@@ -367,7 +361,7 @@ function EntriesCard({
               <Button
                 variant="ghost"
                 size="sm"
-                className="size-8 p-0 text-muted-foreground opacity-0 transition-opacity hover:text-destructive group-hover:opacity-100"
+                className="size-8 p-0 text-muted-foreground opacity-0 transition-all duration-200 hover:text-destructive group-hover:opacity-70 hover:opacity-100"
                 onClick={() => setEntryToDelete(entry.id)}
               >
                 <Trash2 className="size-4" />
@@ -424,4 +418,25 @@ function EmptyState({
 
 function pluralize(count: number, noun: string, suffix = "s") {
   return `${count} ${noun}${Math.abs(count) === 1 ? "" : suffix}`
+}
+
+function formatTimeAgo(dateString: string): string {
+  const date = new Date(dateString)
+  const now = new Date()
+  const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000)
+
+  if (diffInSeconds < 60) return "just now"
+  if (diffInSeconds < 3600) {
+    const mins = Math.floor(diffInSeconds / 60)
+    return `${mins}m ago`
+  }
+  if (diffInSeconds < 86400) {
+    const hours = Math.floor(diffInSeconds / 3600)
+    return `${hours}h ago`
+  }
+  if (diffInSeconds < 604800) {
+    const days = Math.floor(diffInSeconds / 86400)
+    return `${days}d ago`
+  }
+  return date.toLocaleDateString()
 }
