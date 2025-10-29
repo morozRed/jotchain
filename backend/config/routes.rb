@@ -28,7 +28,7 @@ Rails.application.routes.draw do
   resources :entries, only: [:create, :update, :destroy]
   resources :meeting_schedules, only: [:update]
 
-  root "home#index"
+  root "dashboard#index"
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.

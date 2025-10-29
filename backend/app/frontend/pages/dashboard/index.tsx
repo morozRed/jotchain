@@ -1,6 +1,8 @@
-import { Head, useForm, usePage } from "@inertiajs/react"
+import { Head, router, useForm, usePage } from "@inertiajs/react"
 import {
   CalendarDays,
+  ChevronLeft,
+  ChevronRight,
   Inbox,
   PencilLine,
   Send,
@@ -44,6 +46,11 @@ type EntryStats = {
 type PageProps = SharedData & {
   entries: DashboardEntry[]
   entryStats: EntryStats
+  selectedDate: string
+  previousDate: string
+  nextDate: string
+  isToday: boolean
+  selectedDateFormatted: string
 }
 
 type EntryFormState = {
@@ -62,7 +69,15 @@ const breadcrumbs = [
 
 export default function Dashboard() {
   const { props } = usePage<PageProps>()
-  const { entries, entryStats } = props
+  const {
+    entries,
+    entryStats,
+    selectedDate,
+    previousDate,
+    nextDate,
+    isToday,
+    selectedDateFormatted,
+  } = props
 
   const entryForm = useForm<EntryFormState>({
     entry: {
@@ -195,30 +210,79 @@ export default function Dashboard() {
           </CardFooter>
         </Card>
 
-        <EntriesCard entries={entries} />
+        <EntriesCard
+          entries={entries}
+          selectedDateFormatted={selectedDateFormatted}
+          previousDate={previousDate}
+          nextDate={nextDate}
+          isToday={isToday}
+        />
       </div>
     </AppLayout>
   )
 }
 
-function EntriesCard({ entries }: { entries: DashboardEntry[] }) {
+function EntriesCard({
+  entries,
+  selectedDateFormatted,
+  previousDate,
+  nextDate,
+  isToday,
+}: {
+  entries: DashboardEntry[]
+  selectedDateFormatted: string
+  previousDate: string
+  nextDate: string
+  isToday: boolean
+}) {
+  const navigateToDate = (date: string) => {
+    router.visit(dashboardPath({ date }), {
+      preserveUrl: true,
+      preserveScroll: true,
+      only: ["entries", "selectedDate", "previousDate", "nextDate", "isToday", "selectedDateFormatted"],
+    })
+  }
+
   return (
     <Card className="shadow-sm">
       <CardHeader className="pb-4">
-        <CardTitle className="flex items-center gap-2 text-lg">
-          <Inbox className="size-5 text-primary" />
-          Recent entries
-        </CardTitle>
-        <CardDescription>
-          Yesterday&apos;s notes fuel tomorrow&apos;s stand-up summary.
-        </CardDescription>
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex-1">
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <Inbox className="size-5 text-primary" />
+              Entries for {selectedDateFormatted}
+            </CardTitle>
+            <CardDescription>
+              Daily notes fuel your stand-up summaries and team updates.
+            </CardDescription>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => navigateToDate(previousDate)}
+              className="flex size-8 items-center justify-center rounded-md border border-border bg-background hover:bg-accent hover:text-accent-foreground"
+              type="button"
+            >
+              <ChevronLeft className="size-4" />
+              <span className="sr-only">Previous day</span>
+            </button>
+            <button
+              onClick={() => navigateToDate(nextDate)}
+              disabled={isToday}
+              className="flex size-8 items-center justify-center rounded-md border border-border bg-background hover:bg-accent hover:text-accent-foreground disabled:bg-muted disabled:text-muted-foreground disabled:opacity-50 disabled:cursor-not-allowed"
+              type="button"
+            >
+              <ChevronRight className="size-4" />
+              <span className="sr-only">Next day</span>
+            </button>
+          </div>
+        </div>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         {entries.length === 0 && (
           <EmptyState
             icon={<Sparkles className="size-5 text-primary" />}
-            title="No entries yet"
-            subtitle="Add your first note above to kick off the chain. We’ll keep it organized."
+            title="No entries for this day"
+            subtitle="Add a note above to capture what you worked on."
           />
         )}
 

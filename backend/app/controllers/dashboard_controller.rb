@@ -4,14 +4,36 @@ class DashboardController < InertiaController
   def index
     render inertia: "dashboard/index", props: {
       entries: entry_payloads,
-      entryStats: entry_stats
+      entryStats: entry_stats,
+      selectedDate: selected_date.to_s,
+      previousDate: (selected_date - 1.day).to_s,
+      nextDate: (selected_date + 1.day).to_s,
+      isToday: selected_date == Date.current,
+      selectedDateFormatted: selected_date.strftime("%B %-d, %Y")
     }
   end
 
   private
 
+  def selected_date
+    @selected_date ||= if params[:date].present?
+      Date.parse(params[:date])
+    else
+      Date.current
+    end
+  rescue ArgumentError
+    Date.current
+  end
+
   def entry_payloads
-    Current.user.entries.recent_first.limit(15).map do |entry|
+    entries = Current.user.entries.recent_first
+
+    # Filter entries for the selected date
+    start_time = selected_date.beginning_of_day
+    end_time = selected_date.end_of_day
+    entries = entries.for_period(start_time..end_time)
+
+    entries.map do |entry|
       {
         id: entry.id,
         body: entry.body,
