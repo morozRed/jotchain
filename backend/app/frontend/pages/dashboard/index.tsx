@@ -1,5 +1,5 @@
 import { Head, useForm, usePage } from "@inertiajs/react"
-import { Send, Sparkles } from "lucide-react"
+import { Command, CornerDownLeft, Send, Sparkles } from "lucide-react"
 
 import { DashboardEntriesCard, type DashboardEntry } from "@/components/dashboard/entries-card"
 import InputError from "@/components/input-error"
@@ -172,7 +172,11 @@ export default function Dashboard() {
                       {entryForm.processing && (
                         <Send className="mr-2 size-4 animate-spin" />
                       )}
-                      Save entry
+                      <span>Save</span>
+                      <div className="flex items-center gap-0.5 text-xs opacity-60">
+                        <Command className="size-3" />
+                        <CornerDownLeft className="size-3" />
+                      </div>
                     </Button>
                   </div>
                   <InputError message={entryForm.errors.body as string | undefined} />
