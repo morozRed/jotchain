@@ -15,6 +15,7 @@ class User < ApplicationRecord
   has_many :entries, dependent: :destroy
   has_many :notification_schedules, dependent: :destroy
   has_many :sessions, dependent: :destroy
+  has_many :notification_deliveries, dependent: :destroy
 
   validates :name, presence: true
   validates :email, presence: true, uniqueness: true, format: {with: URI::MailTo::EMAIL_REGEXP}

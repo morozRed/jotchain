@@ -9,12 +9,13 @@ default: &default
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   timeout: 5000
+  migrations_paths: db/migrate
 
 sqlite: &sqlite
   adapter: sqlite3
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   timeout: 5000
-  migrations_path: db/queue_migrate
+  migrations_paths: db/queue_migrate
 
 development:
   primary:
@@ -22,7 +23,7 @@ development:
     database: jotchain_development
   queue:
     <<: *sqlite
-    database: jotchain_queue_development
+    database: storage/jotchain_queue_development
     storage: storage/jotchain_queue_development.sqlite3
 
 # Warning: The database defined as "test" will be erased and
@@ -34,7 +35,7 @@ test:
     database: jotchain_test
   queue:
     <<: *sqlite
-    database: jotchain_queue_test
+    database: storage/jotchain_queue_test
     storage: ":memory:"
 
 
@@ -46,5 +47,5 @@ production:
     database: jotchain_production
   queue:
     <<: *sqlite
-    database: jotchain_queue_production
+    database: storage/jotchain_queue_production
     storage: storage/jotchain_queue_production.sqlite3

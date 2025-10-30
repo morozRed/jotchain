@@ -30,6 +30,7 @@ class NotificationSchedule < ApplicationRecord
   WEEKDAY_NAMES = Date::DAYNAMES.freeze
 
   belongs_to :user
+  has_many :notification_deliveries, dependent: :destroy
 
   enum :channel, CHANNELS, suffix: true
   enum :recurrence, RECURRENCES, suffix: true
@@ -37,6 +38,7 @@ class NotificationSchedule < ApplicationRecord
   enum :lookback_type, LOOKBACK_TYPES, suffix: true
 
   scope :ordered, -> { order(created_at: :asc) }
+  scope :enabled, -> { where(enabled: true) }
 
   validates :name, presence: true
   validates :time_of_day, presence: true
@@ -70,6 +72,38 @@ class NotificationSchedule < ApplicationRecord
     else
       raise ArgumentError, "Unknown recurrence: #{recurrence}"
     end
+  end
+
+  def summary_window(occurrence_at: Time.current)
+    tz = inferred_time_zone
+    anchor = occurrence_at.in_time_zone(tz)
+    range_end = anchor
+    range_start = case lookback_type
+    when "day"
+      range_end - 1.day
+    when "week"
+      range_end - 1.week
+    when "month"
+      range_end - 1.month
+    when "half_year"
+      range_end - 6.months
+    when "year"
+      range_end - 1.year
+    when "custom_days"
+      days = lookback_days.presence || 7
+      range_end - days.days
+    else
+      range_end - 1.week
+    end
+
+    {
+      start: range_start,
+      end: range_end
+    }
+  end
+
+  def lead_time_duration
+    lead_time_minutes.minutes
   end
 
   # Return a list of future occurrences. Useful for previews.

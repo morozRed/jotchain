@@ -11,18 +11,6 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[8.0].define(version: 2025_02_11_221000) do
-# Could not dump table "entries" because of following StandardError
-#   Unknown type 'uuid' for column 'id'
-
-
-# Could not dump table "notification_schedules" because of following StandardError
-#   Unknown type 'uuid' for column 'id'
-
-
-# Could not dump table "sessions" because of following StandardError
-#   Unknown type 'uuid' for column 'user_id'
-
-
   create_table "solid_queue_blocked_executions", force: :cascade do |t|
     t.bigint "job_id", null: false
     t.string "queue_name", null: false
@@ -144,13 +132,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_11_221000) do
     t.index ["key"], name: "index_solid_queue_semaphores_on_key", unique: true
   end
 
-# Could not dump table "users" because of following StandardError
-#   Unknown type 'uuid' for column 'id'
-
-
-  add_foreign_key "entries", "users"
-  add_foreign_key "notification_schedules", "users"
-  add_foreign_key "sessions", "users"
   add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_claimed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_failed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade

@@ -1,0 +1,18 @@
+Your stand-up summary
+Covering <%= formatted_window(@window) %> for <%= @schedule.name %>.
+
+<% if @sections.any? %>
+<% @sections.each do |section| %>
+<%= section["title"] %>
+<% Array(section["bullets"]).each do |bullet| %>
+- <%= bullet %>
+<% end %>
+
+<% end %>
+<% else %>
+We didn't find any notes to summarize this time.
+<% end %>
+
+Open Jotchain: <%= digest_cta_url %>
+
+Generated with <%= @delivery.summary_model || "AI" %>.

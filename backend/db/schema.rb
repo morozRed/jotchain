@@ -26,6 +26,27 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_29_195711) do
     t.index ["user_id"], name: "index_entries_on_user_id"
   end
 
+  create_table "notification_deliveries", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "notification_schedule_id", null: false
+    t.uuid "user_id", null: false
+    t.datetime "occurrence_at", null: false
+    t.datetime "trigger_at", null: false
+    t.datetime "window_start", null: false
+    t.datetime "window_end", null: false
+    t.string "status", default: "pending", null: false
+    t.jsonb "summary_payload"
+    t.string "summary_model"
+    t.integer "prompt_tokens"
+    t.integer "completion_tokens"
+    t.text "error_message"
+    t.datetime "delivered_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["notification_schedule_id", "occurrence_at"], name: "index_notification_deliveries_on_schedule_and_occurrence", unique: true
+    t.index ["status"], name: "index_notification_deliveries_on_status"
+    t.index ["trigger_at"], name: "index_notification_deliveries_on_trigger_at"
+  end
+
   create_table "notification_schedules", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id", null: false
     t.string "name", null: false
@@ -67,6 +88,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_29_195711) do
   end
 
   add_foreign_key "entries", "users"
+  add_foreign_key "notification_deliveries", "notification_schedules"
+  add_foreign_key "notification_deliveries", "users"
   add_foreign_key "notification_schedules", "users"
   add_foreign_key "sessions", "users"
 end

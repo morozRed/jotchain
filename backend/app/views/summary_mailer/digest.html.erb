@@ -1,0 +1,25 @@
+<h1 style="font-size: 24px; margin-bottom: 12px; color: #0a0f1c; font-weight: 600; letter-spacing: -0.02em;">Your stand-up summary</h1>
+<p style="margin-bottom: 20px; color: #475569;">
+  Covering <strong><%= formatted_window(@window) %></strong> for <%= @schedule.name %>.
+</p>
+
+<%= render "mailers/shared/stats_card", stats: @stats %>
+
+<% if @sections.any? %>
+  <% @sections.each do |section| %>
+    <div style="margin-bottom: 20px;">
+      <h2 style="font-size: 18px; margin-bottom: 8px; color: #0a0f1c; font-weight: 600; letter-spacing: -0.02em;"><%= section["title"] %></h2>
+      <ul style="padding-left: 20px; margin: 0; color: #0a0f1c;">
+        <% Array(section["bullets"]).each do |bullet| %>
+          <li style="margin-bottom: 6px;"><%= bullet %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+<% else %>
+  <p>We didn't find any notes in this window, so there's nothing to summarize today.</p>
+<% end %>
+
+<%= render "mailers/shared/button", url: digest_cta_url, label: "Open Jotchain" %>
+
+<hr class="email-divider">
