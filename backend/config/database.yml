@@ -10,16 +10,32 @@ default: &default
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   timeout: 5000
 
+sqlite: &sqlite
+  adapter: sqlite3
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  timeout: 5000
+  migrations_path: db/queue_migrate
+
 development:
-  <<: *default
-  database: jotchain_development
+  primary:
+    <<: *default
+    database: jotchain_development
+  queue:
+    <<: *sqlite
+    database: jotchain_queue_development
+    storage: storage/jotchain_queue_development.sqlite3
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
-  <<: *default
-  database: jotchain_test
+  primary:
+    <<: *default
+    database: jotchain_test
+  queue:
+    <<: *sqlite
+    database: jotchain_queue_test
+    storage: ":memory:"
 
 
 # Store production database in the storage/ directory, which by default
@@ -28,3 +44,7 @@ production:
   primary:
     <<: *default
     database: jotchain_production
+  queue:
+    <<: *sqlite
+    database: jotchain_queue_production
+    storage: storage/jotchain_queue_production.sqlite3
