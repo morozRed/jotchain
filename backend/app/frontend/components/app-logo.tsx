@@ -7,9 +7,7 @@ export default function AppLogo() {
         <AppLogoIcon className="size-5 fill-current text-white" />
       </div>
       <div className="grid flex-1 text-left text-sm">
-        <span className="mb-0.5 truncate leading-tight font-semibold">
-          JotChain
-        </span>
+        <span className="font-semibold">JotChain</span>
       </div>
     </>
   )

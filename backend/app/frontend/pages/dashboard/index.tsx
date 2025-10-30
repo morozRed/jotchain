@@ -1,16 +1,8 @@
-import { Head, router, useForm, usePage } from "@inertiajs/react"
-import {
-  CalendarDays,
-  ChevronLeft,
-  ChevronRight,
-  Send,
-  Sparkles,
-  Trash2,
-} from "lucide-react"
-import { type ReactNode, useState } from "react"
+import { Head, useForm, usePage } from "@inertiajs/react"
+import { Send, Sparkles } from "lucide-react"
 
+import { DashboardEntriesCard, type DashboardEntry } from "@/components/dashboard/entries-card"
 import InputError from "@/components/input-error"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -20,30 +12,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import AppLayout from "@/layouts/app-layout"
-import { dashboardPath, entryPath } from "@/routes"
+import { dashboardPath } from "@/routes"
 import type { SharedData } from "@/types"
-
-interface DashboardEntry {
-  id: number
-  body: string
-  tag?: string | null
-  loggedAt?: string | null
-  loggedAtLabel?: string | null
-  createdAtAgo: string
-  createdAt: string
-}
 
 interface EntryStats {
   count: number
@@ -76,16 +50,15 @@ const breadcrumbs = [
 ]
 
 export default function Dashboard() {
-  const { props } = usePage<PageProps>()
+  const { props: pageProps } = usePage<PageProps>()
   const {
     entries,
     entryStats,
-    selectedDate,
     previousDate,
     nextDate,
     isToday,
     selectedDateFormatted,
-  } = props
+  } = pageProps
 
   const entryForm = useForm<EntryFormState>({
     entry: {
@@ -136,7 +109,7 @@ export default function Dashboard() {
           <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
             <div>
               <h1 className="text-2xl font-semibold leading-tight text-foreground md:text-3xl">
-                Keep track of what you're building
+                Keep track of what you&apos;re building
               </h1>
               <p className="text-muted-foreground mt-2 max-w-2xl text-sm md:text-base">
                 Jot down your daily wins, challenges, and ideas. Stay organized and never forget what you worked on.
@@ -202,7 +175,7 @@ export default function Dashboard() {
                       Save entry
                     </Button>
                   </div>
-                  <InputError message={entryForm.errors.body} />
+                  <InputError message={entryForm.errors.body as string | undefined} />
                 </div>
 
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:gap-3">
@@ -220,7 +193,7 @@ export default function Dashboard() {
                       aria-invalid={Boolean(entryForm.errors.tag)}
                       className="border-border/30 bg-background shadow-sm transition-all duration-200 focus-visible:border-primary/50 focus-visible:ring-2 focus-visible:ring-primary/20"
                     />
-                    <InputError message={entryForm.errors.tag} />
+                    <InputError message={entryForm.errors.tag as string | undefined} />
                   </div>
                 </div>
               </form>
@@ -239,7 +212,7 @@ export default function Dashboard() {
             </CardFooter>
           </Card>
 
-          <EntriesCard
+          <DashboardEntriesCard
             entries={entries}
             selectedDateFormatted={selectedDateFormatted}
             previousDate={previousDate}
@@ -249,173 +222,6 @@ export default function Dashboard() {
         </div>
       </div>
     </AppLayout>
-  )
-}
-
-function EntriesCard({
-  entries,
-  selectedDateFormatted,
-  previousDate,
-  nextDate,
-  isToday,
-}: {
-  entries: DashboardEntry[]
-  selectedDateFormatted: string
-  previousDate: string
-  nextDate: string
-  isToday: boolean
-}) {
-  const [entryToDelete, setEntryToDelete] = useState<number | null>(null)
-
-  const navigateToDate = (date: string) => {
-    router.visit(dashboardPath({ date }), {
-      preserveUrl: true,
-      preserveScroll: true,
-      only: ["entries", "selectedDate", "previousDate", "nextDate", "isToday", "selectedDateFormatted"],
-    })
-  }
-
-  const handleDeleteEntry = () => {
-    if (entryToDelete) {
-      router.delete(entryPath(entryToDelete), {
-        preserveUrl: true,
-        preserveScroll: true,
-        onSuccess: () => {
-          setEntryToDelete(null)
-        },
-      })
-    }
-  }
-
-  return (
-    <Card className="border-border/30 shadow-[0_1px_3px_rgba(0,0,0,0.06)] lg:flex lg:h-[580px] lg:flex-col">
-      <CardHeader className="pb-4">
-        <div className="flex items-start justify-between gap-4">
-          <div className="flex-1">
-            <CardTitle className="flex items-center gap-2 text-lg font-semibold">
-              <CalendarDays className="size-5 text-primary" />
-              {selectedDateFormatted}
-            </CardTitle>
-            <CardDescription className="mt-1 text-sm">
-              Your daily progress and wins
-            </CardDescription>
-          </div>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => navigateToDate(previousDate)}
-              className="flex size-8 items-center justify-center rounded-md border border-border bg-background hover:bg-accent hover:text-accent-foreground"
-              type="button"
-            >
-              <ChevronLeft className="size-4" />
-              <span className="sr-only">Previous day</span>
-            </button>
-            <button
-              onClick={() => navigateToDate(nextDate)}
-              disabled={isToday}
-              className="flex size-8 items-center justify-center rounded-md border border-border bg-background hover:bg-accent hover:text-accent-foreground disabled:bg-muted disabled:text-muted-foreground disabled:opacity-50 disabled:cursor-not-allowed"
-              type="button"
-            >
-              <ChevronRight className="size-4" />
-              <span className="sr-only">Next day</span>
-            </button>
-          </div>
-        </div>
-      </CardHeader>
-      <CardContent className="flex flex-1 flex-col gap-4 overflow-y-auto">
-        {entries.length === 0 && (
-          <EmptyState
-            icon={<Sparkles className="size-5 text-primary" />}
-            title="No entries for this day"
-            subtitle="Add a note above to capture what you worked on."
-          />
-        )}
-
-        {entries.map((entry) => (
-          <article
-            key={entry.id}
-            className="group relative rounded-lg border border-border/30 bg-background/40 p-4 shadow-sm transition-all duration-200 hover:border-primary/30 hover:bg-background/60 hover:shadow-[0_2px_8px_rgba(0,0,0,0.08)]"
-          >
-            <div className="flex items-start justify-between gap-2">
-              <div className="flex-1">
-                <div className="flex flex-wrap justify-between align-center gap-3 text-xs text-muted-foreground">
-                  {entry.loggedAtLabel && (
-                    <span className="inline-flex items-center gap-1 font-medium text-foreground">
-                      <CalendarDays className="size-4 text-primary" />
-                      {entry.loggedAtLabel}
-                    </span>
-                  )}
-                  <span aria-hidden className="hidden text-border md:inline">
-                    ·
-                  </span>
-                  <span>{entry.createdAtAgo} ago</span>
-                  {entry.tag && (
-                    <Badge
-                      variant="outline"
-                      className="border-primary/30 bg-primary/10 text-xs dark:bg-primary/20 dark:border-primary/40"
-                    >
-                      #{entry.tag}
-                    </Badge>
-                  )}
-                </div>
-                <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-foreground">
-                  {entry.body}
-                </p>
-              </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="size-8 p-0 text-muted-foreground opacity-0 transition-all duration-200 hover:text-destructive group-hover:opacity-70 hover:opacity-100"
-                onClick={() => setEntryToDelete(entry.id)}
-              >
-                <Trash2 className="size-4" />
-                <span className="sr-only">Delete entry</span>
-              </Button>
-            </div>
-          </article>
-        ))}
-      </CardContent>
-
-      <Dialog open={entryToDelete !== null} onOpenChange={(open) => !open && setEntryToDelete(null)}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Delete entry?</DialogTitle>
-            <DialogDescription>
-              This action cannot be undone. This will permanently delete your entry.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setEntryToDelete(null)}>
-              Cancel
-            </Button>
-            <Button variant="destructive" onClick={handleDeleteEntry}>
-              Delete
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </Card>
-  )
-}
-
-function EmptyState({
-  icon,
-  title,
-  subtitle,
-}: {
-  icon: ReactNode
-  title: string
-  subtitle: string
-}) {
-  return (
-    <div className="flex flex-col items-start gap-3 rounded-lg border border-dashed border-primary/40 bg-background/40 p-4 text-left">
-      <span className="flex size-10 items-center justify-center rounded-md bg-primary/10 text-primary">
-        {icon}
-      </span>
-      <div>
-        <p className="font-semibold text-foreground">{title}</p>
-        <p className="text-sm text-muted-foreground">{subtitle}</p>
-      </div>
-    </div>
   )
 }
 
