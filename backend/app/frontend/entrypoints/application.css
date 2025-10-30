@@ -9,9 +9,9 @@
 :root {
   --surface-base: #f8fafc;
   --surface-card: #ffffff;
-  --stroke-faint: rgba(148, 163, 184, 0.15);
+  --stroke-faint: rgba(148, 163, 184, 0.18);
   --text-primary: #0a0f1c;
-  --text-secondary: rgba(71, 85, 105, 0.86);
+  --text-secondary: rgba(71, 85, 105, 0.8);
   --accent-primary: #818cf8;
   --accent-secondary: #22d3ee;
   --accent-hot: #f472b6;
@@ -42,22 +42,22 @@
   --chart-4: #10b981;
   --chart-5: #ef4444;
   --radius: 1.125rem;
-  --sidebar: #ffffff;
+  --sidebar: #fafbfc;
   --sidebar-foreground: var(--text-primary);
   --sidebar-primary: var(--accent-primary);
   --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: #f1f5f9;
   --sidebar-accent-foreground: var(--text-primary);
-  --sidebar-border: var(--stroke-faint);
+  --sidebar-border: rgba(148, 163, 184, 0.2);
   --sidebar-ring: var(--glow-faint);
 }
 
 .dark {
   --surface-base: #070a12;
   --surface-card: rgba(11, 15, 24, 0.92);
-  --stroke-faint: rgba(148, 163, 184, 0.14);
+  --stroke-faint: rgba(148, 163, 184, 0.22);
   --text-primary: #f8fafc;
-  --text-secondary: rgba(203, 213, 225, 0.86);
+  --text-secondary: rgba(203, 213, 225, 0.75);
   --accent-primary: #818cf8;
   --accent-secondary: #22d3ee;
   --accent-hot: #f472b6;
@@ -71,29 +71,29 @@
   --popover-foreground: var(--text-primary);
   --primary: var(--accent-primary);
   --primary-foreground: #05060a;
-  --secondary: rgba(14, 18, 27, 0.72);
+  --secondary: rgba(30, 41, 59, 0.5);
   --secondary-foreground: var(--text-primary);
-  --muted: rgba(14, 18, 27, 0.72);
-  --muted-foreground: var(--text-secondary);
-  --accent: rgba(20, 24, 36, 0.6);
+  --muted: rgba(30, 41, 59, 0.4);
+  --muted-foreground: rgba(203, 213, 225, 0.7);
+  --accent: rgba(30, 41, 59, 0.35);
   --accent-foreground: var(--text-primary);
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
   --border: var(--stroke-faint);
-  --input: rgba(148, 163, 184, 0.25);
+  --input: rgba(148, 163, 184, 0.28);
   --ring: var(--glow-faint);
   --chart-1: #f59e0b;
   --chart-2: #3b82f6;
   --chart-3: #8b5cf6;
   --chart-4: #10b981;
   --chart-5: #ef4444;
-  --sidebar: rgba(11, 15, 24, 0.7);
+  --sidebar: rgba(15, 20, 32, 0.6);
   --sidebar-foreground: var(--text-primary);
   --sidebar-primary: var(--accent-primary);
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: rgba(20, 24, 36, 0.6);
+  --sidebar-accent: rgba(30, 41, 59, 0.35);
   --sidebar-accent-foreground: var(--text-primary);
-  --sidebar-border: var(--stroke-faint);
+  --sidebar-border: rgba(148, 163, 184, 0.18);
   --sidebar-ring: var(--glow-faint);
 }
 
@@ -184,15 +184,21 @@
     pointer-events: none;
   }
 
+  /* Light mode enhancements */
+  [data-slot="sidebar-inner"] {
+    border-right: 1px solid rgba(148, 163, 184, 0.2);
+    box-shadow: 1px 0 0 0 rgba(255, 255, 255, 0.5) inset;
+  }
+
   .dark .app-background::before {
     content: '';
     position: absolute;
     inset: 0;
     background:
-      radial-gradient(36% 40% at 18% 18%, rgba(129, 140, 248, 0.32), transparent 70%),
-      radial-gradient(28% 32% at 82% 12%, rgba(45, 212, 191, 0.25), transparent 70%),
+      radial-gradient(40% 45% at 15% 15%, rgba(129, 140, 248, 0.15), transparent 70%),
+      radial-gradient(32% 36% at 85% 10%, rgba(45, 212, 191, 0.12), transparent 70%),
       linear-gradient(180deg, #070a12 0%, #0a0f1c 60%, #05070d 100%);
-    filter: saturate(105%);
+    filter: saturate(95%);
   }
 
   .dark .app-background::after {
@@ -200,14 +206,23 @@
     position: absolute;
     inset: 0;
     z-index: -1;
-    opacity: 0.18;
+    opacity: 0.1;
     background:
       repeating-linear-gradient(
         120deg,
-        rgba(148, 163, 184, 0.12) 0 1px,
-        rgba(148, 163, 184, 0.02) 1px 18px
+        rgba(148, 163, 184, 0.08) 0 1px,
+        rgba(148, 163, 184, 0.015) 1px 20px
       );
-    mask-image: radial-gradient(60% 60% at 50% 20%, rgba(0, 0, 0, 0.9), transparent 95%);
+    mask-image: radial-gradient(65% 65% at 50% 18%, rgba(0, 0, 0, 0.85), transparent 95%);
+  }
+
+  /* Sidebar enhancements */
+  .dark [data-slot="sidebar-inner"] {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-right: 1px solid rgba(148, 163, 184, 0.12);
+    background: rgba(15, 20, 32, 0.5);
+    box-shadow: none;
   }
 
   /* Button enhancements */
