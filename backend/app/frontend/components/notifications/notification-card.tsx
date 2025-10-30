@@ -33,7 +33,6 @@ import {
   computePreviewOccurrences,
   formDataFromSchedule,
   formatInTimeZone,
-  isNotificationFormDataEqual,
   lookupWeekday,
   normalizePayload,
 } from "./utils"
@@ -50,13 +49,13 @@ export function NotificationCard({ schedule, meta }: NotificationCardProps) {
   )
 
   const form = useForm<NotificationFormData>(() => initialData)
+  const { setData, setDefaults, clearErrors } = form
 
   useEffect(() => {
-    if (!isNotificationFormDataEqual(form.data, initialData)) {
-      form.reset(initialData)
-      form.clearErrors()
-    }
-  }, [form, initialData])
+    setData(initialData)
+    setDefaults(initialData)
+    clearErrors()
+  }, [initialData, setData, setDefaults, clearErrors])
 
   const [isEditOpen, setIsEditOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
@@ -70,6 +69,16 @@ export function NotificationCard({ schedule, meta }: NotificationCardProps) {
     setOptimisticEnabled(null)
   }, [schedule.enabled])
 
+  const {
+    timezone,
+    time_of_day,
+    recurrence,
+    weekly_day,
+    day_of_month,
+    custom_interval_unit,
+    custom_interval_value,
+  } = form.data
+
   const previewOccurrences = useMemo(() => {
     try {
       return computePreviewOccurrences(form.data)
@@ -77,10 +86,20 @@ export function NotificationCard({ schedule, meta }: NotificationCardProps) {
       console.error(error)
       return []
     }
-  }, [form.data])
+  }, [
+    timezone,
+    time_of_day,
+    recurrence,
+    weekly_day,
+    day_of_month,
+    custom_interval_unit,
+    custom_interval_value,
+  ])
 
-  const serverOccurrences = schedule.nextOccurrences.map((iso) =>
-    formatInTimeZone(iso, form.data.timezone),
+  const serverOccurrences = useMemo(
+    () =>
+      schedule.nextOccurrences.map((iso) => formatInTimeZone(iso, timezone)),
+    [schedule.nextOccurrences, timezone],
   )
 
   const occurrences = previewOccurrences.length
@@ -136,25 +155,25 @@ export function NotificationCard({ schedule, meta }: NotificationCardProps) {
   )
 
   const cadenceLabel = (() => {
-    if (form.data.recurrence === "daily_weekdays") {
+    if (recurrence === "daily_weekdays") {
       return "Every weekday"
     }
-    if (form.data.recurrence === "weekly") {
-      const weekday = lookupWeekday(form.data.weekly_day)
+    if (recurrence === "weekly") {
+      const weekday = lookupWeekday(weekly_day)
       return `Weekly on ${weekday}`
     }
-    if (form.data.recurrence === "monthly_dom") {
-      return `Monthly on day ${form.data.day_of_month ?? 1}`
+    if (recurrence === "monthly_dom") {
+      return `Monthly on day ${day_of_month ?? 1}`
     }
-    if (form.data.recurrence === "custom") {
-      const value = form.data.custom_interval_value ?? 1
-      const unit = UNIT_LABELS[form.data.custom_interval_unit ?? "weeks"].toLowerCase()
-      if (form.data.custom_interval_unit === "weeks") {
-        const weekday = lookupWeekday(form.data.weekly_day)
+    if (recurrence === "custom") {
+      const value = custom_interval_value ?? 1
+      const unit = UNIT_LABELS[custom_interval_unit ?? "weeks"].toLowerCase()
+      if (custom_interval_unit === "weeks") {
+        const weekday = lookupWeekday(weekly_day)
         return `Every ${value} ${unit} on ${weekday}`
       }
-      if (form.data.custom_interval_unit === "months") {
-        return `Every ${value} ${unit} on day ${form.data.day_of_month ?? 1}`
+      if (custom_interval_unit === "months") {
+        return `Every ${value} ${unit} on day ${day_of_month ?? 1}`
       }
       return `Every ${value} ${unit}`
     }
@@ -215,7 +234,7 @@ export function NotificationCard({ schedule, meta }: NotificationCardProps) {
         <div className="flex items-center gap-1.5">
           <span className="text-muted-foreground">{cadenceLabel}</span>
           <span className="text-muted-foreground">@</span>
-          <span className="font-medium">{form.data.time_of_day}</span>
+          <span className="font-medium">{time_of_day}</span>
         </div>
         <div className="h-4 w-px bg-border" />
         <div className="text-muted-foreground">{lookbackLabel}</div>
@@ -223,14 +242,14 @@ export function NotificationCard({ schedule, meta }: NotificationCardProps) {
           <>
             <div className="h-4 w-px bg-border" />
             <div className="flex items-center gap-1.5">
-              <span className="text-xs text-muted-foreground">Next:</span>
+              <span className="text-sm text-muted-foreground">Next:</span>
               <span>{occurrences[0]}</span>
             </div>
           </>
         )}
       </CardContent>
 
-      <Dialog open={isEditOpen} onOpenChange={(open) => (open ? setIsEditOpen(true) : setIsEditOpen(false))}>
+      <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
         <DialogContent className="max-w-2xl lg:max-w-4xl">
           <DialogHeader>
             <DialogTitle>Edit notification</DialogTitle>

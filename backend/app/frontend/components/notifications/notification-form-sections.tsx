@@ -1,6 +1,6 @@
 import { type InertiaFormProps } from "@inertiajs/react"
 import { CalendarDays } from "lucide-react"
-import { type ReactNode } from "react"
+import { type ReactNode, useMemo } from "react"
 
 import InputError from "@/components/input-error"
 import { ComboboxTimezone } from "@/components/ui/combobox-timezone"
@@ -43,24 +43,34 @@ export function NotificationFormSections({
   processing,
   occurrences,
 }: NotificationFormSectionsProps) {
-  const recurrenceOptions = meta.recurrenceOptions.map((option) => (
-    <SelectItem key={option} value={option}>
-      {RECURRENCE_LABELS[option]}
-    </SelectItem>
-  ))
+  const recurrenceOptions = useMemo(
+    () =>
+      meta.recurrenceOptions.map((option) => (
+        <SelectItem key={option} value={option}>
+          {RECURRENCE_LABELS[option]}
+        </SelectItem>
+      )),
+    [meta.recurrenceOptions],
+  )
 
-  const intervalUnitOptions = meta.customIntervalUnitOptions.map((unit) => (
-    <SelectItem key={unit} value={unit}>
-      {UNIT_LABELS[unit]}
-    </SelectItem>
-  ))
+  const intervalUnitOptions = useMemo(
+    () =>
+      meta.customIntervalUnitOptions.map((unit) => (
+        <SelectItem key={unit} value={unit}>
+          {UNIT_LABELS[unit]}
+        </SelectItem>
+      )),
+    [meta.customIntervalUnitOptions],
+  )
 
-  const lookbackOptions = (Object.keys(LOOKBACK_LABELS) as LookbackType[]).map(
-    (option) => (
-      <SelectItem key={option} value={option}>
-        {LOOKBACK_LABELS[option]}
-      </SelectItem>
-    ),
+  const lookbackOptions = useMemo(
+    () =>
+      (Object.keys(LOOKBACK_LABELS) as LookbackType[]).map((option) => (
+        <SelectItem key={option} value={option}>
+          {LOOKBACK_LABELS[option]}
+        </SelectItem>
+      )),
+    [],
   )
 
   const showWeeklyDay =
