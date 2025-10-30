@@ -24,8 +24,8 @@ export default function Login() {
       >
         {({ processing, errors }) => (
           <>
-            <div className="rounded-lg border border-white/8 bg-white/5 p-4 text-xs text-white/70">
-              <div className="flex items-center gap-2 font-medium text-white">
+            <div className="rounded-lg border border-border bg-muted/40 p-4 text-xs text-muted-foreground">
+              <div className="flex items-center gap-2 font-medium text-foreground">
                 <ShieldCheck className="size-4 text-accent-hot" />
                 Security first
               </div>
@@ -36,7 +36,7 @@ export default function Login() {
 
             <div className="grid gap-5">
               <div className="grid gap-2">
-                <Label htmlFor="email" className="text-sm text-white/80">
+                <Label htmlFor="email" className="text-sm">
                   Email address
                 </Label>
                 <Input
@@ -57,13 +57,13 @@ export default function Login() {
                 <div className="flex items-center">
                   <Label
                     htmlFor="password"
-                    className="text-sm text-white/80"
+                    className="text-sm"
                   >
                     Password
                   </Label>
                   <TextLink
                     href={newIdentityPasswordResetPath()}
-                    className="ml-auto text-sm text-accent-hot hover:text-white"
+                    className="ml-auto text-sm text-accent-hot hover:text-foreground"
                     tabIndex={4}
                   >
                     Forgot password?
@@ -95,11 +95,11 @@ export default function Login() {
               </Button>
             </div>
 
-            <div className="text-center text-sm text-white/60">
+            <div className="text-center text-sm text-muted-foreground">
               Need an account?{" "}
               <TextLink
                 href={signUpPath()}
-                className="text-accent-hot hover:text-white"
+                className="text-accent-hot hover:text-foreground"
                 tabIndex={5}
               >
                 Start your free trial

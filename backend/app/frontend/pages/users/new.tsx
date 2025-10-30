@@ -32,7 +32,7 @@ export default function Register() {
           <>
             <div className="grid gap-5">
               <div className="grid gap-2">
-                <Label htmlFor="name" className="text-sm text-white/80">
+                <Label htmlFor="name" className="text-sm">
                   Your name
                 </Label>
                 <Input
@@ -51,7 +51,7 @@ export default function Register() {
               </div>
 
               <div className="grid gap-2">
-                <Label htmlFor="email" className="text-sm text-white/80">
+                <Label htmlFor="email" className="text-sm">
                   Work email
                 </Label>
                 <Input
@@ -68,7 +68,7 @@ export default function Register() {
               </div>
 
               <div className="grid gap-2">
-                <Label htmlFor="password" className="text-sm text-white/80">
+                <Label htmlFor="password" className="text-sm">
                   Password
                 </Label>
                 <Input
@@ -87,7 +87,7 @@ export default function Register() {
               <div className="grid gap-2">
                 <Label
                   htmlFor="password_confirmation"
-                  className="text-sm text-white/80"
+                  className="text-sm"
                 >
                   Confirm password
                 </Label>
@@ -117,11 +117,11 @@ export default function Register() {
               </Button>
             </div>
 
-            <div className="text-center text-sm text-white/60">
+            <div className="text-center text-sm text-muted-foreground">
               Already part of JotChain?{" "}
               <TextLink
                 href={signInPath()}
-                className="text-accent-hot hover:text-white"
+                className="text-accent-hot hover:text-foreground"
                 tabIndex={6}
               >
                 Log in
