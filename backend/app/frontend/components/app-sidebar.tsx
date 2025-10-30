@@ -1,5 +1,5 @@
 import { Link } from "@inertiajs/react"
-import { CalendarDays, LayoutGrid } from "lucide-react"
+import { Bell, LayoutGrid } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
 import { NavUser } from "@/components/nav-user"
@@ -12,7 +12,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { dashboardPath, meetingsPath } from "@/routes"
+import { dashboardPath, notificationsPath } from "@/routes"
 import type { NavItem } from "@/types"
 
 import AppLogo from "./app-logo"
@@ -24,9 +24,9 @@ const mainNavItems: NavItem[] = [
     icon: LayoutGrid,
   },
   {
-    title: "Meetings",
-    href: meetingsPath(),
-    icon: CalendarDays,
+    title: "Notifications",
+    href: notificationsPath(),
+    icon: Bell,
   },
 ]
 

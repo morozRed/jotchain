@@ -13,7 +13,7 @@ class User < ApplicationRecord
 
 
   has_many :entries, dependent: :destroy
-  has_many :meeting_schedules, dependent: :destroy
+  has_many :notification_schedules, dependent: :destroy
   has_many :sessions, dependent: :destroy
 
   validates :name, presence: true
@@ -28,12 +28,6 @@ class User < ApplicationRecord
 
   after_update if: :password_digest_previously_changed? do
     sessions.where.not(id: Current.session).delete_all
-  end
-
-  after_create :ensure_default_meeting_schedules
-
-  def schedule_for(meeting_type)
-    meeting_schedules.find_by(meeting_type:)
   end
 
   def current_streak
@@ -71,8 +65,4 @@ class User < ApplicationRecord
   end
 
   private
-
-  def ensure_default_meeting_schedules
-    MeetingScheduleDefaults.apply!(self)
-  end
 end

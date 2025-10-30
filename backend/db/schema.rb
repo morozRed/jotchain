@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_11_170010) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_29_195711) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -26,19 +26,25 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_11_170010) do
     t.index ["user_id"], name: "index_entries_on_user_id"
   end
 
-  create_table "meeting_schedules", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "notification_schedules", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id", null: false
-    t.string "meeting_type", null: false
+    t.string "name", null: false
+    t.string "channel", default: "email", null: false
     t.boolean "enabled", default: true, null: false
     t.time "time_of_day", null: false
     t.string "timezone", default: "UTC", null: false
+    t.string "recurrence", default: "weekly", null: false
     t.integer "weekly_day"
-    t.integer "monthly_week"
+    t.integer "day_of_month"
+    t.integer "custom_interval_value"
+    t.string "custom_interval_unit"
+    t.string "lookback_type", default: "week", null: false
+    t.integer "lookback_days"
     t.integer "lead_time_minutes", default: 30, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id", "meeting_type"], name: "index_meeting_schedules_on_user_id_and_meeting_type", unique: true
-    t.index ["user_id"], name: "index_meeting_schedules_on_user_id"
+    t.index ["user_id", "created_at"], name: "index_notification_schedules_on_user_id_and_created_at"
+    t.index ["user_id"], name: "index_notification_schedules_on_user_id"
   end
 
   create_table "sessions", force: :cascade do |t|
@@ -61,6 +67,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_11_170010) do
   end
 
   add_foreign_key "entries", "users"
-  add_foreign_key "meeting_schedules", "users"
+  add_foreign_key "notification_schedules", "users"
   add_foreign_key "sessions", "users"
 end

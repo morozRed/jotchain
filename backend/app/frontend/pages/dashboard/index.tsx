@@ -337,7 +337,7 @@ function EntriesCard({
           >
             <div className="flex items-start justify-between gap-2">
               <div className="flex-1">
-                <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
+                <div className="flex flex-wrap justify-between align-center gap-3 text-xs text-muted-foreground">
                   {entry.loggedAtLabel && (
                     <span className="inline-flex items-center gap-1 font-medium text-foreground">
                       <CalendarDays className="size-4 text-primary" />

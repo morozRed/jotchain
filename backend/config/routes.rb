@@ -15,7 +15,8 @@ Rails.application.routes.draw do
   end
 
   get :dashboard, to: "dashboard#index"
-  get :meetings, to: "meetings#index"
+
+  resources :notifications, only: [:index, :create, :update, :destroy]
 
   namespace :settings do
     resource :profile, only: [:show, :update]
@@ -26,7 +27,6 @@ Rails.application.routes.draw do
   end
 
   resources :entries, only: [:create, :update, :destroy]
-  resources :meeting_schedules, only: [:update]
 
   root "dashboard#index"
 

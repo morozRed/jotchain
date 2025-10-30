@@ -73,7 +73,7 @@
   --primary-foreground: #05060a;
   --secondary: rgba(14, 18, 27, 0.72);
   --secondary-foreground: var(--text-primary);
-  --muted: rgba(20, 24, 36, 0.6);
+  --muted: rgba(14, 18, 27, 0.72);
   --muted-foreground: var(--text-secondary);
   --accent: rgba(20, 24, 36, 0.6);
   --accent-foreground: var(--text-primary);
