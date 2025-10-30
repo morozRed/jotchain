@@ -1,5 +1,5 @@
-<h1 style="font-size: 24px; margin-bottom: 12px; color: #0a0f1c; font-weight: 600; letter-spacing: -0.02em;">Your stand-up summary</h1>
-<p style="margin-bottom: 20px; color: #475569;">
+<h1 style="font-size: 24px; margin-bottom: 12px; color: #f8fafc; font-weight: 600; letter-spacing: -0.02em;">Your stand-up summary</h1>
+<p style="margin-bottom: 20px; color: rgba(226, 232, 240, 0.78);">
   Covering <strong><%= formatted_window(@window) %></strong> for <%= @schedule.name %>.
 </p>
 
@@ -7,9 +7,9 @@
 
 <% if @sections.any? %>
   <% @sections.each do |section| %>
-    <div style="margin-bottom: 20px;">
-      <h2 style="font-size: 18px; margin-bottom: 8px; color: #0a0f1c; font-weight: 600; letter-spacing: -0.02em;"><%= section["title"] %></h2>
-      <ul style="padding-left: 20px; margin: 0; color: #0a0f1c;">
+    <div style="margin-bottom: 20px; padding: 18px 20px; border-radius: 16px; background: rgba(15, 24, 40, 0.78); border: 1px solid rgba(129, 140, 248, 0.18);">
+      <h2 style="font-size: 18px; margin-bottom: 10px; color: #e2e8f0; font-weight: 600; letter-spacing: -0.01em;"><%= section["title"] %></h2>
+      <ul style="padding-left: 20px; margin: 0; color: rgba(226, 232, 240, 0.85);">
         <% Array(section["bullets"]).each do |bullet| %>
           <li style="margin-bottom: 6px;"><%= bullet %></li>
         <% end %>
@@ -17,7 +17,7 @@
     </div>
   <% end %>
 <% else %>
-  <p>We didn't find any notes in this window, so there's nothing to summarize today.</p>
+  <p style="color: rgba(226, 232, 240, 0.75);">We didn't find any notes in this window, so there's nothing to summarize today.</p>
 <% end %>
 
 <%= render "mailers/shared/button", url: digest_cta_url, label: "Open Jotchain" %>

@@ -1,28 +1,28 @@
 <% if local_assigns[:stats].present? %>
-  <div class="stats-card" style="background-color: #f8fafc; border: 1px solid rgba(148, 163, 184, 0.2); border-radius: 10px; padding: 20px; margin-bottom: 24px;">
+  <div class="stats-card" style="background: rgba(13, 22, 38, 0.94); border: 1px solid rgba(129, 140, 248, 0.25); border-radius: 14px; padding: 22px; margin-bottom: 24px;">
     <table role="presentation" class="stats-grid" style="width: 100%;" cellpadding="0" cellspacing="0">
       <tr>
         <td class="stat-item" style="text-align: center; padding: 8px; vertical-align: top; width: 33.33%;">
-          <div class="stat-value" style="font-size: 28px; font-weight: 700; color: #818cf8; line-height: 1.2; margin-bottom: 4px;">
+          <div class="stat-value" style="font-size: 28px; font-weight: 700; color: #38bdf8; line-height: 1.2; margin-bottom: 4px;">
             <%= format_streak(stats[:current_streak] || stats["current_streak"]) %>
           </div>
-          <div class="stat-label" style="font-size: 12px; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600;">
+          <div class="stat-label" style="font-size: 12px; color: rgba(148, 163, 184, 0.85); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600;">
             <%= format_streak_label(stats[:current_streak] || stats["current_streak"]) %>
           </div>
         </td>
-        <td class="stat-item" style="text-align: center; padding: 8px; vertical-align: top; width: 33.33%; border-left: 1px solid rgba(148, 163, 184, 0.15); border-right: 1px solid rgba(148, 163, 184, 0.15);">
-          <div class="stat-value" style="font-size: 28px; font-weight: 700; color: #818cf8; line-height: 1.2; margin-bottom: 4px;">
+        <td class="stat-item" style="text-align: center; padding: 8px; vertical-align: top; width: 33.33%; border-left: 1px solid rgba(129, 140, 248, 0.18); border-right: 1px solid rgba(129, 140, 248, 0.18);">
+          <div class="stat-value" style="font-size: 28px; font-weight: 700; color: #38bdf8; line-height: 1.2; margin-bottom: 4px;">
             <%= format_total_notes(stats[:total_notes] || stats["total_notes"]) %>
           </div>
-          <div class="stat-label" style="font-size: 12px; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600;">
+          <div class="stat-label" style="font-size: 12px; color: rgba(148, 163, 184, 0.85); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600;">
             Total notes
           </div>
         </td>
         <td class="stat-item" style="text-align: center; padding: 8px; vertical-align: top; width: 33.33%;">
-          <div class="stat-value" style="font-size: 20px; font-weight: 700; color: #818cf8; line-height: 1.2; margin-bottom: 4px;">
+          <div class="stat-value" style="font-size: 20px; font-weight: 700; color: #38bdf8; line-height: 1.2; margin-bottom: 4px;">
             <%= format_most_productive_day(stats[:most_productive_day] || stats["most_productive_day"]) %>
           </div>
-          <div class="stat-label" style="font-size: 12px; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600;">
+          <div class="stat-label" style="font-size: 12px; color: rgba(148, 163, 184, 0.85); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600;">
             Top day
           </div>
         </td>

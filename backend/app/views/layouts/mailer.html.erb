@@ -5,15 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
       :root {
-        color-scheme: light;
+        color-scheme: dark;
         font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       }
 
       body {
         margin: 0;
         padding: 24px;
-        background-color: #f8fafc;
-        color: #0a0f1c;
+        background: radial-gradient(60% 60% at 20% 10%, rgba(56, 189, 248, 0.08), transparent 70%), radial-gradient(48% 48% at 80% 18%, rgba(129, 140, 248, 0.12), transparent 75%), #050a14;
+        color: #e2e8f0;
       }
 
       .email-wrapper {
@@ -23,63 +23,71 @@
       .email-container {
         max-width: 600px;
         margin: 0 auto;
-        background-color: #ffffff;
-        border-radius: 12px;
+        background: linear-gradient(160deg, #0d1729 0%, #0a1220 100%);
+        border-radius: 18px;
         overflow: hidden;
-        box-shadow: 0 1px 4px rgba(15, 23, 42, 0.08);
+        border: 1px solid rgba(129, 140, 248, 0.22);
+        box-shadow: 0 32px 70px -32px rgba(2, 6, 23, 0.85), inset 0 1px 0 rgba(148, 163, 184, 0.05);
       }
 
       .email-content {
         padding: 32px 32px 24px;
         font-size: 16px;
-        line-height: 1.6;
+        line-height: 1.7;
+        color: rgba(226, 232, 240, 0.92);
       }
 
       .email-content h1,
       .email-content h2 {
         margin-top: 0;
-        color: #0a0f1c;
+        color: #f8fafc;
         font-weight: 600;
         letter-spacing: -0.02em;
       }
 
-      .email-content p {
-        margin: 0 0 16px 0;
+      .email-content p,
+      .email-content li {
+        color: rgba(226, 232, 240, 0.85);
+      }
+
+      .email-content a {
+        color: #a5b4fc;
       }
 
       .email-divider {
         border: none;
         height: 1px;
-        background-color: rgba(148, 163, 184, 0.2);
+        background: linear-gradient(90deg, rgba(129, 140, 248, 0), rgba(129, 140, 248, 0.35), rgba(129, 140, 248, 0));
         margin: 24px 0;
       }
 
       .email-footer {
         padding: 0 32px 32px;
         font-size: 13px;
-        color: #64748b;
+        color: rgba(148, 163, 184, 0.85);
         line-height: 0;
         display: flex;
         flex-direction: column;
         align-items: center;
+        gap: 6px;
       }
 
       .email-button {
         display: inline-block;
         padding: 12px 24px;
-        background-color: #818cf8;
-        color: #05060a !important;
+        background: linear-gradient(135deg, #0ea5e9, #6366f1);
+        color: #031022 !important;
         text-decoration: none;
-        border-radius: 8px;
+        border-radius: 10px;
         font-weight: 600;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+        box-shadow: 0 18px 36px -22px rgba(14, 165, 233, 0.55);
       }
 
       .stats-card {
-        background-color: #f8fafc;
-        border: 1px solid rgba(148, 163, 184, 0.2);
-        border-radius: 10px;
-        padding: 20px;
+        background: rgba(13, 22, 38, 0.94);
+        border: 1px solid rgba(129, 140, 248, 0.25);
+        border-radius: 14px;
+        padding: 22px;
         margin-bottom: 24px;
       }
 
@@ -98,14 +106,14 @@
       .stat-value {
         font-size: 28px;
         font-weight: 700;
-        color: #818cf8;
+        color: #38bdf8;
         line-height: 1.2;
         margin-bottom: 4px;
       }
 
       .stat-label {
         font-size: 12px;
-        color: #64748b;
+        color: rgba(148, 163, 184, 0.85);
         text-transform: uppercase;
         letter-spacing: 0.05em;
         font-weight: 600;
@@ -125,7 +133,7 @@
         }
 
         .stats-card {
-          padding: 16px;
+          padding: 18px;
         }
 
         .stat-value {
