@@ -27,6 +27,7 @@ Rails.application.routes.draw do
   end
 
   resources :entries, only: [:create, :update, :destroy]
+  resources :feedback, only: [:create]
 
   root "dashboard#index"
 

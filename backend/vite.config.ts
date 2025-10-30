@@ -13,4 +13,7 @@ export default defineConfig({
     tailwindcss(),
     RubyPlugin(),
   ],
+  resolve: {
+    dedupe: ['react', 'react-dom'],
+  },
 })

@@ -33,7 +33,12 @@ class NotificationsController < InertiaController
 
   def update
     if @notification.update(schedule_params)
-      redirect_to notifications_path, notice: "Notification updated"
+      notice_message = if schedule_params.key?(:enabled) && schedule_params.keys.size == 1
+        schedule_params[:enabled] ? "Notification enabled" : "Notification disabled"
+      else
+        "Notification updated"
+      end
+      redirect_to notifications_path, notice: notice_message
     else
       redirect_to notifications_path, inertia: inertia_errors(@notification)
     end

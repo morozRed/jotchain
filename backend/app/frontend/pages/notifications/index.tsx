@@ -146,7 +146,7 @@ export default function Notifications() {
       </div>
 
       <Dialog open={isCreateOpen} onOpenChange={(open) => (open ? setIsCreateOpen(true) : closeCreateDialog())}>
-        <DialogContent className="max-w-2xl lg:max-w-4xl">
+        <DialogContent className="max-w-3xl lg:max-w-5xl">
           <DialogHeader>
             <DialogTitle>Create notification</DialogTitle>
             <DialogDescription>

@@ -1,8 +1,9 @@
 import { type InertiaFormProps } from "@inertiajs/react"
+import { CalendarDays } from "lucide-react"
 import { type ReactNode } from "react"
 
 import InputError from "@/components/input-error"
-import { Checkbox } from "@/components/ui/checkbox"
+import { ComboboxTimezone } from "@/components/ui/combobox-timezone"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {
@@ -13,6 +14,8 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
+import { Switch } from "@/components/ui/switch"
+import { TimePicker } from "@/components/ui/time-picker"
 import { cn } from "@/lib/utils"
 
 import { LOOKBACK_LABELS, RECURRENCE_LABELS, UNIT_LABELS } from "./constants"
@@ -71,11 +74,12 @@ export function NotificationFormSections({
       form.data.custom_interval_unit === "months")
 
   return (
-    <div className="space-y-6 lg:grid lg:grid-cols-2 lg:gap-8 lg:space-y-0">
-      <div className="space-y-6">
+    <div className="space-y-6">
+      <div className="space-y-6 lg:grid lg:grid-cols-2 lg:gap-8 lg:space-y-0">
         <FormSection
           title="Basics"
           description="Give the notification a readable name and control whether it is active."
+          className="h-full"
         >
           <div className="grid gap-4 sm:grid-cols-[1fr_auto] sm:items-start">
             <FieldGroup>
@@ -85,16 +89,21 @@ export function NotificationFormSections({
                 value={form.data.name}
                 onChange={(event) => form.setData("name", event.target.value)}
                 aria-invalid={Boolean(form.errors.name)}
-                placeholder={buildSuggestedName(form.data)}
+                placeholder="e.g., Weekly Monday standup summary"
                 disabled={processing}
               />
+              {!form.errors.name && !form.data.name && (
+                <p className="text-xs text-muted-foreground">
+                  Suggested: {buildSuggestedName(form.data)}
+                </p>
+              )}
               <InputError message={form.errors.name} />
             </FieldGroup>
 
             <div className="flex flex-col gap-2">
               <Label>Status</Label>
-              <div className="flex h-8 items-center gap-2 text-sm text-muted-foreground">
-                <Checkbox
+              <div className="flex h-9 items-center gap-3">
+                <Switch
                   id={`${idPrefix}-enabled`}
                   checked={form.data.enabled}
                   onCheckedChange={(checked) =>
@@ -102,7 +111,13 @@ export function NotificationFormSections({
                   }
                   disabled={processing}
                 />
-                <Label htmlFor={`${idPrefix}-enabled`} className="text-sm">
+                <Label
+                  htmlFor={`${idPrefix}-enabled`}
+                  className={cn(
+                    "text-sm font-medium",
+                    form.data.enabled ? "text-primary" : "text-muted-foreground",
+                  )}
+                >
                   {form.data.enabled ? "Enabled" : "Paused"}
                 </Label>
               </div>
@@ -110,78 +125,10 @@ export function NotificationFormSections({
           </div>
         </FormSection>
 
-        <Separator className="md:hidden" />
-
-        <FormSection
-          title="Delivery"
-          description="Choose when emails send and how much lead time to include."
-        >
-          <div className="grid gap-4 md:grid-cols-1">
-            <FieldGroup>
-              <Label htmlFor={`${idPrefix}-timezone`}>Time zone</Label>
-              <Select
-                value={form.data.timezone}
-                onValueChange={(value) => form.setData("timezone", value)}
-                disabled={processing}
-              >
-                <SelectTrigger id={`${idPrefix}-timezone`}>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {[form.data.timezone, ...meta.timezonePresets]
-                    .filter((value, index, array) => array.indexOf(value) === index)
-                    .map((value) => (
-                      <SelectItem key={value} value={value}>
-                        {value}
-                      </SelectItem>
-                    ))}
-                </SelectContent>
-              </Select>
-              <InputError message={form.errors.timezone} />
-            </FieldGroup>
-
-            <FieldGroup>
-              <Label htmlFor={`${idPrefix}-time`}>Send time</Label>
-              <Input
-                id={`${idPrefix}-time`}
-                type="time"
-                value={form.data.time_of_day}
-                onChange={(event) => form.setData("time_of_day", event.target.value)}
-                disabled={processing}
-                aria-invalid={Boolean(form.errors.time_of_day)}
-              />
-              <InputError message={form.errors.time_of_day} />
-            </FieldGroup>
-
-            <FieldGroup>
-              <Label htmlFor={`${idPrefix}-lead-time`}>Lead time (minutes)</Label>
-              <Input
-                id={`${idPrefix}-lead-time`}
-                type="number"
-                min={0}
-                max={1440}
-                value={form.data.lead_time_minutes}
-                onChange={(event) =>
-                  form.setData(
-                    "lead_time_minutes",
-                    event.target.value === ""
-                      ? 0
-                      : Number.parseInt(event.target.value, 10),
-                  )
-                }
-                disabled={processing}
-                aria-invalid={Boolean(form.errors.lead_time_minutes)}
-              />
-              <InputError message={form.errors.lead_time_minutes} />
-            </FieldGroup>
-          </div>
-        </FormSection>
-      </div>
-
-      <div className="space-y-6">
         <FormSection
           title="Cadence"
           description="Set how often the notification fires."
+          className="h-full"
         >
           <div className="grid gap-4 md:grid-cols-2">
             <FieldGroup>
@@ -292,12 +239,66 @@ export function NotificationFormSections({
             ) : null}
           </div>
         </FormSection>
+      </div>
 
-        <Separator className="md:hidden" />
+      <Separator className="md:hidden" />
+
+      <div className="space-y-6 lg:grid lg:grid-cols-2 lg:gap-8 lg:space-y-0">
+        <FormSection
+          title="Delivery"
+          description="Choose when emails send and how much lead time to include."
+          className="h-full"
+        >
+          <div className="grid gap-4 md:grid-cols-1">
+            <FieldGroup>
+              <Label htmlFor={`${idPrefix}-timezone`}>Time zone</Label>
+              <ComboboxTimezone
+                value={form.data.timezone}
+                onChange={(value) => form.setData("timezone", value)}
+                disabled={processing}
+              />
+              <InputError message={form.errors.timezone} />
+            </FieldGroup>
+
+            <FieldGroup>
+              <Label htmlFor={`${idPrefix}-time`}>Send time</Label>
+              <TimePicker
+                value={form.data.time_of_day}
+                onChange={(value) => form.setData("time_of_day", value)}
+                disabled={processing}
+                placeholder="Select time"
+              />
+              <InputError message={form.errors.time_of_day} />
+            </FieldGroup>
+
+            <FieldGroup>
+              <Label htmlFor={`${idPrefix}-lead-time`}>Lead time (minutes)</Label>
+              <Input
+                id={`${idPrefix}-lead-time`}
+                type="number"
+                min={0}
+                max={1440}
+                value={form.data.lead_time_minutes}
+                onChange={(event) =>
+                  form.setData(
+                    "lead_time_minutes",
+                    event.target.value === ""
+                      ? 0
+                      : Number.parseInt(event.target.value, 10),
+                  )
+                }
+                disabled={processing}
+                aria-invalid={Boolean(form.errors.lead_time_minutes)}
+              />
+              <InputError message={form.errors.lead_time_minutes} />
+            </FieldGroup>
+          </div>
+        </FormSection>
 
         <FormSection
           title="Summary window"
           description="Decide how much history each email covers and preview upcoming sends."
+          className="h-full"
         >
           <div className="grid gap-4 md:grid-cols-2">
             <FieldGroup>
@@ -344,19 +345,26 @@ export function NotificationFormSections({
             ) : null}
           </div>
 
-          <div className="rounded-lg border bg-muted/40 p-3 text-sm text-muted-foreground">
-            <p className="font-medium text-foreground">Next deliveries</p>
+          <div className="rounded-lg border border-primary/20 bg-primary/5 p-4 text-sm">
+            <div className="flex items-center gap-2 font-semibold text-foreground">
+              <CalendarDays className="h-4 w-4 text-primary" />
+              <span>Next deliveries</span>
+            </div>
             {occurrences.length ? (
-              <ul className="mt-1.5 space-y-1">
+              <ul className="mt-3 space-y-2">
                 {occurrences.map((occurrence, index) => (
-                  <li key={`${occurrence}-${index}`} className="leading-relaxed">
-                    {occurrence}
+                  <li
+                    key={`${occurrence}-${index}`}
+                    className="flex items-start gap-2 text-foreground"
+                  >
+                    <span className="mt-1 flex size-1.5 shrink-0 rounded-full bg-primary" />
+                    <span className="leading-relaxed">{occurrence}</span>
                   </li>
                 ))}
               </ul>
             ) : (
-              <p className="mt-1">
-                Configure cadence and timing to preview upcoming sends.
+              <p className="mt-2 text-muted-foreground">
+                Configure cadence and timing above to preview upcoming delivery dates.
               </p>
             )}
           </div>
@@ -456,7 +464,12 @@ function FormSection({
   className?: string
 }) {
   return (
-    <section className={cn("space-y-4", className)}>
+    <section
+      className={cn(
+        "space-y-4 rounded-lg border bg-card p-4 shadow-sm",
+        className,
+      )}
+    >
       <div className="space-y-1">
         <h3 className="text-sm font-semibold text-foreground">{title}</h3>
         {description ? (

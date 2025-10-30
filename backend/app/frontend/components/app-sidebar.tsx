@@ -1,6 +1,7 @@
 import { Link } from "@inertiajs/react"
 import { Bell, LayoutGrid } from "lucide-react"
 
+import { FeedbackButton } from "@/components/feedback-button"
 import { NavMain } from "@/components/nav-main"
 import { NavUser } from "@/components/nav-user"
 import {
@@ -50,6 +51,7 @@ export function AppSidebar() {
       </SidebarContent>
 
       <SidebarFooter>
+        <FeedbackButton />
         <NavUser />
       </SidebarFooter>
     </Sidebar>

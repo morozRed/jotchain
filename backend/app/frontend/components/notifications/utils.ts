@@ -1,3 +1,5 @@
+import { getUserTimezone } from "@/utils/timezone"
+
 import { LOOKBACK_LABELS, UNIT_LABELS, WEEKDAY_INDEX } from "./constants"
 import type {
   MetaPayload,
@@ -51,6 +53,10 @@ export function isNotificationFormDataEqual(
 }
 
 export function buildDefaultFormData(meta: MetaPayload): NotificationFormData {
+  // Try to detect user's timezone, fallback to server timezone
+  const detectedTimezone = getUserTimezone()
+  const timezone = detectedTimezone !== "UTC" ? detectedTimezone : meta.timezone
+
   return {
     name: buildSuggestedName({
       channel: "email",
@@ -65,7 +71,7 @@ export function buildDefaultFormData(meta: MetaPayload): NotificationFormData {
     }),
     channel: "email",
     enabled: true,
-    timezone: meta.timezone,
+    timezone,
     time_of_day: "09:00",
     recurrence: "weekly",
     weekly_day: meta.defaultWeeklyDay,

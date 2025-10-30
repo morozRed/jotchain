@@ -18,7 +18,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { cn } from "@/lib/utils"
+import { Switch } from "@/components/ui/switch"
 import { notificationPath } from "@/routes"
 
 import { LOOKBACK_LABELS, UNIT_LABELS } from "./constants"
@@ -60,6 +60,15 @@ export function NotificationCard({ schedule, meta }: NotificationCardProps) {
 
   const [isEditOpen, setIsEditOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
+  const [optimisticEnabled, setOptimisticEnabled] = useState<boolean | null>(null)
+
+  // Use optimistic state if available, otherwise use server state
+  const currentEnabled = optimisticEnabled ?? schedule.enabled
+
+  // Reset optimistic state when schedule prop updates
+  useEffect(() => {
+    setOptimisticEnabled(null)
+  }, [schedule.enabled])
 
   const previewOccurrences = useMemo(() => {
     try {
@@ -102,6 +111,30 @@ export function NotificationCard({ schedule, meta }: NotificationCardProps) {
     })
   }, [schedule.id])
 
+  const handleToggleEnabled = useCallback(
+    (checked: boolean) => {
+      // Optimistically update the UI
+      setOptimisticEnabled(checked)
+
+      router.put(
+        notificationPath(schedule.id),
+        {
+          notification_schedule: {
+            enabled: checked,
+          },
+        },
+        {
+          preserveScroll: true,
+          onError: () => {
+            // Revert optimistic update on error
+            setOptimisticEnabled(null)
+          },
+        },
+      )
+    },
+    [schedule.id],
+  )
+
   const cadenceLabel = (() => {
     if (form.data.recurrence === "daily_weekdays") {
       return "Every weekday"
@@ -136,101 +169,65 @@ export function NotificationCard({ schedule, meta }: NotificationCardProps) {
   })()
 
   return (
-    <Card className="border shadow-sm">
-      <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-4">
-        <div className="flex-1 space-y-1">
-          <div className="flex items-center gap-2">
-            <CardTitle className="text-lg font-semibold">
-              {schedule.name || buildSuggestedName(form.data)}
-            </CardTitle>
-            <span
-              className={cn(
-                "rounded-full px-2 py-0.5 text-xs font-medium",
-                schedule.enabled
-                  ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
-                  : "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200",
-              )}
-            >
-              {schedule.enabled ? "Enabled" : "Paused"}
-            </span>
-          </div>
-        </div>
+    <Card className="border shadow-sm gap-1">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+        <CardTitle className="text-lg font-semibold">
+          {schedule.name || buildSuggestedName(form.data)}
+        </CardTitle>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="sm" className="size-8 p-0">
-              <MoreVertical className="size-4" />
-              <span className="sr-only">Open menu</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => setIsEditOpen(true)}>
-              Edit
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => setDeleteOpen(true)}
-              className="text-destructive"
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <Switch
+              id={`notification-toggle-${schedule.id}`}
+              checked={currentEnabled}
+              onCheckedChange={handleToggleEnabled}
+            />
+            <label
+              htmlFor={`notification-toggle-${schedule.id}`}
+              className="text-sm font-medium text-muted-foreground cursor-pointer"
             >
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+              {currentEnabled ? "Enabled" : "Disabled"}
+            </label>
+          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="sm" className="size-8 p-0">
+                <MoreVertical className="size-4" />
+                <span className="sr-only">Open menu</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => setIsEditOpen(true)}>
+                Edit
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => setDeleteOpen(true)}
+                className="text-destructive"
+              >
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </CardHeader>
 
-      <CardContent className="space-y-6">
-        <div className="grid gap-6 md:grid-cols-3">
-          <div className="rounded-lg border bg-muted/40 p-3 text-sm">
-            <div>
-              <h4 className="mb-2 text-sm font-semibold text-foreground">Delivery</h4>
-              <dl className="space-y-2 text-sm">
-                <div>
-                  <dt className="inline font-medium text-muted-foreground">Time zone: </dt>
-                  <dd className="inline">{form.data.timezone}</dd>
-                </div>
-                <div>
-                  <dt className="inline font-medium text-muted-foreground">Send time: </dt>
-                  <dd className="inline">{form.data.time_of_day}</dd>
-                </div>
-                <div>
-                  <dt className="inline font-medium text-muted-foreground">Lead time: </dt>
-                  <dd className="inline">{form.data.lead_time_minutes} minutes</dd>
-                </div>
-              </dl>
-            </div>
-          </div>
-
-          <div className="rounded-lg border bg-muted/40 p-3 text-sm">
-            <div>
-              <h4 className="mb-2 text-sm font-semibold text-foreground">Schedule</h4>
-              <dl className="space-y-2 text-sm">
-                <div>
-                  <dt className="inline font-medium text-muted-foreground">Cadence: </dt>
-                  <dd className="inline">{cadenceLabel}</dd>
-                </div>
-                <div>
-                  <dt className="inline font-medium text-muted-foreground">Summary: </dt>
-                  <dd className="inline">{lookbackLabel}</dd>
-                </div>
-              </dl>
-            </div>
-          </div>
-          <div className="rounded-lg border bg-muted/40 p-3 text-sm">
-            <p className="font-medium text-foreground">Next deliveries</p>
-            {occurrences.length ? (
-              <ul className="mt-1.5 space-y-1 text-muted-foreground">
-                {occurrences.map((occurrence, index) => (
-                  <li key={`${occurrence}-${index}`} className="leading-relaxed">
-                    {occurrence}
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="mt-1 text-muted-foreground">
-                No upcoming deliveries scheduled.
-              </p>
-            )}
-          </div>
+      <CardContent className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
+        <div className="flex items-center gap-1.5">
+          <span className="text-muted-foreground">{cadenceLabel}</span>
+          <span className="text-muted-foreground">@</span>
+          <span className="font-medium">{form.data.time_of_day}</span>
         </div>
+        <div className="h-4 w-px bg-border" />
+        <div className="text-muted-foreground">{lookbackLabel}</div>
+        {occurrences.length > 0 && (
+          <>
+            <div className="h-4 w-px bg-border" />
+            <div className="flex items-center gap-1.5">
+              <span className="text-xs text-muted-foreground">Next:</span>
+              <span>{occurrences[0]}</span>
+            </div>
+          </>
+        )}
       </CardContent>
 
       <Dialog open={isEditOpen} onOpenChange={(open) => (open ? setIsEditOpen(true) : setIsEditOpen(false))}>
