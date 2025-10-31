@@ -45,7 +45,7 @@ production:
   primary:
     <<: *default
     database: jotchain_production
-    username: <%= ENV["DB_USER"] || "waytale" %>
+    username: <%= ENV["DB_USER"] || "jotchain" %>
     password: <%= ENV["DATABASE_PASSWORD"] %>
     host: <%= ENV["DB_HOST"] || "localhost" %>
     port: <%= ENV["DB_PORT"] || 5432 %>
