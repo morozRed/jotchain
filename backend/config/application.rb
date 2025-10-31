@@ -44,6 +44,11 @@ module ReactStarterKit
     config.mission_control.jobs.base_controller_class = "AdminController"
     config.mission_control.jobs.http_basic_auth_enabled = false
 
+    if Rails.env.local?
+      config.hosts << "app.jotchain.localhost:3000"
+      config.hosts << "jobs.jotchain.localhost:3000"
+    end
+
     # Encryption settings
     config.active_record.encryption.primary_key = ENV["ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY"]
     config.active_record.encryption.deterministic_key = ENV["ACTIVE_RECORD_ENCRYPTION_DETERMINISTIC_KEY"]

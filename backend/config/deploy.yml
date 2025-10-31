@@ -128,7 +128,6 @@ accessories:
     port: "5432"
     env:
       clear:
-        POSTGRES_HOST: '%'
         POSTGRES_DB: jotchain_production
         POSTGRES_USER: jotchain
         # Bind to all interfaces on private network
@@ -139,3 +138,4 @@ accessories:
       - config/postgres/production.conf:/etc/postgresql/postgresql.conf
     directories:
       - data:/var/lib/postgresql/data
+    cmd: postgres -c shared_buffers=512MB -c max_connections=120 -c effective_cache_size=1536MB -c maintenance_work_mem=128MB -c work_mem=2MB -c random_page_cost=1.1 -c wal_buffers=16MB -c checkpoint_timeout=15min -c checkpoint_completion_target=0.9 -c max_wal_size=1GB -c min_wal_size=80MB -c autovacuum=on -c autovacuum_vacuum_threshold=50 -c autovacuum_vacuum_scale_factor=0.1 -c autovacuum_analyze_threshold=50 -c autovacuum_analyze_scale_factor=0.05 -c autovacuum_max_workers=3 -c autovacuum_naptime=30s -c autovacuum_vacuum_cost_limit=400 -c autovacuum_vacuum_insert_threshold=1000 -c autovacuum_vacuum_insert_scale_factor=0.01 -c log_min_duration_statement=1000 -c log_checkpoints=on -c log_connections=on -c log_disconnections=on -c log_lock_waits=on -c deadlock_timeout=1s -c track_io_timing=on -c track_functions=all -c temp_file_limit=5GB -c statement_timeout=1800000 -c idle_in_transaction_session_timeout=300000
