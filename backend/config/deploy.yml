@@ -109,8 +109,6 @@ asset_path: /rails/public
 # Configure the image builder.
 builder:
   arch: amd64
-  args:
-    RUBY_VERSION: ruby-3.4.5
   secrets:
     - RAILS_MASTER_KEY
     - STRIPE_SECRET_KEY
