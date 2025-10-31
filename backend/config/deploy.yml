@@ -22,11 +22,6 @@ servers:
   #   options:
   #     network-alias: vite_ssr
 
-  # job:
-  #   hosts:
-  #     - 192.168.0.1
-  #   cmd: bin/jobs
-
 ssh:
   keys: [ "~/.ssh/jotchain_hetzner_ed25519" ]
 
