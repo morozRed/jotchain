@@ -1,0 +1,524 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const appSignupUrl = "https://app.jotchain.com/signup";
+const currentDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+---
+
+<Layout title="Terms of Service - JotChain">
+	<header>
+		<div class="header-content">
+			<div class="logo">
+				<svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+					<rect width="32" height="32" rx="8" fill="url(#gradient)" />
+					<path d="M16 8L24 16L16 24L8 16L16 8Z" fill="white" opacity="0.9" />
+					<defs>
+						<linearGradient id="gradient" x1="0" y1="0" x2="32" y2="32">
+							<stop offset="0%" stop-color="#818cf8" />
+							<stop offset="100%" stop-color="#22d3ee" />
+						</linearGradient>
+					</defs>
+				</svg>
+				<span>JotChain</span>
+			</div>
+			<nav>
+				<a href="/">Home</a>
+				<a href="/#features">Product</a>
+				<a href="/#pricing">Pricing</a>
+				<a href="/privacy">Privacy</a>
+			</nav>
+		</div>
+	</header>
+
+	<main>
+		<div class="legal-container">
+			<h1>Terms of Service</h1>
+			<p class="last-updated">Last Updated: {currentDate}</p>
+
+			<section>
+				<h2>1. Acceptance of Terms</h2>
+				<p>Welcome to JotChain. By accessing or using our service, you agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, please do not use our service.</p>
+				<p>We reserve the right to modify these Terms at any time. We will notify you of any changes by posting the new Terms on this page. Your continued use of the service after such modifications constitutes your acceptance of the updated Terms.</p>
+			</section>
+
+			<section>
+				<h2>2. Description of Service</h2>
+				<p>JotChain is an AI-powered meeting assistant service that provides:</p>
+				<ul>
+					<li>Meeting transcription and recording capabilities</li>
+					<li>Automated note-taking and summarization</li>
+					<li>Action item extraction and tracking</li>
+					<li>Meeting insights and analytics</li>
+					<li>Integration with calendar and productivity tools</li>
+				</ul>
+				<p>We reserve the right to modify, suspend, or discontinue any aspect of the service at any time, with or without notice.</p>
+			</section>
+
+			<section>
+				<h2>3. User Accounts</h2>
+
+				<h3>3.1 Account Registration</h3>
+				<p>To use JotChain, you must create an account by providing accurate and complete information. You are responsible for:</p>
+				<ul>
+					<li>Maintaining the confidentiality of your account credentials</li>
+					<li>All activities that occur under your account</li>
+					<li>Notifying us immediately of any unauthorized use of your account</li>
+					<li>Ensuring your account information remains accurate and up-to-date</li>
+				</ul>
+
+				<h3>3.2 Account Eligibility</h3>
+				<p>You must be at least 18 years old to create an account and use our service. By creating an account, you represent and warrant that you meet this age requirement.</p>
+
+				<h3>3.3 Account Termination</h3>
+				<p>We reserve the right to suspend or terminate your account at any time if you violate these Terms or engage in conduct that we deem inappropriate or harmful to our service or other users.</p>
+			</section>
+
+			<section>
+				<h2>4. User Responsibilities and Conduct</h2>
+				<p>You agree to use JotChain only for lawful purposes and in accordance with these Terms. You agree NOT to:</p>
+				<ul>
+					<li>Violate any applicable laws, regulations, or third-party rights</li>
+					<li>Record meetings without obtaining proper consent from all participants</li>
+					<li>Upload or share content that is illegal, harmful, threatening, abusive, defamatory, or otherwise objectionable</li>
+					<li>Attempt to gain unauthorized access to our systems or other user accounts</li>
+					<li>Interfere with or disrupt the service or servers</li>
+					<li>Use the service to transmit viruses, malware, or other harmful code</li>
+					<li>Scrape, copy, or reverse engineer any part of the service</li>
+					<li>Use automated systems (bots, scrapers) to access the service without our permission</li>
+					<li>Resell or redistribute the service without our written consent</li>
+					<li>Remove or modify any proprietary notices or labels</li>
+				</ul>
+			</section>
+
+			<section>
+				<h2>5. Recording Consent and Legal Compliance</h2>
+				<p><strong>Important:</strong> You are solely responsible for complying with all applicable laws regarding recording conversations, including obtaining consent from all participants before recording any meeting.</p>
+				<p>Recording laws vary by jurisdiction. Some locations require all parties to consent to recording (two-party or all-party consent), while others require only one party to consent (one-party consent). You must:</p>
+				<ul>
+					<li>Understand and comply with the recording laws applicable to your location and the locations of all meeting participants</li>
+					<li>Obtain all necessary consents before recording any meeting</li>
+					<li>Inform all participants that a meeting is being recorded</li>
+					<li>Not use JotChain to record conversations where doing so would be illegal</li>
+				</ul>
+				<p>We provide tools to help you notify participants of recording, but you remain solely responsible for legal compliance.</p>
+			</section>
+
+			<section>
+				<h2>6. Intellectual Property Rights</h2>
+
+				<h3>6.1 Our Intellectual Property</h3>
+				<p>JotChain and all associated content, features, and functionality are owned by JotChain and protected by international copyright, trademark, and other intellectual property laws. You may not:</p>
+				<ul>
+					<li>Copy, modify, or create derivative works of our service</li>
+					<li>Use our trademarks, logos, or branding without written permission</li>
+					<li>Reverse engineer, decompile, or disassemble our software</li>
+				</ul>
+
+				<h3>6.2 Your Content</h3>
+				<p>You retain ownership of all content you create, upload, or record using JotChain ("Your Content"). By using our service, you grant us a limited, worldwide, non-exclusive, royalty-free license to:</p>
+				<ul>
+					<li>Store, process, and transmit Your Content to provide the service</li>
+					<li>Use Your Content to improve and train our AI models (in anonymized, aggregated form)</li>
+					<li>Create backups and ensure service reliability</li>
+				</ul>
+				<p>You represent and warrant that you have all necessary rights to Your Content and that it does not violate any third-party rights or applicable laws.</p>
+			</section>
+
+			<section>
+				<h2>7. Subscriptions and Payments</h2>
+
+				<h3>7.1 Subscription Plans</h3>
+				<p>JotChain offers various subscription plans with different features and pricing. Plan details and pricing are available on our website and may be changed at any time with notice to existing subscribers.</p>
+
+				<h3>7.2 Billing</h3>
+				<p>Subscriptions are billed in advance on a recurring basis (monthly or annually, depending on your plan). By subscribing, you authorize us to charge your payment method on a recurring basis.</p>
+
+				<h3>7.3 Payment Methods</h3>
+				<p>We accept various payment methods as indicated on our website. You must provide accurate and complete payment information and keep it up-to-date.</p>
+
+				<h3>7.4 Refunds and Cancellation</h3>
+				<p>You may cancel your subscription at any time. Upon cancellation:</p>
+				<ul>
+					<li>You will continue to have access to paid features until the end of your current billing period</li>
+					<li>Your subscription will not renew for the next billing period</li>
+					<li>No refunds will be provided for partial billing periods, except as required by law</li>
+				</ul>
+
+				<h3>7.5 Price Changes</h3>
+				<p>We may change our pricing at any time. For existing subscribers, we will provide at least 30 days' notice before any price increase takes effect. Your continued use of the service after a price increase constitutes acceptance of the new pricing.</p>
+
+				<h3>7.6 Taxes</h3>
+				<p>All fees are exclusive of applicable taxes, which you are responsible for paying.</p>
+			</section>
+
+			<section>
+				<h2>8. Free Trial</h2>
+				<p>We may offer a free trial period for new users. Free trial terms will be specified at the time of signup. We reserve the right to modify or cancel free trial offers at any time. You may cancel during the trial period to avoid being charged.</p>
+			</section>
+
+			<section>
+				<h2>9. Service Availability and Support</h2>
+				<p>While we strive to provide reliable service, we do not guarantee that:</p>
+				<ul>
+					<li>The service will be uninterrupted, timely, secure, or error-free</li>
+					<li>The results obtained from the service will be accurate or reliable</li>
+					<li>Any errors in the service will be corrected</li>
+				</ul>
+				<p>We may perform maintenance, updates, or modifications that may temporarily interrupt or affect service availability.</p>
+			</section>
+
+			<section>
+				<h2>10. Data Privacy and Security</h2>
+				<p>Your use of JotChain is also governed by our Privacy Policy, which is incorporated into these Terms by reference. Please review our <a href="/privacy">Privacy Policy</a> to understand how we collect, use, and protect your information.</p>
+				<p>While we implement security measures to protect your data, no system is completely secure. You acknowledge and accept the inherent risks of transmitting information over the Internet.</p>
+			</section>
+
+			<section>
+				<h2>11. Third-Party Services and Integrations</h2>
+				<p>JotChain may integrate with third-party services (calendar apps, video conferencing platforms, productivity tools). Your use of these third-party services is subject to their respective terms of service and privacy policies. We are not responsible for the practices or content of third-party services.</p>
+			</section>
+
+			<section>
+				<h2>12. Disclaimers and Limitations of Liability</h2>
+
+				<h3>12.1 Disclaimer of Warranties</h3>
+				<p>THE SERVICE IS PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.</p>
+				<p>We do not warrant that:</p>
+				<ul>
+					<li>The service will meet your specific requirements</li>
+					<li>The service will be uninterrupted, timely, secure, or error-free</li>
+					<li>Transcriptions, summaries, or other AI-generated content will be accurate or complete</li>
+					<li>Any defects or errors will be corrected</li>
+				</ul>
+
+				<h3>12.2 AI-Generated Content Disclaimer</h3>
+				<p>JotChain uses artificial intelligence to generate transcriptions, summaries, and other content. AI-generated content may contain errors, inaccuracies, or omissions. You should review and verify all AI-generated content before relying on it for important decisions or purposes.</p>
+
+				<h3>12.3 Limitation of Liability</h3>
+				<p>TO THE MAXIMUM EXTENT PERMITTED BY LAW, JOTCHAIN AND ITS AFFILIATES, OFFICERS, DIRECTORS, EMPLOYEES, AND AGENTS SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING BUT NOT LIMITED TO:</p>
+				<ul>
+					<li>Loss of profits, revenue, or data</li>
+					<li>Business interruption</li>
+					<li>Loss of goodwill or reputation</li>
+					<li>Cost of substitute services</li>
+				</ul>
+				<p>ARISING OUT OF OR RELATED TO THESE TERMS OR YOUR USE OF THE SERVICE, EVEN IF WE HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.</p>
+				<p>IN NO EVENT SHALL OUR TOTAL LIABILITY TO YOU FOR ALL CLAIMS EXCEED THE AMOUNT YOU PAID US IN THE 12 MONTHS PRECEDING THE CLAIM, OR $100, WHICHEVER IS GREATER.</p>
+
+				<h3>12.4 Jurisdictional Limitations</h3>
+				<p>Some jurisdictions do not allow the exclusion or limitation of certain warranties or liabilities. In such jurisdictions, our liability will be limited to the maximum extent permitted by law.</p>
+			</section>
+
+			<section>
+				<h2>13. Indemnification</h2>
+				<p>You agree to indemnify, defend, and hold harmless JotChain and its affiliates, officers, directors, employees, and agents from and against any claims, liabilities, damages, losses, and expenses (including reasonable attorneys' fees) arising out of or related to:</p>
+				<ul>
+					<li>Your use or misuse of the service</li>
+					<li>Your violation of these Terms</li>
+					<li>Your violation of any laws or third-party rights</li>
+					<li>Your Content or any recording made without proper consent</li>
+					<li>Any dispute between you and another user</li>
+				</ul>
+			</section>
+
+			<section>
+				<h2>14. Dispute Resolution and Arbitration</h2>
+
+				<h3>14.1 Informal Resolution</h3>
+				<p>Before filing a claim, you agree to contact us at <a href="mailto:grig@jotchain.com">grig@jotchain.com</a> to attempt to resolve the dispute informally.</p>
+
+				<h3>14.2 Arbitration Agreement</h3>
+				<p>If we cannot resolve a dispute informally, any dispute arising out of or relating to these Terms or the service will be resolved through binding arbitration, rather than in court, except that you may assert claims in small claims court if your claims qualify.</p>
+				<p>The arbitration will be conducted by a neutral arbitrator in accordance with the rules of [Arbitration Association to be specified] and the laws of [Jurisdiction to be specified].</p>
+
+				<h3>14.3 Class Action Waiver</h3>
+				<p>YOU AGREE THAT DISPUTES WILL BE RESOLVED ON AN INDIVIDUAL BASIS ONLY, AND NOT AS A CLASS ACTION, CONSOLIDATED ACTION, OR REPRESENTATIVE ACTION. YOU WAIVE YOUR RIGHT TO PARTICIPATE IN A CLASS ACTION LAWSUIT OR CLASS-WIDE ARBITRATION.</p>
+			</section>
+
+			<section>
+				<h2>15. Governing Law and Jurisdiction</h2>
+				<p>These Terms shall be governed by and construed in accordance with the laws of [Jurisdiction to be specified], without regard to its conflict of law provisions.</p>
+				<p>Any legal action or proceeding arising under these Terms (excluding arbitrable disputes) will be brought exclusively in the courts located in [Jurisdiction to be specified], and you consent to personal jurisdiction in such courts.</p>
+			</section>
+
+			<section>
+				<h2>16. Export Compliance</h2>
+				<p>You agree to comply with all applicable export and import laws and regulations. You represent that you are not located in a country subject to a U.S. Government embargo or designated as a "terrorist supporting" country, and that you are not on any list of prohibited or restricted parties.</p>
+			</section>
+
+			<section>
+				<h2>17. Severability</h2>
+				<p>If any provision of these Terms is found to be unenforceable or invalid, that provision will be limited or eliminated to the minimum extent necessary so that these Terms will otherwise remain in full force and effect.</p>
+			</section>
+
+			<section>
+				<h2>18. Entire Agreement</h2>
+				<p>These Terms, together with our Privacy Policy and any other legal notices published by us on the service, constitute the entire agreement between you and JotChain regarding the service and supersede all prior agreements and understandings.</p>
+			</section>
+
+			<section>
+				<h2>19. Assignment</h2>
+				<p>You may not assign or transfer these Terms or your account without our prior written consent. We may assign or transfer these Terms without restriction.</p>
+			</section>
+
+			<section>
+				<h2>20. Waiver</h2>
+				<p>Our failure to enforce any right or provision of these Terms will not be deemed a waiver of such right or provision.</p>
+			</section>
+
+			<section>
+				<h2>21. Contact Information</h2>
+				<p>If you have any questions about these Terms of Service, please contact us:</p>
+				<ul>
+					<li>Email: <a href="mailto:grig@jotchain.com">grig@jotchain.com</a></li>
+					<li>Email: <a href="mailto:support@jotchain.com">support@jotchain.com</a></li>
+					<li>Company: JotChain Spain, Barcelona, Carrer de Pallars</li>
+				</ul>
+			</section>
+
+			<section class="acknowledgment">
+				<p><strong>By using JotChain, you acknowledge that you have read, understood, and agree to be bound by these Terms of Service.</strong></p>
+			</section>
+		</div>
+	</main>
+
+	<footer>
+		<div class="footer-content">
+			<div class="footer-brand">
+				<svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+					<rect width="32" height="32" rx="8" fill="url(#footerGradient)" />
+					<path d="M16 8L24 16L16 24L8 16L16 8Z" fill="white" opacity="0.9" />
+					<defs>
+						<linearGradient id="footerGradient" x1="0" y1="0" x2="32" y2="32">
+							<stop offset="0%" stop-color="#818cf8" />
+							<stop offset="100%" stop-color="#22d3ee" />
+						</linearGradient>
+					</defs>
+				</svg>
+				<span>JotChain</span>
+			</div>
+			<nav>
+				<a href="/">Home</a>
+				<a href="/#features">Product</a>
+				<a href="/#workflow">Workflow</a>
+				<a href="/#pricing">Pricing</a>
+				<a href="mailto:grig@jotchain.com">Contact</a>
+				<a href="/privacy">Privacy</a>
+				<a href="/terms">Terms</a>
+			</nav>
+			<p>© 2025 JotChain. Never blank in meetings again.</p>
+		</div>
+	</footer>
+</Layout>
+
+<style>
+	header {
+		position: sticky;
+		top: 20px;
+		z-index: 100;
+		padding: 20px 24px;
+	}
+
+	.header-content {
+		max-width: 1200px;
+		margin: 0 auto;
+		background: rgba(15, 15, 25, 0.8);
+		backdrop-filter: blur(10px);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		border-radius: 32px;
+		padding: 12px 24px;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	.logo {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		font-weight: 600;
+		font-size: 18px;
+	}
+
+	header nav {
+		display: flex;
+		gap: 32px;
+	}
+
+	header nav a {
+		color: rgba(255, 255, 255, 0.7);
+		text-decoration: none;
+		transition: color 0.2s;
+		font-size: 14px;
+	}
+
+	header nav a:hover {
+		color: white;
+	}
+
+	main {
+		min-height: calc(100vh - 200px);
+		padding: 60px 24px 80px;
+	}
+
+	.legal-container {
+		max-width: 800px;
+		margin: 0 auto;
+		color: rgba(255, 255, 255, 0.9);
+		line-height: 1.8;
+	}
+
+	h1 {
+		font-size: 48px;
+		font-weight: 700;
+		margin-bottom: 8px;
+		background: linear-gradient(135deg, #818cf8 0%, #22d3ee 100%);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-clip: text;
+	}
+
+	.last-updated {
+		color: rgba(255, 255, 255, 0.5);
+		font-size: 14px;
+		margin-bottom: 48px;
+	}
+
+	section {
+		margin-bottom: 48px;
+	}
+
+	h2 {
+		font-size: 28px;
+		font-weight: 600;
+		margin-bottom: 16px;
+		color: white;
+		margin-top: 40px;
+	}
+
+	h3 {
+		font-size: 20px;
+		font-weight: 600;
+		margin-bottom: 12px;
+		margin-top: 24px;
+		color: rgba(255, 255, 255, 0.95);
+	}
+
+	p {
+		margin-bottom: 16px;
+		color: rgba(255, 255, 255, 0.8);
+	}
+
+	ul {
+		margin: 16px 0;
+		padding-left: 24px;
+	}
+
+	li {
+		margin-bottom: 8px;
+		color: rgba(255, 255, 255, 0.8);
+	}
+
+	a {
+		color: #818cf8;
+		text-decoration: none;
+	}
+
+	a:hover {
+		color: #22d3ee;
+		text-decoration: underline;
+	}
+
+	strong {
+		color: rgba(255, 255, 255, 0.95);
+		font-weight: 600;
+	}
+
+	.acknowledgment {
+		background: rgba(129, 140, 248, 0.1);
+		border: 1px solid rgba(129, 140, 248, 0.3);
+		border-radius: 12px;
+		padding: 24px;
+		margin-top: 48px;
+	}
+
+	.acknowledgment p {
+		margin: 0;
+		color: rgba(255, 255, 255, 0.95);
+	}
+
+	footer {
+		background: rgba(15, 15, 25, 0.8);
+		border-top: 1px solid rgba(255, 255, 255, 0.1);
+		padding: 48px 24px;
+		margin-top: 80px;
+	}
+
+	.footer-content {
+		max-width: 1200px;
+		margin: 0 auto;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 24px;
+		text-align: center;
+	}
+
+	.footer-brand {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		font-weight: 600;
+		font-size: 18px;
+	}
+
+	footer nav {
+		display: flex;
+		gap: 24px;
+		flex-wrap: wrap;
+		justify-content: center;
+	}
+
+	footer nav a {
+		color: rgba(255, 255, 255, 0.6);
+		text-decoration: none;
+		font-size: 14px;
+		transition: color 0.2s;
+	}
+
+	footer nav a:hover {
+		color: white;
+	}
+
+	footer p {
+		color: rgba(255, 255, 255, 0.4);
+		font-size: 14px;
+		margin: 0;
+	}
+
+	@media (max-width: 768px) {
+		header nav {
+			display: none;
+		}
+
+		h1 {
+			font-size: 36px;
+		}
+
+		h2 {
+			font-size: 24px;
+		}
+
+		h3 {
+			font-size: 18px;
+		}
+
+		.legal-container {
+			padding: 0 8px;
+		}
+
+		footer nav {
+			gap: 16px;
+		}
+	}
+</style>

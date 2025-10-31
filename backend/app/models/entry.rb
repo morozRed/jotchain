@@ -5,6 +5,8 @@ class Entry < ApplicationRecord
 
   belongs_to :user
 
+  encrypts :body
+
   validates :body, presence: true, length: {maximum: MAX_BODY_LENGTH}
   validates :logged_at, presence: true
   validates :tag, length: {maximum: 120}, allow_blank: true

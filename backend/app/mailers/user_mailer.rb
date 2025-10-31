@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 class UserMailer < ApplicationMailer
+  def welcome
+    @user = params[:user]
+
+    mail to: @user.email, subject: "Welcome to Jotchain"
+  end
+
   def password_reset
     @user = params[:user]
     @signed_id = @user.generate_token_for(:password_reset)

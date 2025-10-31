@@ -11,6 +11,8 @@ class User < ApplicationRecord
     password_salt.last(10)
   end
 
+  encrypts :name
+  encrypts :email, deterministic: true
 
   has_many :entries, dependent: :destroy
   has_many :notification_schedules, dependent: :destroy

@@ -1,12 +1,12 @@
-<h1 style="font-size: 24px; margin-bottom: 12px; color: #0a0f1c; font-weight: 600; letter-spacing: -0.02em;">Verify your email</h1>
-<p style="margin-bottom: 20px; color: #475569;">
-  Please confirm that <strong><%= @user.email %></strong> is the address you want to use with Jotchain. We'll send important notifications here, including password resets.
+<h1 style="font-size: 24px; margin-bottom: 12px; color: #f8fafc; font-weight: 600; letter-spacing: -0.02em;">Verify your email</h1>
+<p style="margin-bottom: 20px; color: rgba(226, 232, 240, 0.82);">
+  Please confirm that <strong><%= @user.email %></strong> is the address you want to use with Jotchain. We&apos;ll send important notifications here, including password resets.
 </p>
 
-<p style="font-weight: 600; margin-bottom: 20px; color: #0a0f1c;">Tap the button below to complete verification:</p>
+<p style="font-weight: 600; margin-bottom: 20px; color: rgba(226, 232, 240, 0.92);">Tap the button below to complete verification:</p>
 
 <%= render "mailers/shared/button", url: identity_email_verification_url(sid: @signed_id), label: "Verify email" %>
 
-<p style="margin-top: 24px; color: #64748b; font-size: 14px;">
-  Didn't request this? You can ignore this message and your address will stay unverified.
+<p style="margin-top: 24px; color: rgba(148, 163, 184, 0.85); font-size: 14px;">
+  Didn&apos;t request this? You can ignore this message and your address will stay unverified.
 </p>
