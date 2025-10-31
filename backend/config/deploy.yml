@@ -129,6 +129,10 @@ accessories:
     env:
       clear:
         POSTGRES_HOST: '%'
+        POSTGRES_DB: jotchain_production
+        POSTGRES_USER: jotchain
+        # Bind to all interfaces on private network
+        POSTGRES_HOST_AUTH_METHOD: scram-sha-256
       secret:
         - POSTGRES_PASSWORD
     files:
