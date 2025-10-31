@@ -63,10 +63,10 @@ Rails.application.configure do
 
   # Set host to be used by links generated in mailer templates.
   # APP_HOST environment variable is required in production (e.g., "yourdomain.com")
-  config.action_mailer.default_url_options = {host: ENV.fetch("APP_HOST")}
+  config.action_mailer.default_url_options = {host: ENV.fetch("APP_HOST", "")}
 
   # Set URL options for controllers (used by _url helpers like billing_url)
-  config.action_controller.default_url_options = {host: ENV.fetch("APP_HOST")}
+  config.action_controller.default_url_options = {host: ENV.fetch("APP_HOST", "")}
 
   # Specify outgoing SMTP server. Remember to add smtp/* credentials via rails credentials:edit.
   # config.action_mailer.smtp_settings = {
