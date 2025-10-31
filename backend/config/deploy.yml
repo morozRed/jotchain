@@ -109,22 +109,14 @@ asset_path: /rails/public
 # Configure the image builder.
 builder:
   arch: amd64
-  # Uncomment to enable SSR:
-  # dockerfile: Dockerfile-ssr
-  # cache:
-  #   type: registry
-  #   image: morozgrigory/jotchain:kamal-cache
-  #   options: mode=max
-
-  # # Build image via remote server (useful for faster amd64 builds on arm64 computers)
-  # remote: ssh://docker@docker-builder-server
-  #
-  # # Pass arguments and secrets to the Docker build process
-  # args:
-  #   RUBY_VERSION: ruby-3.4.5
-  # secrets:
-  #   - GITHUB_TOKEN
-  #   - RAILS_MASTER_KEY
+  args:
+    RUBY_VERSION: ruby-3.4.5
+  secrets:
+    - RAILS_MASTER_KEY
+    - STRIPE_SECRET_KEY
+    - ACTIVE_RECORD_ENCRYPTION_DETERMINISTIC_KEY
+    - ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT
+    - ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY
 
 # Use a different ssh user than root
 # ssh:
