@@ -14,9 +14,6 @@ FROM docker.io/library/ruby:$RUBY_VERSION-slim AS base
 # Rails app lives here
 WORKDIR /rails
 
-# Install pnpm
-RUN npm install -g pnpm@latest-10
-
 # Install base packages
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y curl libjemalloc2 libvips sqlite3 && \
@@ -42,6 +39,9 @@ ENV PATH=/usr/local/node/bin:$PATH
 RUN curl -sL https://github.com/nodenv/node-build/archive/master.tar.gz | tar xz -C /tmp/ && \
     /tmp/node-build-master/bin/node-build "${NODE_VERSION}" /usr/local/node && \
     rm -rf /tmp/node-build-master
+
+# Install pnpm
+RUN npm install -g pnpm@latest-10
 
 # Install application gems
 COPY Gemfile Gemfile.lock vendor ./
