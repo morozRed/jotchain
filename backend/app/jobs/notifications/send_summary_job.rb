@@ -7,6 +7,12 @@ module Notifications
     def perform(delivery_id)
       delivery = NotificationDelivery.find(delivery_id)
 
+      # Skip if user doesn't have an active subscription or trial
+      unless delivery.user.can_receive_notifications?
+        mark_skipped(delivery, OpenStruct.new(payload: {reason: "No active subscription"}, model: nil, usage: nil))
+        return
+      end
+
       return unless ensure_ready(delivery)
 
       builder_result = generate_summary(delivery)

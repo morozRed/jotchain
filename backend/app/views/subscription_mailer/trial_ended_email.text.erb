@@ -1,0 +1,19 @@
+Your Jotchain trial has ended
+
+Hi <%= @user.name.presence || "there" %>, your 14-day trial of Jotchain has come to an end.
+
+We hope you enjoyed exploring Jotchain! To continue accessing AI summaries and notification schedules, upgrade to Jotchain Pro today.
+
+What you'll keep with Jotchain Pro:
+- Unlimited journal entries
+- AI-powered summaries
+- Notification schedules
+- Email delivery before meetings
+
+Starting at just $9/month (or save $18 with our yearly plan)
+
+<% if @billing_url.present? %>
+Upgrade to Pro: <%= @billing_url %>
+<% end %>
+
+Questions? Just reply to this email and we'll help you get started.

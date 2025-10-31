@@ -1,0 +1,36 @@
+<h1 style="font-size: 24px; margin-bottom: 12px; color: #f8fafc; font-weight: 600; letter-spacing: -0.02em;">
+  Your Jotchain trial has ended
+</h1>
+
+<p style="margin-bottom: 18px; color: rgba(226, 232, 240, 0.82);">
+  Hi <%= @user.name.presence || "there" %>, your 14-day trial of Jotchain has come to an end.
+</p>
+
+<p style="margin-bottom: 18px; color: rgba(226, 232, 240, 0.82);">
+  We hope you enjoyed exploring Jotchain! To continue accessing AI summaries and notification schedules, upgrade to Jotchain Pro today.
+</p>
+
+<div style="margin: 20px 0; padding: 18px 20px; border-radius: 16px; background: rgba(15, 24, 40, 0.78); border: 1px solid rgba(129, 140, 248, 0.18);">
+  <p style="margin: 0 0 12px 0; color: rgba(148, 163, 184, 0.9); font-weight: 600; font-size: 15px;">
+    What you'll keep with Jotchain Pro:
+  </p>
+  <ul style="margin: 0; padding-left: 20px; color: rgba(226, 232, 240, 0.82); line-height: 1.6;">
+    <li><strong>Unlimited journal entries</strong></li>
+    <li><strong>AI-powered summaries</strong></li>
+    <li><strong>Notification schedules</strong></li>
+    <li><strong>Email delivery before meetings</strong></li>
+  </ul>
+</div>
+
+<p style="margin-bottom: 18px; color: rgba(226, 232, 240, 0.82); text-align: center; font-size: 18px; font-weight: 600;">
+  <span style="color: rgba(129, 140, 248, 0.9);">Starting at just $9/month</span><br>
+  <span style="font-size: 14px; font-weight: normal; color: rgba(148, 163, 184, 0.85);">or save $18 with our yearly plan</span>
+</p>
+
+<% if @billing_url.present? %>
+  <%= render "mailers/shared/button", url: @billing_url, label: "Upgrade to Pro" %>
+<% end %>
+
+<p style="margin-top: 24px; color: rgba(148, 163, 184, 0.85); font-size: 14px;">
+  Questions? Just reply to this email and we'll help you get started.
+</p>

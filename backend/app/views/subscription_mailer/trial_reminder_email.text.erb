@@ -1,0 +1,19 @@
+We miss you at Jotchain
+
+Hi <%= @user.name.presence || "there" %>, it's been a month since your trial ended, and we wanted to reach out.
+
+We noticed you tried Jotchain but haven't subscribed yet. We'd love to have you back! Your journal entries are still safe and waiting for you.
+
+Here's what you're missing:
+- Stay on top of your work with AI-powered summaries
+- Never miss a beat with scheduled email notifications
+- Log unlimited notes and track your progress
+- Get meeting-ready in seconds
+
+Join Jotchain Pro today: $9/month or $90/year (save $18)
+
+<% if @billing_url.present? %>
+Get started with Pro: <%= @billing_url %>
+<% end %>
+
+Have feedback or questions? We'd love to hear from you—just reply to this email.

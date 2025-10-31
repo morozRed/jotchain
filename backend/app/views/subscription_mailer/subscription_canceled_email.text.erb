@@ -1,0 +1,16 @@
+Your subscription has been canceled
+
+Hi <%= @user.name.presence || "there" %>, we're sorry to see you go.
+
+Your Jotchain Pro subscription has been canceled. You'll continue to have access to Pro features until the end of your current billing period.
+
+What happens next?
+After your current period ends, you'll lose access to Pro features including AI summaries and notification schedules. Your existing journal entries will remain safe and accessible.
+
+We'd love to hear your feedback. What could we have done better? Your input helps us improve Jotchain for everyone.
+
+<% if @billing_url.present? %>
+Reactivate your subscription: <%= @billing_url %>
+<% end %>
+
+Changed your mind? You can reactivate your subscription anytime.

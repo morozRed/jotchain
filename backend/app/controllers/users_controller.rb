@@ -10,6 +10,7 @@ class UsersController < InertiaController
 
   def create
     @user = User.new(user_params)
+    @user.trial_ends_at = 14.days.from_now
 
     if @user.save
       session_record = @user.sessions.create!

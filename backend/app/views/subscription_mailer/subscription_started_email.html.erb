@@ -1,0 +1,27 @@
+<h1 style="font-size: 24px; margin-bottom: 12px; color: #f8fafc; font-weight: 600; letter-spacing: -0.02em;">
+  Welcome to Jotchain Pro! 🎉
+</h1>
+
+<p style="margin-bottom: 18px; color: rgba(226, 232, 240, 0.82);">
+  Thank you for subscribing to <strong><%= @plan_name %></strong>. You now have unlimited access to all Jotchain features!
+</p>
+
+<div style="margin: 20px 0; padding: 18px 20px; border-radius: 16px; background: rgba(15, 24, 40, 0.78); border: 1px solid rgba(129, 140, 248, 0.18);">
+  <p style="margin: 0 0 12px 0; color: rgba(148, 163, 184, 0.9); font-weight: 600; font-size: 15px;">
+    Your Pro subscription includes:
+  </p>
+  <ul style="margin: 0; padding-left: 20px; color: rgba(226, 232, 240, 0.82); line-height: 1.6;">
+    <li><strong>Unlimited journal entries:</strong> Log as many notes and wins as you need</li>
+    <li><strong>Unlimited AI summaries:</strong> Get intelligent digests of your work</li>
+    <li><strong>Unlimited notification schedules:</strong> Set up as many reminders as you want</li>
+    <li><strong>Email notifications:</strong> Receive summaries right before your meetings</li>
+  </ul>
+</div>
+
+<% if @billing_url.present? %>
+  <%= render "mailers/shared/button", url: @billing_url, label: "Manage Subscription" %>
+<% end %>
+
+<p style="margin-top: 24px; color: rgba(148, 163, 184, 0.85); font-size: 14px;">
+  Need help or have questions? Just reply to this email and we'll be happy to assist.
+</p>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_29_195711) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_15_000000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -84,7 +84,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_29_195711) do
     t.boolean "verified", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "stripe_customer_id"
+    t.string "stripe_subscription_id"
+    t.string "subscription_status", default: "trialing", null: false
+    t.string "plan_type"
+    t.datetime "trial_ends_at"
+    t.datetime "current_period_end"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["stripe_customer_id"], name: "index_users_on_stripe_customer_id"
+    t.index ["stripe_subscription_id"], name: "index_users_on_stripe_subscription_id"
   end
 
   add_foreign_key "entries", "users"

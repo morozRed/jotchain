@@ -1,0 +1,32 @@
+<h1 style="font-size: 24px; margin-bottom: 12px; color: #f8fafc; font-weight: 600; letter-spacing: -0.02em;">
+  Your subscription has been canceled
+</h1>
+
+<p style="margin-bottom: 18px; color: rgba(226, 232, 240, 0.82);">
+  Hi <%= @user.name.presence || "there" %>, we're sorry to see you go.
+</p>
+
+<p style="margin-bottom: 18px; color: rgba(226, 232, 240, 0.82);">
+  Your Jotchain Pro subscription has been canceled. You'll continue to have access to Pro features until the end of your current billing period.
+</p>
+
+<div style="margin: 20px 0; padding: 18px 20px; border-radius: 16px; background: rgba(15, 24, 40, 0.78); border: 1px solid rgba(234, 88, 12, 0.18);">
+  <p style="margin: 0 0 8px 0; color: rgba(251, 146, 60, 0.9); font-weight: 600; font-size: 15px;">
+    What happens next?
+  </p>
+  <p style="margin: 0; color: rgba(226, 232, 240, 0.82); line-height: 1.6;">
+    After your current period ends, you'll lose access to Pro features including AI summaries and notification schedules. Your existing journal entries will remain safe and accessible.
+  </p>
+</div>
+
+<p style="margin-bottom: 18px; color: rgba(226, 232, 240, 0.82);">
+  We'd love to hear your feedback. What could we have done better? Your input helps us improve Jotchain for everyone.
+</p>
+
+<% if @billing_url.present? %>
+  <%= render "mailers/shared/button", url: @billing_url, label: "Reactivate Subscription" %>
+<% end %>
+
+<p style="margin-top: 24px; color: rgba(148, 163, 184, 0.85); font-size: 14px;">
+  Changed your mind? You can reactivate your subscription anytime.
+</p>

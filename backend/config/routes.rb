@@ -20,6 +20,15 @@ Rails.application.routes.draw do
 
   resources :notifications, only: [:index, :create, :update, :destroy]
 
+  get "billing", to: "subscriptions#index", as: :billing
+  post "billing/checkout", to: "subscriptions#create_checkout_session", as: :billing_checkout
+  get "billing/success", to: "subscriptions#success", as: :billing_success
+  post "billing/portal", to: "subscriptions#customer_portal", as: :billing_portal
+
+  namespace :webhooks do
+    post "stripe", to: "stripe#create"
+  end
+
   namespace :settings do
     resource :profile, only: [:show, :update]
     resource :password, only: [:show, :update]

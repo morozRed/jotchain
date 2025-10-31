@@ -4,8 +4,18 @@ class InertiaController < ApplicationController
   inertia_config default_render: true
   inertia_share flash: -> { flash.to_hash },
       auth: {
-        user: -> { Current.user.as_json(only: %i[id name email verified created_at updated_at]) },
-        session: -> { Current.session.as_json(only: %i[id]) }
+        user: -> {
+          return nil unless Current.user
+
+          user_data = Current.user.as_json(only: %i[id name email verified created_at updated_at])
+          user_data[:subscription] = {
+            status: Current.user.subscription_status,
+            planType: Current.user.plan_type,
+            daysLeftInTrial: Current.user.days_left_in_trial
+          }
+          user_data
+        },
+        session: -> { Current.session&.as_json(only: %i[id]) }
       }
 
   private

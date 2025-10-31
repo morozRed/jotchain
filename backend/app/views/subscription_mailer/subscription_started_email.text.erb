@@ -1,0 +1,15 @@
+Welcome to Jotchain Pro!
+
+Thank you for subscribing to <%= @plan_name %>. You now have unlimited access to all Jotchain features!
+
+Your Pro subscription includes:
+- Unlimited journal entries: Log as many notes and wins as you need
+- Unlimited AI summaries: Get intelligent digests of your work
+- Unlimited notification schedules: Set up as many reminders as you want
+- Email notifications: Receive summaries right before your meetings
+
+<% if @billing_url.present? %>
+Manage your subscription: <%= @billing_url %>
+<% end %>
+
+Need help or have questions? Just reply to this email and we'll be happy to assist.

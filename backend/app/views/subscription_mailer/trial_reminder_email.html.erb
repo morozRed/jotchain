@@ -1,0 +1,36 @@
+<h1 style="font-size: 24px; margin-bottom: 12px; color: #f8fafc; font-weight: 600; letter-spacing: -0.02em;">
+  We miss you at Jotchain
+</h1>
+
+<p style="margin-bottom: 18px; color: rgba(226, 232, 240, 0.82);">
+  Hi <%= @user.name.presence || "there" %>, it's been a month since your trial ended, and we wanted to reach out.
+</p>
+
+<p style="margin-bottom: 18px; color: rgba(226, 232, 240, 0.82);">
+  We noticed you tried Jotchain but haven't subscribed yet. We'd love to have you back! Your journal entries are still safe and waiting for you.
+</p>
+
+<div style="margin: 20px 0; padding: 18px 20px; border-radius: 16px; background: rgba(15, 24, 40, 0.78); border: 1px solid rgba(129, 140, 248, 0.18);">
+  <p style="margin: 0 0 12px 0; color: rgba(148, 163, 184, 0.9); font-weight: 600; font-size: 15px;">
+    Here's what you're missing:
+  </p>
+  <ul style="margin: 0; padding-left: 20px; color: rgba(226, 232, 240, 0.82); line-height: 1.6;">
+    <li>Stay on top of your work with <strong>AI-powered summaries</strong></li>
+    <li>Never miss a beat with <strong>scheduled email notifications</strong></li>
+    <li>Log unlimited notes and track your progress</li>
+    <li>Get meeting-ready in seconds</li>
+  </ul>
+</div>
+
+<p style="margin-bottom: 18px; color: rgba(226, 232, 240, 0.82); text-align: center; font-size: 18px; font-weight: 600;">
+  <span style="color: rgba(129, 140, 248, 0.9);">Join Jotchain Pro today</span><br>
+  <span style="font-size: 14px; font-weight: normal; color: rgba(148, 163, 184, 0.85);">$9/month or $90/year (save $18)</span>
+</p>
+
+<% if @billing_url.present? %>
+  <%= render "mailers/shared/button", url: @billing_url, label: "Get Started with Pro" %>
+<% end %>
+
+<p style="margin-top: 24px; color: rgba(148, 163, 184, 0.85); font-size: 14px;">
+  Have feedback or questions? We'd love to hear from you—just reply to this email.
+</p>

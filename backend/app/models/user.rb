@@ -67,5 +67,27 @@ class User < ApplicationRecord
     streak
   end
 
+  # Subscription helper methods
+  def active_subscription?
+    subscription_status == "active"
+  end
+
+  def trial_active?
+    subscription_status == "trialing" && trial_ends_at.present? && trial_ends_at > Time.current
+  end
+
+  def trial_expired?
+    subscription_status == "trialing" && trial_ends_at.present? && trial_ends_at <= Time.current
+  end
+
+  def days_left_in_trial
+    return 0 unless trial_active?
+    ((trial_ends_at - Time.current) / 1.day).ceil
+  end
+
+  def can_receive_notifications?
+    active_subscription? || trial_active?
+  end
+
   private
 end

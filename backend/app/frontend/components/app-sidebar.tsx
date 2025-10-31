@@ -1,9 +1,10 @@
-import { Link } from "@inertiajs/react"
-import { Bell, LayoutGrid } from "lucide-react"
+import { usePage, Link } from "@inertiajs/react"
+import { Bell, CreditCard, LayoutGrid } from "lucide-react"
 
 import { FeedbackButton } from "@/components/feedback-button"
 import { NavMain } from "@/components/nav-main"
 import { NavUser } from "@/components/nav-user"
+import { SubscriptionStatus } from "@/components/subscription-status"
 import {
   Sidebar,
   SidebarContent,
@@ -13,8 +14,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { dashboardPath, notificationsPath } from "@/routes"
-import type { NavItem } from "@/types"
+import { billingPath, dashboardPath, notificationsPath } from "@/routes"
+import type { NavItem, SharedData } from "@/types"
 
 import AppLogo from "./app-logo"
 
@@ -29,9 +30,16 @@ const mainNavItems: NavItem[] = [
     href: notificationsPath(),
     icon: Bell,
   },
+  {
+    title: "Billing",
+    href: billingPath(),
+    icon: CreditCard,
+  },
 ]
 
 export function AppSidebar() {
+  const { auth } = usePage<SharedData>().props
+
   return (
     <Sidebar collapsible="icon" variant="inset">
       <SidebarHeader>
@@ -51,6 +59,7 @@ export function AppSidebar() {
       </SidebarContent>
 
       <SidebarFooter>
+        <SubscriptionStatus user={auth.user} />
         <FeedbackButton />
         <NavUser />
       </SidebarFooter>
