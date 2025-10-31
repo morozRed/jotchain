@@ -78,7 +78,7 @@ env:
 
     # Match this to any external database server to configure Active Record correctly
     # Use react_starter_kit-db for a db accessory server on same machine via local kamal docker network.
-    DB_HOST: jotchain_db
+    DB_HOST: 10.0.0.2
     DB_PORT: "5432"
     DB_USERNAME: postgres
     DB_DATABASE: jotchain_production
