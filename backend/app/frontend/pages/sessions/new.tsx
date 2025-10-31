@@ -30,7 +30,7 @@ export default function Login() {
                 Security first
               </div>
               <p className="mt-1 leading-relaxed">
-                Two-step verification follows the first login. Your notes stay encrypted at rest.
+                Your notes stay encrypted at rest.
               </p>
             </div>
 

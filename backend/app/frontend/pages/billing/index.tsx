@@ -1,5 +1,6 @@
 import { Head, router, usePage } from "@inertiajs/react"
 import { Check, CreditCard } from "lucide-react"
+import { useEffect } from "react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -30,6 +31,8 @@ type PlanPayload = {
 type PageProps = SharedData & {
   subscription: SubscriptionPayload
   plans: PlanPayload[]
+  checkout_url?: string
+  portal_url?: string
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -40,7 +43,16 @@ const breadcrumbs: BreadcrumbItem[] = [
 ]
 
 export default function Billing() {
-  const { subscription, plans } = usePage<PageProps>().props
+  const { subscription, plans, checkout_url, portal_url } = usePage<PageProps>().props
+
+  // Redirect to Stripe when checkout_url or portal_url is present
+  useEffect(() => {
+    if (checkout_url) {
+      window.location.href = checkout_url
+    } else if (portal_url) {
+      window.location.href = portal_url
+    }
+  }, [checkout_url, portal_url])
 
   const handleUpgrade = (planType: string) => {
     router.post(billingCheckoutPath(), { plan_type: planType })

@@ -24,10 +24,15 @@ class SubscriptionsController < InertiaController
       user: Current.user,
       price_id: price_id,
       success_url: billing_success_url,
-      cancel_url: billing_path
+      cancel_url: billing_url
     )
 
-    redirect_to session.url, allow_other_host: true
+    # Return the Stripe URL to the frontend for client-side navigation
+    render inertia: "billing/index", props: {
+      subscription: subscription_payload,
+      plans: plans_payload,
+      checkout_url: session.url
+    }
   end
 
   def success
@@ -39,10 +44,15 @@ class SubscriptionsController < InertiaController
 
     portal_session = StripeService::SubscriptionService.create_customer_portal_session(
       customer_id: Current.user.stripe_customer_id,
-      return_url: billing_path
+      return_url: billing_url
     )
 
-    redirect_to portal_session.url, allow_other_host: true
+    # Return the portal URL to the frontend for client-side navigation
+    render inertia: "billing/index", props: {
+      subscription: subscription_payload,
+      plans: plans_payload,
+      portal_url: portal_session.url
+    }
   end
 
   private
