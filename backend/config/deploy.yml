@@ -77,8 +77,8 @@ env:
     # WEB_CONCURRENCY: 2
 
     # Match this to any external database server to configure Active Record correctly
-    # Use react_starter_kit-db for a db accessory server on same machine via local kamal docker network.
-    DB_HOST: jotchain-db
+    # External PostgreSQL server on separate machine via private network
+    DB_HOST: 10.0.0.2
     DB_PORT: 5432
     DB_USER: jotchain
     DB_DATABASE: jotchain_production
@@ -121,6 +121,7 @@ builder:
 #   user: app
 
 # Use accessory services (secrets come from .kamal/secrets).
+# NOTE: Commented out because using external PostgreSQL on separate server (10.0.0.2)
 accessories:
   db:
     image: postgres:18
