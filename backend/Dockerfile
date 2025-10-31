@@ -58,6 +58,9 @@ RUN pnpm install --frozen-lockfile && \
 # Copy application code
 COPY . .
 
+RUN --mount=type=secret,id=RAILS_MASTER_KEY,env=RAILS_MASTER_KEY
+RUN --mount=type=secret,id=STRIPE_SECRET_KEY,env=STRIPE_SECRET_KEY
+
 # Precompile bootsnap code for faster boot times
 RUN bundle exec bootsnap precompile app/ lib/
 
