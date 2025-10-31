@@ -2,5 +2,5 @@
 
 Rails.configuration.to_prepare do
   Stripe.api_key = ENV.fetch("STRIPE_SECRET_KEY", "")
-  Stripe.api_version = "2024-12-18.acacia"
+  Stripe.api_version = "2025-09-30.clover"
 end

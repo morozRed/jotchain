@@ -45,7 +45,9 @@ module ReactStarterKit
     config.mission_control.jobs.http_basic_auth_enabled = false
 
     if Rails.env.local?
+      config.hosts << "app.jotchain.test:3000"
       config.hosts << "app.jotchain.localhost:3000"
+      config.hosts << "jobs.jotchain.test:3000"
       config.hosts << "jobs.jotchain.localhost:3000"
     end
 

@@ -48,7 +48,7 @@ Rails.application.configure do
   config.action_mailer.perform_deliveries = true
 
   # Set URL options for controllers (used by _url helpers like billing_url)
-  config.action_controller.default_url_options = {host: "app.jotchain.localhost", port: 3000}
+  config.action_controller.default_url_options = {host: "app.jotchain.test", port: 3000}
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
