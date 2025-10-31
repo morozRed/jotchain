@@ -2,7 +2,7 @@
 service: jotchain
 
 # Name of the container image.
-image: morozred/jotchain
+image: morozgrigory/jotchain
 
 # Deploy to these servers.
 servers:
