@@ -42,6 +42,28 @@ export function SubscriptionStatus({ user }: SubscriptionStatusProps) {
     subscription.daysLeftInTrial != null &&
     subscription.daysLeftInTrial > 0
   ) {
+    // If user has selected a plan during trial, show the plan name
+    if (subscription.planType) {
+      const planName = subscription.planType === "monthly" ? "Monthly Pro" : "Yearly Pro"
+      return (
+        <Link
+          href={billingPath()}
+          className="flex items-center gap-3 rounded-lg border border-border/50 bg-muted/30 p-3 transition-colors hover:bg-muted/50"
+        >
+          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-gradient-to-br from-cyan-500 to-indigo-500">
+            <Sparkles className="h-4 w-4 text-white" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium truncate">{planName}</p>
+            <p className="text-muted-foreground text-xs">
+              Trial: {subscription.daysLeftInTrial} {subscription.daysLeftInTrial === 1 ? "day" : "days"} left
+            </p>
+          </div>
+        </Link>
+      )
+    }
+
+    // No plan selected yet, show generic trial message
     return (
       <Link
         href={billingPath()}

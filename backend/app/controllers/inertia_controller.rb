@@ -11,7 +11,12 @@ class InertiaController < ApplicationController
           user_data[:subscription] = {
             status: Current.user.subscription_status,
             planType: Current.user.plan_type,
-            daysLeftInTrial: Current.user.days_left_in_trial
+            daysLeftInTrial: Current.user.days_left_in_trial,
+            trialEndsAt: Current.user.trial_ends_at&.iso8601,
+            currentPeriodEnd: Current.user.current_period_end&.iso8601,
+            activeSubscription: Current.user.active_subscription?,
+            trialActive: Current.user.trial_active?,
+            trialExpired: Current.user.trial_expired?
           }
           user_data
         },

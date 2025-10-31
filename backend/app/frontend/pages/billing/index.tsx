@@ -100,13 +100,26 @@ export default function Billing() {
               </div>
             ) : subscription.trialActive ? (
               <div className="space-y-2">
-                <p className="text-lg font-semibold">Free Trial</p>
-                <p className="text-muted-foreground text-sm">
-                  {subscription.daysLeftInTrial} days left in your trial
+                <p className="text-lg font-semibold">
+                  {subscription.planType
+                    ? `${subscription.planType === "monthly" ? "Monthly" : "Yearly"} Pro`
+                    : "Free Trial"}
                 </p>
                 <p className="text-muted-foreground text-sm">
-                  Upgrade now to continue enjoying all features after your trial ends
+                  {subscription.planType
+                    ? `Trial period: ${subscription.daysLeftInTrial} days remaining`
+                    : `${subscription.daysLeftInTrial} days left in your trial`}
                 </p>
+                <p className="text-muted-foreground text-sm">
+                  {subscription.planType
+                    ? `Your subscription will automatically activate on ${subscription.trialEndsAt ? new Date(subscription.trialEndsAt).toLocaleDateString() : "the trial end date"}`
+                    : "Upgrade now to continue enjoying all features after your trial ends"}
+                </p>
+                {subscription.planType && (
+                  <Button onClick={handleManageSubscription} variant="outline" className="mt-4">
+                    Manage Subscription
+                  </Button>
+                )}
               </div>
             ) : (
               <div className="space-y-2">
