@@ -8,7 +8,9 @@ fi
 
 # If running the rails server then create or migrate existing database
 if [ "${@: -2:1}" == "./bin/rails" ] && [ "${@: -1:1}" == "server" ]; then
-  ./bin/rails db:prepare
+  ./bin/rails db:prepare              # Prepare PostgreSQL (primary)
+  ./bin/rails db:prepare:queue        # Prepare SQLite queue database
+  ./bin/rails db:prepare:cache        # Prepare SQLite cache database
 fi
 
 exec "${@}"
