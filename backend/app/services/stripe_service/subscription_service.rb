@@ -24,7 +24,7 @@ module StripeService
         stripe_subscription_id: stripe_subscription.id,
         subscription_status: stripe_subscription.status,
         plan_type: plan_type,
-        current_period_end: Time.at(stripe_subscription.current_period_end),
+        current_period_end: Time.at(stripe_subscription.items.data.first.current_period_end),
         trial_ends_at: stripe_subscription.trial_end ? Time.at(stripe_subscription.trial_end) : nil
       )
 
