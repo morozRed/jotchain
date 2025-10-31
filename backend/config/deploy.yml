@@ -133,6 +133,5 @@ accessories:
         - POSTGRES_PASSWORD
     files:
       - config/postgres/production.conf:/etc/postgresql/postgresql.conf
-      - db/production.sql:/docker-entrypoint-initdb.d/setup.sql
     directories:
       - data:/var/lib/postgresql/data
