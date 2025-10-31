@@ -125,7 +125,7 @@ accessories:
   db:
     image: postgres:18
     host: jotchain_db
-    port: "5432"
+    port: 5432
     env:
       clear:
         POSTGRES_DB: jotchain_production
