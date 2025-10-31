@@ -51,7 +51,7 @@ production:
     port: <%= ENV["DB_PORT"] || 5432 %>
   queue:
     <<: *sqlite
-    database: /rails/storage/jotchain_queue_production.sqlite3
+    database: /data/jotchain_queue_production.sqlite3
   cache:
     <<: *sqlite
-    database: /rails/storage/jotchain_cache_production.sqlite3
+    database: /data/jotchain_cache_production.sqlite3
