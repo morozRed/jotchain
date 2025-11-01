@@ -6,9 +6,12 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "build:cf": "astro build --clear",
+    "preview:cf": "wrangler pages dev ./dist",
+    "deploy": "npx astro build --clear && echo '_worker.js' >> dist/.assetsignore && npx wrangler deploy"
   },
   "dependencies": {
-    "astro": "^5.14.5"
+    "astro": "5.15.3"
   }
 }

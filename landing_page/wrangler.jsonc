@@ -1,0 +1,13 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "jotchain-landing",
+  "account_id": "2e4c824734d3c7ad8670f36bb28dee4b",
+  // Update to today's date
+  "compatibility_date": "2025-11-01",
+  "assets": {
+    "directory": "./dist",
+  },
+  "routes": [
+    { "pattern": "jotchain.com", "custom_domain": true },
+  ],
+}
