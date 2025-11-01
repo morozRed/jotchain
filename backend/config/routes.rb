@@ -27,6 +27,9 @@ Rails.application.routes.draw do
     post "billing/checkout", to: "subscriptions#create_checkout_session", as: :billing_checkout
     get "billing/success", to: "subscriptions#success", as: :billing_success
     post "billing/portal", to: "subscriptions#customer_portal", as: :billing_portal
+    post "billing/cancel", to: "subscriptions#cancel", as: :billing_cancel
+    post "billing/reactivate", to: "subscriptions#reactivate", as: :billing_reactivate
+    post "billing/switch", to: "subscriptions#switch_plan", as: :billing_switch
 
     namespace :webhooks do
       post "stripe", to: "stripe#create"

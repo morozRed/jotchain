@@ -16,7 +16,8 @@ class InertiaController < ApplicationController
             currentPeriodEnd: Current.user.current_period_end&.iso8601,
             activeSubscription: Current.user.active_subscription?,
             trialActive: Current.user.trial_active?,
-            trialExpired: Current.user.trial_expired?
+            trialExpired: Current.user.trial_expired?,
+            cancelAtPeriodEnd: Current.user.cancel_at_period_end
           }
           user_data
         },

@@ -85,6 +85,10 @@ class User < ApplicationRecord
     ((trial_ends_at - Time.current) / 1.day).ceil
   end
 
+  def subscription_canceling?
+    cancel_at_period_end && (active_subscription? || trial_active?)
+  end
+
   def can_receive_notifications?
     active_subscription? || trial_active?
   end
