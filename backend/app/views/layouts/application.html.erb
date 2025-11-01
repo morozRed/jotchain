@@ -9,6 +9,23 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
+    <%# SEO Meta Tags %>
+    <meta name="description" content="<%= content_for(:description) || 'Log daily progress, schedule AI email digests, and walk into every meeting prepared.' %>">
+
+    <%# Open Graph / Facebook %>
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="<%= request.original_url %>">
+    <meta property="og:title" content="<%= content_for(:title) || 'JotChain' %>">
+    <meta property="og:description" content="<%= content_for(:description) || 'Log daily progress, schedule AI email digests, and walk into every meeting prepared.' %>">
+    <meta property="og:image" content="<%= request.base_url %>/og-image.png">
+
+    <%# Twitter %>
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="<%= request.original_url %>">
+    <meta property="twitter:title" content="<%= content_for(:title) || 'JotChain' %>">
+    <meta property="twitter:description" content="<%= content_for(:description) || 'Log daily progress, schedule AI email digests, and walk into every meeting prepared.' %>">
+    <meta property="twitter:image" content="<%= request.base_url %>/og-image.png">
+
     <%= yield :head %>
 
     <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
