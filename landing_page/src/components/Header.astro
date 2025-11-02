@@ -1,0 +1,97 @@
+---
+const appSignupUrl = 'https://app.jotchain.com/sign_up';
+---
+
+<header class="nav">
+	<a href="/" class="brand">
+		<span class="brand__glyph"></span>
+		<span class="brand__name">JotChain</span>
+	</a>
+	<nav class="nav__links">
+		<a href="/#features">Product</a>
+		<a href="/#workflow">Workflow</a>
+		<a href="/#audience">Who it's for</a>
+		<a href="/#pricing">Pricing</a>
+	</nav>
+	<div class="nav__actions">
+		<a class="nav__primary" href={appSignupUrl}>Start now</a>
+	</div>
+</header>
+
+<style>
+	.nav {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1.5rem;
+		padding: 0.75rem 1.2rem;
+		border: 1px solid var(--stroke-faint);
+		border-radius: 999px;
+		backdrop-filter: blur(22px);
+		background: rgba(10, 13, 22, 0.78);
+		position: sticky;
+		top: 1.5rem;
+		z-index: 5;
+		box-shadow: 0 18px 42px -32px rgba(7, 10, 18, 0.75);
+	}
+
+	.brand {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.65rem;
+		font-weight: 600;
+		letter-spacing: -0.01em;
+		cursor: pointer;
+		opacity: 1;
+		transition: opacity 0.2s ease;
+	}
+
+	.brand:hover {
+		opacity: 0.85;
+	}
+
+	.brand__glyph {
+		width: 28px;
+		height: 28px;
+		border-radius: 10px;
+		background: url('/favicon.svg') center/cover;
+		box-shadow: 0 4px 14px rgba(129, 140, 248, 0.25);
+	}
+
+	.brand__name {
+		font-size: 1rem;
+	}
+
+	.nav__links {
+		display: none;
+		gap: 1.5rem;
+		font-size: 0.95rem;
+		color: var(--text-secondary);
+	}
+
+	.nav__links a {
+		opacity: 0.85;
+	}
+
+	.nav__actions {
+		display: inline-flex;
+		gap: 0.75rem;
+		align-items: center;
+	}
+
+	.nav__primary {
+		padding: 0.5rem 1.2rem;
+		border-radius: 999px;
+		font-size: 0.92rem;
+		font-weight: 500;
+		background: var(--accent-primary);
+		color: #05060a;
+		box-shadow: 0 10px 20px -12px rgba(129, 140, 248, 0.5);
+	}
+
+	@media (min-width: 768px) {
+		.nav__links {
+			display: flex;
+		}
+	}
+</style>

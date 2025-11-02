@@ -12,6 +12,7 @@
     "deploy": "npx astro build --clear && echo '_worker.js' >> dist/.assetsignore && npx wrangler deploy"
   },
   "dependencies": {
+    "@astrojs/sitemap": "^3.6.0",
     "astro": "5.15.3"
   }
 }

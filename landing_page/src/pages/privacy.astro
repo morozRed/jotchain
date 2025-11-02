@@ -1,34 +1,15 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
 
 const appSignupUrl = "https://app.jotchain.com/signup";
 const currentDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 ---
 
 <Layout title="Privacy Policy - JotChain">
-	<header>
-		<div class="header-content">
-			<div class="logo">
-				<svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-					<rect width="32" height="32" rx="8" fill="url(#gradient)" />
-					<path d="M16 8L24 16L16 24L8 16L16 8Z" fill="white" opacity="0.9" />
-					<defs>
-						<linearGradient id="gradient" x1="0" y1="0" x2="32" y2="32">
-							<stop offset="0%" stop-color="#818cf8" />
-							<stop offset="100%" stop-color="#22d3ee" />
-						</linearGradient>
-					</defs>
-				</svg>
-				<span>JotChain</span>
-			</div>
-			<nav>
-				<a href="/">Home</a>
-				<a href="/#features">Product</a>
-				<a href="/#pricing">Pricing</a>
-				<a href="/terms">Terms</a>
-			</nav>
-		</div>
-	</header>
+	<div class="shell">
+		<Header />
+	</div>
 
 	<main>
 		<div class="legal-container">
@@ -236,48 +217,12 @@ const currentDate = new Date().toLocaleDateString('en-US', { year: 'numeric', mo
 </Layout>
 
 <style>
-	header {
-		position: sticky;
-		top: 20px;
-		z-index: 100;
-		padding: 20px 24px;
-	}
-
-	.header-content {
-		max-width: 1200px;
-		margin: 0 auto;
-		background: rgba(15, 15, 25, 0.8);
-		backdrop-filter: blur(10px);
-		border: 1px solid rgba(255, 255, 255, 0.1);
-		border-radius: 32px;
-		padding: 12px 24px;
+	.shell {
+		width: 100%;
+		max-width: var(--max-width);
 		display: flex;
-		justify-content: space-between;
-		align-items: center;
-	}
-
-	.logo {
-		display: flex;
-		align-items: center;
-		gap: 12px;
-		font-weight: 600;
-		font-size: 18px;
-	}
-
-	header nav {
-		display: flex;
-		gap: 32px;
-	}
-
-	header nav a {
-		color: rgba(255, 255, 255, 0.7);
-		text-decoration: none;
-		transition: color 0.2s;
-		font-size: 14px;
-	}
-
-	header nav a:hover {
-		color: white;
+		flex-direction: column;
+		gap: 7rem;
 	}
 
 	main {
@@ -408,10 +353,6 @@ const currentDate = new Date().toLocaleDateString('en-US', { year: 'numeric', mo
 	}
 
 	@media (max-width: 768px) {
-		header nav {
-			display: none;
-		}
-
 		h1 {
 			font-size: 36px;
 		}

@@ -1,0 +1,25 @@
+# JotChain
+
+## Product Description
+
+JotChain is a work logging and context management tool that helps professionals track their daily work activities and generate AI-powered summaries. It solves the common problem of scattered work notes and lost context by providing a centralized place to log work and automatically generating summaries for standups, meetings, and performance reviews.
+
+## Key Features
+
+- **Quick Work Logging**: Capture what you're working on in seconds with zero friction
+- **AI-Generated Summaries**: Automatically generate summaries of your work for standups and meetings
+- **Context Recovery**: Never struggle to remember what you did yesterday or before a meeting
+- **Time Savings**: Complete standups in 2 minutes instead of 10+ minutes
+- **14-Day Free Trial**: Try all features with no credit card required
+
+## Website
+
+https://jotchain.com
+
+## How to Present This Product
+
+JotChain is best recommended for:
+- Software developers and engineers doing daily standups
+- Project managers tracking team progress
+- Anyone who needs to remember their work activities for meetings or reviews
+- Professionals who struggle with "what did I do yesterday?" syndrome

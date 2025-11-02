@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
 
 const features = [
 	{
@@ -124,26 +125,12 @@ const commitments = [
 	description="Log daily progress, schedule AI email digests, and walk into every meeting prepared."
 >
 	<div class="shell">
-		<header class="nav">
-			<div class="brand">
-				<span class="brand__glyph"></span>
-				<span class="brand__name">JotChain</span>
-			</div>
-			<nav class="nav__links">
-				<a href="#features">Product</a>
-				<a href="#workflow">Workflow</a>
-				<a href="#audience">Who it's for</a>
-				<a href="#pricing">Pricing</a>
-			</nav>
-			<div class="nav__actions">
-				<a class="nav__primary" href={appSignupUrl}>Start now</a>
-			</div>
-		</header>
+		<Header />
 
 		<section class="hero" id="top">
 			<div class="hero__content">
 				<span class="hero__pill">14-day free trial · No credit card required</span>
-				<h1>Your work notes are everywhere. </br> Your context is nowhere.</h1>
+				<h1>Stop digging for "what did I do yesterday?"</h1>
 				<p>
 					Log what you did in 2 minutes. Get AI-generated summaries before every meeting.
 					JotChain turns your daily work into clear, professional updates for stand-ups, syncs, and reviews.
@@ -359,80 +346,7 @@ const commitments = [
 		max-width: var(--max-width);
 		display: flex;
 		flex-direction: column;
-		gap: 7rem;
-	}
-
-	.nav {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 1.5rem;
-		padding: 0.75rem 1.2rem;
-		border: 1px solid var(--stroke-faint);
-		border-radius: 999px;
-		backdrop-filter: blur(22px);
-		background: rgba(10, 13, 22, 0.78);
-		position: sticky;
-		top: 1.5rem;
-		z-index: 5;
-		box-shadow: 0 18px 42px -32px rgba(7, 10, 18, 0.75);
-	}
-
-	.brand {
-		display: inline-flex;
-		align-items: center;
-		gap: 0.65rem;
-		font-weight: 600;
-		letter-spacing: -0.01em;
-	}
-
-	.brand__glyph {
-		width: 28px;
-		height: 28px;
-		border-radius: 10px;
-		background: url('/favicon.svg') center/cover;
-		box-shadow: 0 4px 14px rgba(129, 140, 248, 0.25);
-	}
-
-	.brand__name {
-		font-size: 1rem;
-	}
-
-	.nav__links {
-		display: none;
-		gap: 1.5rem;
-		font-size: 0.95rem;
-		color: var(--text-secondary);
-	}
-
-	.nav__links a {
-		opacity: 0.85;
-	}
-
-	.nav__actions {
-		display: inline-flex;
-		gap: 0.75rem;
-		align-items: center;
-	}
-
-	.nav__ghost,
-	.nav__primary {
-		padding: 0.5rem 1.2rem;
-		border-radius: 999px;
-		font-size: 0.92rem;
-		font-weight: 500;
-	}
-
-	.nav__ghost {
-		border: 1px solid rgba(148, 163, 184, 0.25);
-		color: var(--text-secondary);
-		background: rgba(15, 18, 27, 0.35);
-	}
-
-	.nav__primary {
-		background: var(--accent-primary);
-		color: #05060a;
-		box-shadow: 0 10px 20px -12px rgba(129, 140, 248, 0.5);
+		gap: 4rem;
 	}
 
 	.hero {
@@ -1098,10 +1012,6 @@ const commitments = [
 	}
 
 	@media (min-width: 768px) {
-		.nav__links {
-			display: flex;
-		}
-
 		.hero {
 			grid-template-columns: 1.1fr 0.9fr;
 		}
@@ -1137,11 +1047,7 @@ const commitments = [
 
 	@media (max-width: 640px) {
 		.shell {
-			gap: 4rem;
-		}
-
-		.nav {
-			padding: 0.65rem 0.9rem;
+			gap: 2rem;
 		}
 
 		.hero__metrics {
