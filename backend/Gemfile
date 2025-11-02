@@ -57,6 +57,8 @@ gem "authentication-zero"
 gem "js-routes"
 
 gem "nokogiri", "~> 1.18"
+gem "user_agent_parser"
+gem "httparty"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
