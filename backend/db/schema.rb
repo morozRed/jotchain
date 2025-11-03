@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_31_231647) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_03_111228) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -80,7 +80,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_31_231647) do
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", null: false
     t.string "email", null: false
-    t.string "password_digest", null: false
+    t.string "password_digest"
     t.boolean "verified", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -91,7 +91,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_31_231647) do
     t.datetime "trial_ends_at"
     t.datetime "current_period_end"
     t.boolean "cancel_at_period_end", default: false, null: false
+    t.string "provider"
+    t.string "uid"
+    t.string "avatar_url"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["provider", "uid"], name: "index_users_on_provider_and_uid", unique: true
     t.index ["stripe_customer_id"], name: "index_users_on_stripe_customer_id"
     t.index ["stripe_subscription_id"], name: "index_users_on_stripe_subscription_id"
   end

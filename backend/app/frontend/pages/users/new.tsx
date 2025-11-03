@@ -1,11 +1,13 @@
 import { Form, Head } from "@inertiajs/react"
 import { ArrowRight, LoaderCircle, Sparkles } from "lucide-react"
 
+import GoogleSignInButton from "@/components/google-sign-in-button"
 import InputError from "@/components/input-error"
 import TextLink from "@/components/text-link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Separator } from "@/components/ui/separator"
 import AuthLayout from "@/layouts/auth-layout"
 import { signInPath, signUpPath } from "@/routes"
 
@@ -22,14 +24,25 @@ export default function Register() {
       description="Capture today’s wins and let AI craft tomorrow’s stand-up brief."
     >
       <Head title="Sign up • JotChain" />
-      <Form
-        method="post"
-        action={signUpPath()}
-        resetOnSuccess={["password", "password_confirmation"]}
-        className="flex flex-col gap-6"
-      >
-        {({ processing, errors }) => (
-          <>
+      <div className="flex flex-col gap-6">
+        <div className="flex justify-center">
+          <GoogleSignInButton />
+        </div>
+
+        <div className="relative">
+          <Separator className="my-4" />
+          <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-background px-2 text-xs text-muted-foreground">
+            or
+          </span>
+        </div>
+
+        <Form
+          method="post"
+          action={signUpPath()}
+          resetOnSuccess={["password", "password_confirmation"]}
+          className="flex flex-col gap-6"
+        >
+          {({ processing, errors }) => (
             <div className="grid gap-5">
               <div className="grid gap-2">
                 <Label htmlFor="name" className="text-sm">
@@ -116,20 +129,20 @@ export default function Register() {
                 Start free trial
               </Button>
             </div>
+          )}
+        </Form>
 
-            <div className="text-center text-sm text-muted-foreground">
-              Already part of JotChain?{" "}
-              <TextLink
-                href={signInPath()}
-                className="text-accent-hot hover:text-foreground"
-                tabIndex={6}
-              >
-                Log in
-              </TextLink>
-            </div>
-          </>
-        )}
-      </Form>
+        <div className="text-center text-sm text-muted-foreground">
+          Already part of JotChain?{" "}
+          <TextLink
+            href={signInPath()}
+            className="text-accent-hot hover:text-foreground"
+            tabIndex={6}
+          >
+            Log in
+          </TextLink>
+        </div>
+      </div>
     </AuthLayout>
   )
 }

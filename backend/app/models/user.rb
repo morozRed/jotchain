@@ -22,6 +22,7 @@ class User < ApplicationRecord
   validates :name, presence: true
   validates :email, presence: true, uniqueness: true, format: {with: URI::MailTo::EMAIL_REGEXP}
   validates :password, allow_nil: true, length: {minimum: 12}
+  validates :uid, uniqueness: { scope: :provider }, if: -> { provider.present? }
 
   normalizes :email, with: -> { _1.strip.downcase }
 
@@ -91,6 +92,42 @@ class User < ApplicationRecord
 
   def can_receive_notifications?
     active_subscription? || trial_active?
+  end
+
+  # Find or create a user from OAuth authentication data
+  def self.from_omniauth(auth)
+    # Normalize the email for lookup
+    normalized_email = auth.info.email.strip.downcase
+
+    # Try to find existing user by provider and uid
+    user = find_by(provider: auth.provider, uid: auth.uid)
+
+    # If not found by provider/uid, try to find by email (for account linking)
+    user ||= find_by(email: normalized_email)
+
+    if user
+      # Update existing user with OAuth data
+      user.update(
+        provider: auth.provider,
+        uid: auth.uid,
+        avatar_url: auth.info.image,
+        verified: true # OAuth users are auto-verified
+      )
+    else
+      # Create new user from OAuth data
+      user = create!(
+        name: auth.info.name,
+        email: normalized_email,
+        provider: auth.provider,
+        uid: auth.uid,
+        avatar_url: auth.info.image,
+        verified: true, # OAuth users are auto-verified
+        trial_ends_at: 14.days.from_now, # New users get 14-day trial
+        password: SecureRandom.base58(24)
+      )
+    end
+
+    user
   end
 
   private

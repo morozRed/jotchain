@@ -1,11 +1,13 @@
 import { Form, Head } from "@inertiajs/react"
 import { LoaderCircle, ShieldCheck } from "lucide-react"
 
+import GoogleSignInButton from "@/components/google-sign-in-button"
 import InputError from "@/components/input-error"
 import TextLink from "@/components/text-link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Separator } from "@/components/ui/separator"
 import AuthLayout from "@/layouts/auth-layout"
 import { newIdentityPasswordResetPath, signInPath, signUpPath } from "@/routes"
 
@@ -16,98 +18,111 @@ export default function Login() {
       description="Pick up where you left off. Your AI summaries are already queued."
     >
       <Head title="Log in • JotChain" />
-      <Form
-        method="post"
-        action={signInPath()}
-        resetOnSuccess={["password"]}
-        className="flex flex-col gap-6"
-      >
-        {({ processing, errors }) => (
-          <>
-            <div className="rounded-lg border border-border bg-muted/40 p-4 text-xs text-muted-foreground">
-              <div className="flex items-center gap-2 font-medium text-foreground">
-                <ShieldCheck className="size-4 text-accent-hot" />
-                Security first
-              </div>
-              <p className="mt-1 leading-relaxed">
-                Your notes stay encrypted at rest.
-              </p>
-            </div>
-
-            <div className="grid gap-5">
-              <div className="grid gap-2">
-                <Label htmlFor="email" className="text-sm">
-                  Email address
-                </Label>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  required
-                  autoFocus
-                  tabIndex={1}
-                  autoComplete="email"
-                  placeholder="you@team.com"
-                  aria-invalid={Boolean(errors.email)}
-                />
-                <InputError message={errors.email} />
-              </div>
-
-              <div className="grid gap-2">
-                <div className="flex items-center">
-                  <Label
-                    htmlFor="password"
-                    className="text-sm"
-                  >
-                    Password
-                  </Label>
-                  <TextLink
-                    href={newIdentityPasswordResetPath()}
-                    className="ml-auto text-sm text-accent-hot hover:text-foreground"
-                    tabIndex={4}
-                  >
-                    Forgot password?
-                  </TextLink>
+      <div className="flex flex-col gap-6">
+        <Form
+          method="post"
+          action={signInPath()}
+          resetOnSuccess={["password"]}
+          className="flex flex-col gap-3"
+        >
+          {({ processing, errors }) => (
+            <>
+              <div className="rounded-lg border border-border bg-muted/40 p-4 text-xs text-muted-foreground">
+                <div className="flex items-center gap-2 font-medium text-foreground">
+                  <ShieldCheck className="size-4 text-accent-hot" />
+                  Security first
                 </div>
-                <Input
-                  id="password"
-                  type="password"
-                  name="password"
-                  required
-                  tabIndex={2}
-                  autoComplete="current-password"
-                  placeholder="••••••••••"
-                  aria-invalid={Boolean(errors.password)}
-                />
-                <InputError message={errors.password} />
+                <p className="mt-1 leading-relaxed">
+                  Your notes stay encrypted at rest.
+                </p>
               </div>
 
-              <Button
-                type="submit"
-                className="mt-2 w-full bg-primary text-primary-foreground hover:bg-primary/80"
-                tabIndex={3}
-                disabled={processing}
-              >
-                {processing && (
-                  <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
-                )}
-                Log in
-              </Button>
-            </div>
+              <div className="grid gap-5">
+                <div className="grid gap-2">
+                  <Label htmlFor="email" className="text-sm">
+                    Email address
+                  </Label>
+                  <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    required
+                    autoFocus
+                    tabIndex={1}
+                    autoComplete="email"
+                    placeholder="you@team.com"
+                    aria-invalid={Boolean(errors.email)}
+                  />
+                  <InputError message={errors.email} />
+                </div>
 
-            <div className="text-center text-sm text-muted-foreground">
-              Need an account?{" "}
-              <TextLink
-                href={signUpPath()}
-                className="text-accent-hot hover:text-foreground"
-                tabIndex={5}
-              >
-                Start your free trial
-              </TextLink>
-            </div>
-          </>
-        )}
-      </Form>
+                <div className="grid gap-2">
+                  <div className="flex items-center">
+                    <Label
+                      htmlFor="password"
+                      className="text-sm"
+                    >
+                      Password
+                    </Label>
+                    <TextLink
+                      href={newIdentityPasswordResetPath()}
+                      className="ml-auto text-sm text-accent-hot hover:text-foreground"
+                      tabIndex={4}
+                    >
+                      Forgot password?
+                    </TextLink>
+                  </div>
+                  <Input
+                    id="password"
+                    type="password"
+                    name="password"
+                    required
+                    tabIndex={2}
+                    autoComplete="current-password"
+                    placeholder="••••••••••"
+                    aria-invalid={Boolean(errors.password)}
+                  />
+                  <InputError message={errors.password} />
+                </div>
+
+                <Button
+                  type="submit"
+                  className="mt-2 w-full bg-primary text-primary-foreground hover:bg-primary/80"
+                  tabIndex={3}
+                  disabled={processing}
+                >
+                  {processing && (
+                    <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
+                  )}
+                  Log in
+                </Button>
+              </div>
+            </>
+          )}
+        </Form>
+
+        <div className="relative">
+          <Separator className="my-4" />
+          <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-background px-2 text-xs text-muted-foreground">
+            or
+          </span>
+        </div>
+
+        <div className="flex justify-center">
+          <GoogleSignInButton />
+        </div>
+
+        <div className="text-center text-sm text-muted-foreground">
+          Need an account?{" "}
+          <TextLink
+            href={signUpPath()}
+            className="text-accent-hot hover:text-foreground"
+            tabIndex={5}
+          >
+            Start your free trial
+          </TextLink>
+        </div>
+      </div>
     </AuthLayout>
   )
 }

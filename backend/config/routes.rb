@@ -11,6 +11,11 @@ Rails.application.routes.draw do
     get  "sign_up", to: "users#new", as: :sign_up
     post "sign_up", to: "users#create"
 
+    # OmniAuth routes for Google OAuth
+    # POST /auth/google_oauth2 is handled by OmniAuth middleware
+    get "auth/:provider/callback", to: "oauth_callbacks#create"
+    get "auth/failure", to: "oauth_callbacks#failure"
+
     resources :sessions, only: [:destroy]
     resource :users, only: [:destroy]
 
