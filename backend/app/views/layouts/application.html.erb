@@ -48,6 +48,9 @@
       );
     </script>
 
+    <%# Enable analytics script %>
+    <%= tag.script src: "https://datafa.st/js/script.js", defer: true, data_domain: "jotchain.com", data_website_id: "dfid_kiLBJoAvBFYfovGFWcd49" %>
+
     <%= vite_stylesheet_tag "application" %>
     <%= vite_react_refresh_tag %>
     <%= vite_client_tag %>
