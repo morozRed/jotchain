@@ -28,6 +28,26 @@ RSpec.describe Entry, type: :model do
     end
   end
 
+  describe "#body_text" do
+    it "returns body for plain format" do
+      entry = build(:entry, body: "Hello plain text", body_format: "plain")
+      expect(entry.body_text).to eq("Hello plain text")
+    end
+
+    it "extracts text from tiptap JSON" do
+      tiptap_json = {
+        type: "doc",
+        content: [
+          { type: "paragraph", content: [{ type: "text", text: "Hello" }] },
+          { type: "paragraph", content: [{ type: "text", text: "world" }] }
+        ]
+      }.to_json
+
+      entry = build(:entry, body: tiptap_json, body_format: "tiptap")
+      expect(entry.body_text).to include("Hello")
+      expect(entry.body_text).to include("world")
+    end
+  end
   describe ".recent_first" do
     it "orders entries by logged_at descending" do
       older = create(:entry, logged_at: 2.days.ago)

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_03_111228) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_04_161444) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -21,9 +21,21 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_03_111228) do
     t.datetime "logged_at", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "body_format", default: "tiptap", null: false
     t.index ["user_id", "logged_at"], name: "index_entries_on_user_id_and_logged_at"
     t.index ["user_id", "tag"], name: "index_entries_on_user_id_and_tag"
     t.index ["user_id"], name: "index_entries_on_user_id"
+  end
+
+  create_table "entry_mentions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "entry_id", null: false
+    t.string "mentionable_type", null: false
+    t.uuid "mentionable_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["entry_id", "mentionable_type", "mentionable_id"], name: "index_entry_mentions_uniqueness", unique: true
+    t.index ["entry_id"], name: "index_entry_mentions_on_entry_id"
+    t.index ["mentionable_type", "mentionable_id"], name: "index_entry_mentions_on_mentionable"
   end
 
   create_table "notification_deliveries", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -64,8 +76,37 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_03_111228) do
     t.integer "lead_time_minutes", default: 30, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.jsonb "included_project_ids"
     t.index ["user_id", "created_at"], name: "index_notification_schedules_on_user_id_and_created_at"
     t.index ["user_id"], name: "index_notification_schedules_on_user_id"
+  end
+
+  create_table "persons", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "name"], name: "index_persons_on_user_id_and_name"
+    t.index ["user_id"], name: "index_persons_on_user_id"
+  end
+
+  create_table "project_persons", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "project_id", null: false
+    t.uuid "person_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["person_id"], name: "index_project_persons_on_person_id"
+    t.index ["project_id", "person_id"], name: "index_project_persons_on_project_id_and_person_id", unique: true
+  end
+
+  create_table "projects", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.string "name", null: false
+    t.string "color"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "name"], name: "index_projects_on_user_id_and_name"
+    t.index ["user_id"], name: "index_projects_on_user_id"
   end
 
   create_table "sessions", force: :cascade do |t|
@@ -101,8 +142,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_03_111228) do
   end
 
   add_foreign_key "entries", "users"
+  add_foreign_key "entry_mentions", "entries"
   add_foreign_key "notification_deliveries", "notification_schedules"
   add_foreign_key "notification_deliveries", "users"
   add_foreign_key "notification_schedules", "users"
+  add_foreign_key "persons", "users"
+  add_foreign_key "project_persons", "persons"
+  add_foreign_key "project_persons", "projects"
+  add_foreign_key "projects", "users"
   add_foreign_key "sessions", "users"
 end

@@ -136,6 +136,17 @@ class NotificationSchedule < ApplicationRecord
     {hour: tod.hour, min: tod.min, sec: tod.respond_to?(:sec) ? tod.sec : 0}
   end
 
+  # Check if this schedule should include all projects (nil = all projects)
+  def include_all_projects?
+    included_project_ids.nil?
+  end
+
+  # Get the list of project IDs to include in summaries
+  def project_filter
+    return nil if include_all_projects? # nil means no filtering
+    included_project_ids || []
+  end
+
   private
 
   def timezone_is_valid

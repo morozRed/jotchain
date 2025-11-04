@@ -186,7 +186,7 @@ module Summaries
           id: entry.id,
           logged_at: entry.logged_at,
           tag: entry.tag,
-          body: entry.body
+          body: entry.body_text
         }
       end
     end
@@ -215,7 +215,7 @@ module Summaries
         .map do |date, daily_entries|
           [
             "# #{date.strftime('%A, %B %d')}",
-            daily_entries.map { |entry| "- #{entry_timestamp(entry)} #{format_tag(entry)}#{truncate(normalize_body(entry.body))}" }
+            daily_entries.map { |entry| "- #{entry_timestamp(entry)} #{format_tag(entry)}#{truncate(normalize_body(entry.body_text))}" }
           ].flatten.join("\n")
         end
         .join("\n")

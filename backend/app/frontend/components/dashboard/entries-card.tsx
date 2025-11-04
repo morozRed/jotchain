@@ -9,6 +9,7 @@ import {
 import { useState } from "react"
 
 import { EmptyState } from "@/components/empty-state"
+import { TiptapContent } from "@/components/tiptap-content"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -18,6 +19,7 @@ import { dashboardPath, entryPath } from "@/routes"
 export interface DashboardEntry {
   id: number
   body: string
+  bodyFormat: string
   tag?: string | null
   loggedAt?: string | null
   loggedAtLabel?: string | null
@@ -138,9 +140,12 @@ export function DashboardEntriesCard({
                       </Badge>
                     ) : null}
                   </div>
-                  <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-foreground">
-                    {entry.body}
-                  </p>
+                  <div className="mt-3">
+                    <TiptapContent
+                      content={entry.body}
+                      className="text-sm leading-relaxed text-foreground"
+                    />
+                  </div>
                 </div>
                 <Button
                   variant="ghost"

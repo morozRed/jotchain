@@ -3,6 +3,7 @@ import { Command, CornerDownLeft, Send, Sparkles } from "lucide-react"
 
 import { DashboardEntriesCard, type DashboardEntry } from "@/components/dashboard/entries-card"
 import InputError from "@/components/input-error"
+import { TiptapEditor } from "@/components/tiptap-editor"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -14,7 +15,7 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
+import { getEmptyTiptapDocument } from "@/lib/tiptap-utils"
 import AppLayout from "@/layouts/app-layout"
 import { dashboardPath } from "@/routes"
 import type { SharedData } from "@/types"
@@ -62,7 +63,7 @@ export default function Dashboard() {
 
   const entryForm = useForm<EntryFormState>({
     entry: {
-      body: "",
+      body: getEmptyTiptapDocument(),
       tag: "",
     },
   })
@@ -80,9 +81,15 @@ export default function Dashboard() {
     }
 
     entryForm.post("/entries", {
+      data: {
+        entry: {
+          ...entryForm.data.entry,
+          body_format: "tiptap",
+        },
+      },
       preserveScroll: true,
       onSuccess: () => {
-        entryForm.setData("entry", { body: "", tag: "" })
+        entryForm.setData("entry", { body: getEmptyTiptapDocument(), tag: "" })
         entryForm.clearErrors()
       },
     })
@@ -93,7 +100,7 @@ export default function Dashboard() {
     submitEntryRequest()
   }
 
-  const handleEntryShortcut: React.KeyboardEventHandler<HTMLTextAreaElement> = (event) => {
+  const handleEntryShortcut: React.KeyboardEventHandler = (event) => {
     if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
       event.preventDefault()
       submitEntryRequest()
@@ -150,18 +157,13 @@ export default function Dashboard() {
               <form onSubmit={submitEntry} className="flex flex-1 flex-col gap-5">
                 <div className="relative flex flex-1 flex-col space-y-3">
                   <div className="relative flex flex-1">
-                    <Textarea
-                      id="entry-body"
+                    <TiptapEditor
                       value={entryForm.data.entry.body}
-                      onChange={(event) =>
-                        handleEntryChange("body", event.target.value)
-                      }
+                      onChange={(value) => handleEntryChange("body", value)}
                       onKeyDown={handleEntryShortcut}
                       placeholder="Shipped auth refactor, fixed API timeout issues, reviewed @backend PRs..."
-                      aria-invalid={Boolean(entryForm.errors.body)}
-                      aria-label="Entry content"
                       autoFocus
-                      className="min-h-0 flex-1 resize-none border-border/30 bg-background px-4 py-3 pb-16 text-[15px] leading-relaxed shadow-sm transition-all duration-200 focus-visible:border-primary/50 focus-visible:ring-2 focus-visible:ring-primary/20"
+                      className="min-h-0 flex-1 pb-12 text-[15px] leading-relaxed"
                     />
                     <Button
                       type="submit"
