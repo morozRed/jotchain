@@ -245,4 +245,90 @@
     box-shadow: 0 18px 38px -20px rgba(129, 140, 248, 0.7);
     transition: all 0.2s ease;
   }
+
+  /* TipTap Editor Styles */
+  .prose {
+    @apply focus:outline-none h-full;
+    --tw-prose-body: rgb(71 85 105) !important; /* slate-600 - lighter text */
+  }
+
+  .dark .prose {
+    --tw-prose-body: rgb(203 213 225) !important; /* slate-300 - soft light gray */
+  }
+
+  .prose p.is-editor-empty:first-child::before {
+    @apply text-muted-foreground;
+    content: attr(data-placeholder);
+    float: left;
+    height: 0;
+    pointer-events: none;
+  }
+
+  /* Mention Styles */
+  .mention {
+    @apply inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-sm font-medium;
+    @apply bg-primary/10 text-primary;
+    @apply border border-primary/20;
+  }
+
+  .mention svg {
+    @apply h-3 w-3 flex-shrink-0;
+  }
+
+  .mention[data-type="project"] {
+    @apply bg-blue-100 text-blue-700 border-blue-200;
+  }
+
+  .dark .mention[data-type="project"] {
+    @apply bg-blue-950/50 text-blue-400 border-blue-800/50;
+  }
+
+  .mention[data-type="person"] {
+    @apply bg-purple-100 text-purple-700 border-purple-200;
+  }
+
+  .dark .mention[data-type="person"] {
+    @apply bg-purple-950/50 text-purple-400 border-purple-800/50;
+  }
+
+  /* Mention Icons via ::before */
+  .mention[data-type="project"]::before {
+    content: "";
+    display: inline-block;
+    width: 0.75rem;
+    height: 0.75rem;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>');
+    background-size: contain;
+    background-repeat: no-repeat;
+    flex-shrink: 0;
+  }
+
+  .mention[data-type="person"]::before {
+    content: "";
+    display: inline-block;
+    width: 0.75rem;
+    height: 0.75rem;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>');
+    background-size: contain;
+    background-repeat: no-repeat;
+    flex-shrink: 0;
+  }
+
+  /* Tippy.js Styles */
+
+  .tippy-box {
+    background-color: transparent !important
+  }
+
+  .tippy-box[data-theme~='light-border'] {
+    @apply bg-transparent;
+  }
+
+  .tippy-box[data-theme~='light-border'] .tippy-content {
+    @apply p-0;
+  }
+
+  .tippy-box[data-theme~='light-border'] .tippy-arrow {
+    @apply hidden;
+  }
 }

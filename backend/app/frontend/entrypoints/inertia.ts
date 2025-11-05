@@ -1,6 +1,7 @@
 import { createInertiaApp } from "@inertiajs/react"
 import { type ReactNode, createElement } from "react"
 import { createRoot } from "react-dom/client"
+import "tippy.js/dist/tippy.css"
 
 import { initializeTheme } from "@/hooks/use-appearance"
 import PersistentLayout from "@/layouts/persistent-layout"

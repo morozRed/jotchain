@@ -34,6 +34,6 @@ class EntriesController < InertiaController
   end
 
   def entry_params
-    params.require(:entry).permit(:body, :tag, :logged_at)
+    params.require(:entry).permit(:body, :body_format, :tag, :logged_at)
   end
 end

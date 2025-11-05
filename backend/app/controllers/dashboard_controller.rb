@@ -37,6 +37,7 @@ class DashboardController < InertiaController
       {
         id: entry.id,
         body: entry.body,
+        bodyFormat: entry.body_format,
         tag: entry.tag,
         loggedAt: entry.logged_at&.iso8601,
         loggedAtLabel: entry.logged_at&.in_time_zone(Time.zone)&.to_fs(:long),
