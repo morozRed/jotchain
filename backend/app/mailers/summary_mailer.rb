@@ -29,7 +29,7 @@ class SummaryMailer < ApplicationMailer
 
   def subject_line
     window_end = time_zone_local(@delivery.window_end)
-    "Summary ready: #{window_end.strftime('%b %-d')}"
+    "JotChain | Summary ready: #{window_end.strftime('%b %-d')}"
   rescue StandardError
     "Your Jotchain summary"
   end
