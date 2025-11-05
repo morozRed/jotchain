@@ -100,7 +100,16 @@ class Entry < ApplicationRecord
       doc = JSON.parse(body)
       texts = []
       traverse_tiptap_nodes(doc) do |node|
-        texts << node["text"] if node["type"] == "text"
+        case node["type"]
+        when "text"
+          texts << node["text"]
+        when "mention"
+          # Include the visible label for mentions (fallback to id)
+          if node["attrs"].is_a?(Hash)
+            label = node["attrs"]["label"].presence || node["attrs"]["id"].to_s
+            texts << label if label.present?
+          end
+        end
       end
       texts.join(" ")
     rescue JSON::ParserError
