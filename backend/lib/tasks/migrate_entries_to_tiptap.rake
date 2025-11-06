@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# Usage
+# be rake entries:migrate_to_tiptap
+
 namespace :entries do
   desc "Migrate all plain text entries to TipTap format"
   task migrate_to_tiptap: :environment do
@@ -35,7 +38,7 @@ namespace :entries do
 
           # Update entry with new format
           entry.update_columns(
-            body: entry.class.encrypted_attributes[:body].encrypt(tiptap_json),
+            body: tiptap_json,
             body_format: "tiptap"
           )
 
