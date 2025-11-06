@@ -1,9 +1,11 @@
-import { useEditor, EditorContent } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import Mention from "@tiptap/extension-mention";
 import { Extension, mergeAttributes } from "@tiptap/core";
+import Mention from "@tiptap/extension-mention";
+import { EditorContent, useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
 import { useEffect } from "react";
+
 import { cn } from "@/lib/utils";
+
 import { mentionSuggestion } from "./tiptap-mention-suggestion";
 
 interface TiptapEditorProps {

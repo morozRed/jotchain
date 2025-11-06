@@ -1,10 +1,11 @@
-import { useEditor, EditorContent } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import Mention from "@tiptap/extension-mention";
 import { mergeAttributes } from "@tiptap/core";
+import Mention from "@tiptap/extension-mention";
+import { EditorContent, useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
 import { useEffect } from "react";
-import { cn } from "@/lib/utils";
+
 import { isValidTiptapJson, tiptapToPlainText } from "@/lib/tiptap-utils";
+import { cn } from "@/lib/utils";
 
 interface TiptapContentProps {
   content: string; // TipTap JSON string

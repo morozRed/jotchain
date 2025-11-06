@@ -32,7 +32,7 @@ export function getTimezoneOffset(timezone: string): string {
     const parts = formatter.formatToParts(now)
     const offsetPart = parts.find((part) => part.type === "timeZoneName")
 
-    if (offsetPart && offsetPart.value.startsWith("GMT")) {
+    if (offsetPart?.value.startsWith("GMT")) {
       return offsetPart.value.replace("GMT", "UTC")
     }
 

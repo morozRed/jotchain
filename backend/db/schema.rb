@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_04_161444) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_06_132432) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -22,6 +22,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_04_161444) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "body_format", default: "tiptap", null: false
+    t.index ["user_id", "logged_at"], name: "index_entries_on_user_and_logged_at"
     t.index ["user_id", "logged_at"], name: "index_entries_on_user_id_and_logged_at"
     t.index ["user_id", "tag"], name: "index_entries_on_user_id_and_tag"
     t.index ["user_id"], name: "index_entries_on_user_id"
@@ -33,6 +34,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_04_161444) do
     t.uuid "mentionable_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["entry_id", "mentionable_type", "mentionable_id"], name: "index_entry_mentions_composite"
     t.index ["entry_id", "mentionable_type", "mentionable_id"], name: "index_entry_mentions_uniqueness", unique: true
     t.index ["entry_id"], name: "index_entry_mentions_on_entry_id"
     t.index ["mentionable_type", "mentionable_id"], name: "index_entry_mentions_on_mentionable"

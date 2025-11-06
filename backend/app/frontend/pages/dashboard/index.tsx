@@ -1,5 +1,5 @@
 import { Head, useForm, usePage } from "@inertiajs/react"
-import { Command, CornerDownLeft, Send, Sparkles } from "lucide-react"
+import { Command, CornerDownLeft, Flame, Lightbulb, Send, Sparkles } from "lucide-react"
 
 import { DashboardEntriesCard, type DashboardEntry } from "@/components/dashboard/entries-card"
 import InputError from "@/components/input-error"
@@ -13,10 +13,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { getEmptyTiptapDocument } from "@/lib/tiptap-utils"
 import AppLayout from "@/layouts/app-layout"
+import { getEmptyTiptapDocument } from "@/lib/tiptap-utils"
 import { dashboardPath } from "@/routes"
 import type { SharedData } from "@/types"
 
@@ -39,7 +37,6 @@ type PageProps = SharedData & {
 interface EntryFormState {
   entry: {
     body: string
-    tag: string
   }
 }
 
@@ -64,14 +61,13 @@ export default function Dashboard() {
   const entryForm = useForm<EntryFormState>({
     entry: {
       body: getEmptyTiptapDocument(),
-      tag: "",
     },
   })
 
-  const handleEntryChange = (field: keyof EntryFormState["entry"], value: string) => {
+  const handleEntryBodyChange = (value: string) => {
     entryForm.setData("entry", {
       ...entryForm.data.entry,
-      [field]: value,
+      body: value,
     })
   }
 
@@ -89,7 +85,7 @@ export default function Dashboard() {
       },
       preserveScroll: true,
       onSuccess: () => {
-        entryForm.setData("entry", { body: getEmptyTiptapDocument(), tag: "" })
+        entryForm.setData("entry", { body: getEmptyTiptapDocument() })
         entryForm.clearErrors()
       },
     })
@@ -122,35 +118,58 @@ export default function Dashboard() {
                 Jot down your daily wins, challenges, and ideas. Stay organized and never forget what you worked on.
               </p>
             </div>
-            <div className="flex items-center gap-3 rounded-lg border border-dashed border-primary/30 px-4 py-3 text-sm text-primary">
-              <Sparkles className="size-4" />
-              <span>
-                {entryStats.count ? (
-                  <>
-                    {pluralize(entryStats.count, "entry")} logged
-                    {entryStats.currentStreak && entryStats.currentStreak > 0 ? (
-                      <>
-                        {" • "}
-                        {pluralize(entryStats.currentStreak, "day")} streak
-                      </>
-                    ) : null}
-                  </>
-                ) : (
-                  "First note creates your personal timeline"
-                )}
-              </span>
+            <div className="relative overflow-hidden rounded-xl border border-primary/40 bg-gradient-to-r from-primary/15 via-primary/10 to-transparent px-5 py-4 text-sm shadow-sm">
+              <div
+                aria-hidden
+                className="pointer-events-none absolute -top-16 -right-12 h-36 w-36 rounded-full bg-primary/30 opacity-60 blur-3xl"
+              />
+              <div
+                aria-hidden
+                className="pointer-events-none absolute -bottom-20 -left-16 h-40 w-40 rounded-full bg-primary/20 opacity-50 blur-3xl"
+              />
+              <div className="relative flex items-center gap-4">
+                <div className="flex size-11 items-center justify-center rounded-full border border-primary/40 bg-background/80 text-primary shadow-sm">
+                  <Sparkles className="size-5" />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <span className="text-xs font-semibold uppercase tracking-[0.18em] text-primary/70">
+                    Daily momentum
+                  </span>
+                  {entryStats.count ? (
+                    <>
+                      <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-primary">
+                        <span className="text-base font-semibold text-foreground">
+                          {pluralize(entryStats.count, "entry", "entries")}
+                        </span>
+                        <span className="text-sm text-primary/80">logged</span>
+                        {entryStats.currentStreak && entryStats.currentStreak > 0 ? (
+                          <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
+                            <Flame aria-hidden className="size-3.5" />
+                            {pluralize(entryStats.currentStreak, "day")}
+                          </span>
+                        ) : null}
+                      </div>
+                      <span className="text-xs text-primary/70">Keep stacking wins.</span>
+                    </>
+                  ) : (
+                    <span className="text-sm text-primary">
+                      First note creates your personal timeline — start today.
+                    </span>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         </header>
 
-        <div className="flex flex-col gap-6 lg:grid lg:grid-cols-[minmax(0,1.35fr)_minmax(0,0.85fr)]">
+        <div className="flex flex-col gap-2 lg:grid lg:grid-cols-[minmax(0,1.35fr)_minmax(0,0.85fr)]">
           <Card className="border-border/30 shadow-[0_1px_3px_rgba(0,0,0,0.06)] flex flex-col">
             <CardHeader className="pb-5">
               <CardTitle className="text-lg font-semibold">
                 What did you work on today?
               </CardTitle>
               <CardDescription className="text-sm">
-                Capture wins, blockers, and progress.
+                Capture wins, blockers, and progress — mention people or projects, just start typing with @.
               </CardDescription>
             </CardHeader>
             <CardContent className="flex flex-1 flex-col">
@@ -159,7 +178,7 @@ export default function Dashboard() {
                   <div className="relative flex flex-1">
                     <TiptapEditor
                       value={entryForm.data.entry.body}
-                      onChange={(value) => handleEntryChange("body", value)}
+                      onChange={handleEntryBodyChange}
                       onKeyDown={handleEntryShortcut}
                       placeholder="Shipped auth refactor, fixed API timeout issues, reviewed @backend PRs..."
                       autoFocus
@@ -183,31 +202,13 @@ export default function Dashboard() {
                   </div>
                   <InputError message={entryForm.errors.body as string | undefined} />
                 </div>
-
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:gap-3">
-                  <div className="flex-1 space-y-2">
-                    <Label htmlFor="entry-tag" className="text-xs font-normal text-muted-foreground">
-                      Tag (optional)
-                    </Label>
-                    <Input
-                      id="entry-tag"
-                      value={entryForm.data.entry.tag}
-                      onChange={(event) =>
-                        handleEntryChange("tag", event.target.value)
-                      }
-                      placeholder="Backend, Platform, Hiring..."
-                      aria-invalid={Boolean(entryForm.errors.tag)}
-                      className="border-border/30 bg-background shadow-sm transition-all duration-200 focus-visible:border-primary/50 focus-visible:ring-2 focus-visible:ring-primary/20"
-                    />
-                    <InputError message={entryForm.errors.tag as string | undefined} />
-                  </div>
-                </div>
               </form>
             </CardContent>
             <CardFooter className="border-t border-border/30 bg-muted/20 text-xs text-muted-foreground">
               <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                <span className="leading-relaxed">
-                  💡 Aim for 2-4 key points • Include impact and blockers
+                <span className="flex items-center gap-1.5 leading-relaxed">
+                  <Lightbulb className="size-3.5" aria-hidden />
+                  Aim for 2-4 key points • Include impact and blockers
                 </span>
                 {entryStats.lastLoggedAt && (
                   <span className="font-medium text-foreground/80">
@@ -231,8 +232,13 @@ export default function Dashboard() {
   )
 }
 
-function pluralize(count: number, noun: string, suffix = "s") {
-  return `${count} ${noun}${Math.abs(count) === 1 ? "" : suffix}`
+function pluralize(count: number, singular: string, plural?: string) {
+  if (Math.abs(count) === 1) {
+    return `${count} ${singular}`
+  }
+
+  const computedPlural = plural ?? `${singular}s`
+  return `${count} ${computedPlural}`
 }
 
 function formatTimeAgo(dateString: string): string {

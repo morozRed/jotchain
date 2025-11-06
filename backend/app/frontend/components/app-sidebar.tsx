@@ -1,5 +1,5 @@
-import { usePage, Link } from "@inertiajs/react"
-import { Bell, CreditCard, LayoutGrid } from "lucide-react"
+import { Link, usePage } from "@inertiajs/react"
+import { BarChart3, Bell, CreditCard, LayoutGrid } from "lucide-react"
 
 import { FeedbackButton } from "@/components/feedback-button"
 import { NavMain } from "@/components/nav-main"
@@ -13,8 +13,9 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar"
-import { billingPath, dashboardPath, notificationsPath } from "@/routes"
+import { analyticsPath, billingPath, dashboardPath, notificationsPath } from "@/routes"
 import type { NavItem, SharedData } from "@/types"
 
 import AppLogo from "./app-logo"
@@ -24,6 +25,11 @@ const mainNavItems: NavItem[] = [
     title: "Dashboard",
     href: dashboardPath(),
     icon: LayoutGrid,
+  },
+  {
+    title: "Analytics",
+    href: analyticsPath(),
+    icon: BarChart3,
   },
   {
     title: "Notifications",
@@ -39,6 +45,8 @@ const mainNavItems: NavItem[] = [
 
 export function AppSidebar() {
   const { auth } = usePage<SharedData>().props
+  const { state } = useSidebar()
+  const isCollapsed = state === "collapsed"
 
   return (
     <Sidebar collapsible="icon" variant="inset">
@@ -59,7 +67,7 @@ export function AppSidebar() {
       </SidebarContent>
 
       <SidebarFooter>
-        <SubscriptionStatus user={auth.user} />
+        {!isCollapsed ? <SubscriptionStatus user={auth.user} /> : null}
         <FeedbackButton />
         <NavUser />
       </SidebarFooter>

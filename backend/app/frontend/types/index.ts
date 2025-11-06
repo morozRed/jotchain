@@ -45,3 +45,86 @@ export interface Session {
   ip_address: string
   created_at: string
 }
+
+// Analytics types
+export interface AnalyticsMeta {
+  range: "week" | "month" | "year"
+  projectId: number | null
+  tz: string
+  from: string
+  to: string
+}
+
+export interface AnalyticsCards {
+  totalEntries: number
+  activeDays: number
+  currentStreak: number
+  longestStreak: number
+  avgPerActiveDay: number
+  focusScore: number
+  unmentionedShare: number
+}
+
+export interface ActivityDataPoint {
+  date: string
+  count: number
+}
+
+export interface HourlyDataPoint {
+  hour: number
+  count: number
+}
+
+export interface DowDataPoint {
+  isoDow: number
+  count: number
+}
+
+export interface ProjectBreakdown {
+  id: number
+  name: string
+  count: number
+  share: number
+}
+
+export interface PersonBreakdown {
+  id: number
+  name: string
+  count: number
+}
+
+export interface StaleProject {
+  projectId: number
+  name: string
+  daysSinceLast: number
+}
+
+export interface AnalyticsProjectsData {
+  top: ProjectBreakdown[]
+  otherCount: number
+  focusScore: number
+  stale: StaleProject[]
+}
+
+export interface AnalyticsPeopleData {
+  top: PersonBreakdown[]
+  otherCount: number
+}
+
+export interface AnalyticsNeedsAttention {
+  staleProjects: StaleProject[]
+  unmentionedShare: number
+}
+
+export interface AnalyticsData {
+  meta: AnalyticsMeta
+  cards: AnalyticsCards
+  activity: ActivityDataPoint[]
+  rolling7: ActivityDataPoint[]
+  heatmap: ActivityDataPoint[]
+  hourly: HourlyDataPoint[]
+  dow: DowDataPoint[]
+  projects: AnalyticsProjectsData
+  people: AnalyticsPeopleData
+  needsAttention: AnalyticsNeedsAttention
+}

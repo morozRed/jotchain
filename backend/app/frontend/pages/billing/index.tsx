@@ -16,7 +16,7 @@ import AppLayout from "@/layouts/app-layout"
 import { billingCancelPath, billingCheckoutPath, billingPortalPath, billingReactivatePath, billingSwitchPath } from "@/routes"
 import type { BreadcrumbItem, SharedData } from "@/types"
 
-type SubscriptionPayload = {
+interface SubscriptionPayload {
   status: string
   planType: string | null
   trialEndsAt: string | null
@@ -28,7 +28,7 @@ type SubscriptionPayload = {
   cancelAtPeriodEnd: boolean
 }
 
-type PlanPayload = {
+interface PlanPayload {
   id: string
   name: string
   price: string

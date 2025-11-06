@@ -1,12 +1,13 @@
+import type { SuggestionProps } from "@tiptap/suggestion";
+import { Folder, Plus, User } from "lucide-react";
 import {
   forwardRef,
+  useCallback,
   useEffect,
   useImperativeHandle,
   useState,
-  useCallback,
 } from "react";
-import { SuggestionProps } from "@tiptap/suggestion";
-import { Folder, User, Plus } from "lucide-react";
+
 import { cn } from "@/lib/utils";
 
 interface MentionItem {
@@ -163,7 +164,7 @@ export const MentionList = forwardRef<
       acc[item.category].push({ item, index });
       return acc;
     },
-    {} as Record<string, Array<{ item: MentionItem; index: number }>>,
+    {} as Record<string, { item: MentionItem; index: number }[]>,
   );
 
   if (props.items.length === 0) {

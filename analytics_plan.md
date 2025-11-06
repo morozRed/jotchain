@@ -1,6 +1,6 @@
-# Insights Plan (MVP)
+# Analytics Plan (MVP)
 
-This document defines the first version of the Insights screen: the user experience, the components we will build, the data contract returned by the API, and high‑level backend/frontend implementation notes. Scope is intentionally tight: no comparisons, no saved views, no digests. The goal is a useful, engaging, fast insights page that drives habit formation and highlights where attention goes.
+This document defines the first version of the Analytics screen: the user experience, the components we will build, the data contract returned by the API, and high‑level backend/frontend implementation notes. Scope is intentionally tight: no comparisons, no saved views, no digests. The goal is a useful, engaging, fast analytics page that drives habit formation and highlights where attention goes.
 
 ## UX Summary
 
@@ -24,7 +24,7 @@ This document defines the first version of the Insights screen: the user experie
 
 ### Filters
 - Elements: Project selector (All/specific), Range tabs (Week/Month/Year), implicitly use user timezone.
-- Behavior: Changing filters refetches data; state persists in URL query (`/insights?project_id=&range=month`).
+- Behavior: Changing filters refetches data; state persists in URL query (`/analytics?project_id=&range=month`).
 - Accept: API called with selected filters; UI reflects active filter; keyboard accessible.
 
 ### KPI Cards (6)
@@ -79,9 +79,9 @@ Accept: Correct counts based on mentions; cap N=10; provide “See all” link i
 - Show % untagged entries (no project assigned) in the period.
 Accept: Items correctly reflect the range; clicking a stale project drills into that project’s entries; clicking untagged opens entries missing a project.
 
-## API Shape (InsightsData)
+## API Shape (AnalyticsData)
 
-Endpoint: `GET /api/insights?range=week|month|year&project_id=<id|null>&tz=<IANA>`
+Endpoint: `GET /api/analytics?range=week|month|year&project_id=<id|null>&tz=<IANA>`
 
 Response JSON (MVP):
 ```json
@@ -132,10 +132,10 @@ Notes:
 ## Backend Implementation Notes
 
 - Controllers & Routes
-  - `GET /insights` (Inertia page)
-  - `GET /api/insights` responds with the JSON shape above; query params: `range`, `project_id`, `tz`.
+  - `GET /analytics` (Inertia page)
+  - `GET /api/analytics` responds with the JSON shape above; query params: `range`, `project_id`, `tz`.
 
-- InsightsCalculator Service
+- AnalyticsCalculator Service
   - Inputs: `user_id`, `range`, `project_id`, `tz`.
   - Outputs: All aggregates above. Limit top lists to N=10 and return `otherCount`.
   - Timezone‑safe bucketing: Use Postgres `date_trunc` with timezone conversion (e.g., `date_trunc('day', (logged_at at time zone 'UTC') at time zone :tz)`), and similar for hour (extract hour after shifting to `:tz`).
@@ -146,7 +146,7 @@ Notes:
   - Composite indexes: `entries (user_id, logged_at)`; `entry_projects (user_id, project_id, logged_at)`; `entry_people (user_id, person_id, logged_at)`.
   - Consider partial indexes for recent time windows if data is large.
   - Pagination caps: `top` lists capped at 10; provide `otherCount` to avoid heavy payloads.
-  - Caching: Per‑user + filter key (e.g., `insights:v1:{user}:{range}:{project}`) with 5–10 min TTL; invalidate on create/update of entries or tags.
+  - Caching: Per‑user + filter key (e.g., `analytics:v1:{user}:{range}:{project}`) with 5–10 min TTL; invalidate on create/update of entries or tags.
 
 - Security
   - Scope all queries by `user_id`/`account_id` (multi‑tenant safety). Return only entities the user can access.
@@ -154,7 +154,7 @@ Notes:
 ## Frontend Implementation Notes
 
 - Packages: `recharts` for charts; reuse Tailwind + theme tokens.
-- Page: `app/frontend/pages/insights/index.tsx` loads data via `GET /api/insights` and renders sections.
+- Page: `app/frontend/pages/analytics/index.tsx` loads data via `GET /api/analytics` and renders sections.
 - Components
   - `FilterBar` (project select + range tabs)
   - `KpiCards` (6 cards)
@@ -165,7 +165,7 @@ Notes:
   - `ProjectDonut`
   - `TopPeopleBar`
   - `NeedsAttentionList`
-- Types: Define `InsightsData` and nested interfaces per API shape above.
+- Types: Define `AnalyticsData` and nested interfaces per API shape above.
 - Drill‑downs: Use existing routes for entries list with appropriate query params.
 
 ## Out of Scope (MVP)
@@ -181,7 +181,7 @@ Notes:
 
 ## Do We Need AI?
 
-- Short answer: No, not for MVP. All listed insights are standard aggregations and streak calculations that are efficiently computed with SQL and lightweight service logic.
+- Short answer: No, not for MVP. All listed analytics are standard aggregations and streak calculations that are efficiently computed with SQL and lightweight service logic.
 
 - Where AI could add value later (optional):
   - Summaries: Generate human‑readable weekly highlights from aggregates.

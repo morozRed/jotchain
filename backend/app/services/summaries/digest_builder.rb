@@ -123,7 +123,7 @@ module Summaries
               required: %w[title bullets]
             }
           },
-          insights: {
+          analytics: {
             type: "array",
             items: {type: "string"}
           }

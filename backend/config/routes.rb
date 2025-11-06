@@ -51,12 +51,15 @@ Rails.application.routes.draw do
     resources :entries, only: [:create, :update, :destroy]
     resources :feedback, only: [:create]
 
+    get :analytics, to: "analytics#index"
+
     namespace :api do
       resources :projects, only: [:index, :show, :create, :update, :destroy] do
         resources :persons, only: [:create, :destroy], controller: "project_persons"
       end
       resources :persons, only: [:index, :show, :create, :update, :destroy]
       resources :mentions, only: [:index]
+      resource :analytics, only: [:show]
     end
 
     root "dashboard#index"
