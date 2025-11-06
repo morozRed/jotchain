@@ -60,7 +60,7 @@ module Summaries
         model: preferred_model,
         response_format: json_schema_format,
         temperature: 0.3,
-        max_output_tokens: 600
+        max_output_tokens: 3000
       )
 
       parsed = parse_sections(response.text)
@@ -134,7 +134,7 @@ module Summaries
     }.freeze
 
     def preferred_model
-      ENV.fetch("AI_DEFAULT_MODEL", "gpt-4o-mini")
+      ENV.fetch("AI_DEFAULT_MODEL", "gpt-5-mini")
     end
 
     def fetch_entries

@@ -44,7 +44,7 @@ module Ai
     end
 
     def default_model
-      ENV.fetch("AI_DEFAULT_MODEL", "gpt-4o-mini")
+      ENV.fetch("AI_DEFAULT_MODEL", "gpt-5-mini")
     end
 
     def fallback_model
@@ -57,6 +57,7 @@ module Ai
       http.use_ssl = base_uri.scheme == "https"
       http.read_timeout = DEFAULT_TIMEOUT
       http.open_timeout = DEFAULT_TIMEOUT
+      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
 
       request = Net::HTTP::Post.new(base_uri.request_uri, headers)
       request.body = JSON.generate(payload)
@@ -93,10 +94,9 @@ module Ai
       payload = {
         model: model,
         messages: compiled_messages,
-        temperature: temperature
       }
 
-      payload[:max_tokens] = max_output_tokens if max_output_tokens
+      payload[:max_completion_tokens] = max_output_tokens if max_output_tokens
       payload[:response_format] = response_format if response_format
 
       payload.merge!(options) if options.present?
