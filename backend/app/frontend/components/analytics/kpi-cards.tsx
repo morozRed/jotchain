@@ -106,7 +106,7 @@ export function KpiCards({ data }: KpiCardsProps) {
                 </Card>
               </TooltipTrigger>
               <TooltipContent>
-                <p className="max-w-xs">{card.description}</p>
+                <p>{card.description}</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>

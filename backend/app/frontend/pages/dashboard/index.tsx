@@ -13,8 +13,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import AppLayout from "@/layouts/app-layout"
 import { getEmptyTiptapDocument } from "@/lib/tiptap-utils"
 import { dashboardPath } from "@/routes"
@@ -39,7 +37,6 @@ type PageProps = SharedData & {
 interface EntryFormState {
   entry: {
     body: string
-    tag: string
   }
 }
 
@@ -64,14 +61,13 @@ export default function Dashboard() {
   const entryForm = useForm<EntryFormState>({
     entry: {
       body: getEmptyTiptapDocument(),
-      tag: "",
     },
   })
 
-  const handleEntryChange = (field: keyof EntryFormState["entry"], value: string) => {
+  const handleEntryBodyChange = (value: string) => {
     entryForm.setData("entry", {
       ...entryForm.data.entry,
-      [field]: value,
+      body: value,
     })
   }
 
@@ -89,7 +85,7 @@ export default function Dashboard() {
       },
       preserveScroll: true,
       onSuccess: () => {
-        entryForm.setData("entry", { body: getEmptyTiptapDocument(), tag: "" })
+        entryForm.setData("entry", { body: getEmptyTiptapDocument() })
         entryForm.clearErrors()
       },
     })
@@ -156,7 +152,7 @@ export default function Dashboard() {
                       <span className="text-xs text-primary/70">Keep stacking wins.</span>
                     </>
                   ) : (
-                    <span className="max-w-xs text-sm text-primary">
+                    <span className="text-sm text-primary">
                       First note creates your personal timeline — start today.
                     </span>
                   )}
@@ -182,7 +178,7 @@ export default function Dashboard() {
                   <div className="relative flex flex-1">
                     <TiptapEditor
                       value={entryForm.data.entry.body}
-                      onChange={(value) => handleEntryChange("body", value)}
+                      onChange={handleEntryBodyChange}
                       onKeyDown={handleEntryShortcut}
                       placeholder="Shipped auth refactor, fixed API timeout issues, reviewed @backend PRs..."
                       autoFocus
@@ -205,25 +201,6 @@ export default function Dashboard() {
                     </Button>
                   </div>
                   <InputError message={entryForm.errors.body as string | undefined} />
-                </div>
-
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:gap-3">
-                  <div className="flex-1 space-y-2">
-                    <Label htmlFor="entry-tag" className="text-xs font-normal text-muted-foreground">
-                      Tag (optional)
-                    </Label>
-                    <Input
-                      id="entry-tag"
-                      value={entryForm.data.entry.tag}
-                      onChange={(event) =>
-                        handleEntryChange("tag", event.target.value)
-                      }
-                      placeholder="Backend, Platform, Hiring..."
-                      aria-invalid={Boolean(entryForm.errors.tag)}
-                      className="border-border/30 bg-background shadow-sm transition-all duration-200 focus-visible:border-primary/50 focus-visible:ring-2 focus-visible:ring-primary/20"
-                    />
-                    <InputError message={entryForm.errors.tag as string | undefined} />
-                  </div>
                 </div>
               </form>
             </CardContent>
