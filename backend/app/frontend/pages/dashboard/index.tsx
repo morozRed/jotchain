@@ -15,8 +15,8 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { getEmptyTiptapDocument } from "@/lib/tiptap-utils"
 import AppLayout from "@/layouts/app-layout"
+import { getEmptyTiptapDocument } from "@/lib/tiptap-utils"
 import { dashboardPath } from "@/routes"
 import type { SharedData } from "@/types"
 

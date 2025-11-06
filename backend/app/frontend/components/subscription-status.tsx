@@ -4,7 +4,7 @@ import { Clock, CreditCard, Sparkles } from "lucide-react"
 import { billingPath } from "@/routes"
 import type { SharedData } from "@/types"
 
-type SubscriptionStatusProps = {
+interface SubscriptionStatusProps {
   user: SharedData["auth"]["user"]
 }
 

@@ -1,4 +1,4 @@
-import { Link, Head, useForm, usePage } from "@inertiajs/react"
+import { Head, Link, useForm, usePage } from "@inertiajs/react"
 import { Plus, Sparkles } from "lucide-react"
 import { useCallback, useEffect, useMemo, useState } from "react"
 
