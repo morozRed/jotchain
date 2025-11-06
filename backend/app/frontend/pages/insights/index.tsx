@@ -1,4 +1,4 @@
-import { router, usePage } from "@inertiajs/react"
+import { Head, router } from "@inertiajs/react"
 import { AlertCircle, BarChart3 } from "lucide-react"
 import { useEffect, useState } from "react"
 
@@ -12,16 +12,21 @@ import { NeedsAttentionList } from "@/components/insights/needs-attention-list"
 import { ProjectDonut } from "@/components/insights/project-donut"
 import { TopPeopleBar } from "@/components/insights/top-people-bar"
 import { Card, CardContent } from "@/components/ui/card"
-import type { InsightsData, SharedData } from "@/types"
+import AppLayout from "@/layouts/app-layout"
+import { insightsPath } from "@/routes"
+import type { BreadcrumbItem, InsightsData, SharedData } from "@/types"
 
 interface Project {
   id: number
   name: string
 }
 
-interface InsightsPageProps extends SharedData {
-  projects?: Project[]
-}
+const breadcrumbs: BreadcrumbItem[] = [
+  {
+    title: "Insights",
+    href: insightsPath(),
+  },
+]
 
 export default function InsightsPage() {
   const [projects, setProjects] = useState<Project[]>([])
@@ -64,7 +69,7 @@ export default function InsightsPage() {
         throw new Error("Failed to fetch insights")
       }
 
-      const data = await response.json()
+      const data = (await response.json()) as InsightsData
       setInsightsData(data)
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred")
@@ -118,37 +123,42 @@ export default function InsightsPage() {
   // Zero-data state
   if (!loading && insightsData?.cards.totalEntries === 0) {
     return (
-      <div className="container mx-auto max-w-7xl space-y-6 px-4 py-8">
-        <div className="mb-8">
-          <h1 className="mb-2 text-3xl font-bold">Insights</h1>
-          <p className="text-muted-foreground">Analytics and trends from your entries</p>
-        </div>
+      <AppLayout breadcrumbs={breadcrumbs}>
+        <Head title="Insights" />
+        <div className="container mx-auto max-w-7xl space-y-6 px-4 py-8">
+          <div className="mb-8">
+            <h1 className="mb-2 text-3xl font-bold">Insights</h1>
+            <p className="text-muted-foreground">Analytics and trends from your entries</p>
+          </div>
 
-        <Card className="border-border/30">
-          <CardContent className="flex flex-col items-center justify-center py-16">
-            <BarChart3 className="mb-4 h-16 w-16 text-muted-foreground" />
-            <h3 className="mb-2 text-lg font-medium">No data yet</h3>
-            <p className="mb-6 text-center text-sm text-muted-foreground">
-              Start logging entries to see your insights and analytics
-            </p>
-            <div className="flex flex-col gap-2 text-sm text-muted-foreground">
-              <div className="flex items-center gap-2">
-                <span className="text-accent-primary">→</span>
-                <span>Add your first entry</span>
+          <Card className="border-border/30">
+            <CardContent className="flex flex-col items-center justify-center py-16">
+              <BarChart3 className="mb-4 h-16 w-16 text-muted-foreground" />
+              <h3 className="mb-2 text-lg font-medium">No data yet</h3>
+              <p className="mb-6 text-center text-sm text-muted-foreground">
+                Start logging entries to see your insights and analytics
+              </p>
+              <div className="flex flex-col gap-2 text-sm text-muted-foreground">
+                <div className="flex items-center gap-2">
+                  <span className="text-accent-primary">→</span>
+                  <span>Add your first entry</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-accent-primary">→</span>
+                  <span>Tag a project or person</span>
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="text-accent-primary">→</span>
-                <span>Tag a project or person</span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+            </CardContent>
+          </Card>
+        </div>
+      </AppLayout>
     )
   }
 
   return (
-    <div className="container mx-auto max-w-7xl space-y-6 px-4 py-8">
+    <AppLayout breadcrumbs={breadcrumbs}>
+      <Head title="Insights" />
+      <div className="container mx-auto max-w-7xl space-y-6 px-4 py-8">
       <div className="mb-8">
         <h1 className="mb-2 text-3xl font-bold">Insights</h1>
         <p className="text-muted-foreground">Analytics and trends from your entries</p>
@@ -212,6 +222,7 @@ export default function InsightsPage() {
           />
         </div>
       )}
-    </div>
+      </div>
+    </AppLayout>
   )
 }
