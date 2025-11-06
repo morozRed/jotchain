@@ -245,8 +245,7 @@ module Insights
       return 0.0 if total == 0
 
       untagged = filtered_entries.left_joins(:entry_mentions)
-                                .where(entry_mentions: {id: nil})
-                                .where(mentionable_type: "Project")
+                                .where(entry_mentions: {id: nil, mentionable_type: "Project"})
                                 .or(filtered_entries.where.not(id: EntryMention.where(mentionable_type: "Project").select(:entry_id)))
                                 .distinct
                                 .count
