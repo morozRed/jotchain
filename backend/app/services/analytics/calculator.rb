@@ -50,7 +50,7 @@ module Analytics
         longestStreak: longest_streak,
         avgPerActiveDay: avg_per_active,
         focusScore: focus_score,
-        untaggedShare: untagged_share
+        unmentionedShare: unmentioned_share
       }
     end
 
@@ -198,7 +198,7 @@ module Analytics
     def needs_attention_data
       {
         staleProjects: stale_projects,
-        untaggedShare: untagged_share
+        unmentionedShare: unmentioned_share
       }
     end
 
@@ -247,17 +247,15 @@ module Analytics
       (h_index * 100).round
     end
 
-    def untagged_share
+    def unmentioned_share
       total = filtered_entries.count
       return 0.0 if total == 0
 
-      untagged = filtered_entries.left_joins(:entry_mentions)
-                                .where(entry_mentions: {id: nil, mentionable_type: "Project"})
-                                .or(filtered_entries.where.not(id: EntryMention.where(mentionable_type: "Project").select(:entry_id)))
-                                .distinct
-                                .count
+      entry_scope = filtered_entries.select(:id)
+      mentioned_entry_ids = EntryMention.where(entry_id: entry_scope).select(:entry_id)
+      unmentioned = filtered_entries.where.not(id: mentioned_entry_ids).count
 
-      (untagged.to_f / total).round(3)
+      (unmentioned.to_f / total).round(3)
     end
 
     # Streak calculations

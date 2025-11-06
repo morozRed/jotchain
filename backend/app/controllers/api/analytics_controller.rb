@@ -13,9 +13,7 @@ module Api
       end
 
       # Validate timezone
-      begin
-        ActiveSupport::TimeZone[tz]
-      rescue StandardError
+      unless ActiveSupport::TimeZone[tz]
         return render_error("Invalid timezone", status: :bad_request)
       end
 

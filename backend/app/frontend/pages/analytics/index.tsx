@@ -115,8 +115,8 @@ export default function AnalyticsPage() {
     setSelectedProject(projectId)
   }
 
-  const handleUntaggedClick = () => {
-    const params = new URLSearchParams({ untagged: "true", range: selectedRange })
+  const handleUnmentionedClick = () => {
+    const params = new URLSearchParams({ unmentioned: "true", range: selectedRange })
     router.visit(`/dashboard?${params.toString()}`)
   }
 
@@ -227,7 +227,7 @@ export default function AnalyticsPage() {
             <NeedsAttentionList
               data={analyticsData.needsAttention}
               onStaleProjectClick={handleStaleProjectClick}
-              onUntaggedClick={handleUntaggedClick}
+              onUnmentionedClick={handleUnmentionedClick}
             />
           </div>
         )}

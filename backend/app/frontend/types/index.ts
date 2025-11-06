@@ -62,7 +62,7 @@ export interface AnalyticsCards {
   longestStreak: number
   avgPerActiveDay: number
   focusScore: number
-  untaggedShare: number
+  unmentionedShare: number
 }
 
 export interface ActivityDataPoint {
@@ -113,7 +113,7 @@ export interface AnalyticsPeopleData {
 
 export interface AnalyticsNeedsAttention {
   staleProjects: StaleProject[]
-  untaggedShare: number
+  unmentionedShare: number
 }
 
 export interface AnalyticsData {

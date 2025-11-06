@@ -1,4 +1,4 @@
-import { AlertCircle, Tag } from "lucide-react"
+import { AlertCircle, HelpCircle } from "lucide-react"
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import type { AnalyticsNeedsAttention } from "@/types"
@@ -6,14 +6,14 @@ import type { AnalyticsNeedsAttention } from "@/types"
 interface NeedsAttentionListProps {
   data: AnalyticsNeedsAttention
   onStaleProjectClick?: (projectId: number) => void
-  onUntaggedClick?: () => void
+  onUnmentionedClick?: () => void
 }
 
-export function NeedsAttentionList({ data, onStaleProjectClick, onUntaggedClick }: NeedsAttentionListProps) {
+export function NeedsAttentionList({ data, onStaleProjectClick, onUnmentionedClick }: NeedsAttentionListProps) {
   const hasStaleProjects = data.staleProjects.length > 0
-  const hasUntagged = data.untaggedShare > 0
+  const hasUnmentioned = data.unmentionedShare > 0
 
-  if (!hasStaleProjects && !hasUntagged) {
+  if (!hasStaleProjects && !hasUnmentioned) {
     return (
       <Card className="border-border/30 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
         <CardHeader>
@@ -58,18 +58,18 @@ export function NeedsAttentionList({ data, onStaleProjectClick, onUntaggedClick 
             </div>
           )}
 
-          {hasUntagged && (
+          {hasUnmentioned && (
             <div>
               <h4 className="mb-2 flex items-center gap-2 text-sm font-medium">
-                <Tag className="h-4 w-4 text-blue-500" />
-                Untagged Entries
+                <HelpCircle className="h-4 w-4 text-blue-500" />
+                Unmentioned Entries
               </h4>
               <button
-                onClick={onUntaggedClick}
+                onClick={onUnmentionedClick}
                 className="flex w-full items-center justify-between rounded-lg border border-border/30 bg-surface-card p-3 text-left transition-colors hover:bg-muted/30"
               >
-                <span>Entries without project tags</span>
-                <span className="text-sm text-muted-foreground">{(data.untaggedShare * 100).toFixed(1)}% of total</span>
+                <span>Entries without project or person mentions</span>
+                <span className="text-sm text-muted-foreground">{(data.unmentionedShare * 100).toFixed(1)}% of total</span>
               </button>
             </div>
           )}
