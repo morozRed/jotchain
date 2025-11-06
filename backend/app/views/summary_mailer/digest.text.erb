@@ -2,12 +2,24 @@ Your stand-up summary
 Covering <%= formatted_window(@window) %> for <%= @schedule.name %>.
 
 <% if @sections.any? %>
-<% @sections.each do |section| %>
+<% grouped_sections = sections_by_project(@sections) %>
+<% grouped_sections.each do |project_name, project_sections| %>
+<% project_info = project_sections.first["project"] %>
+<% if project_info.present? %>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+<%= project_name.upcase %>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+<% end %>
+<% project_sections.each do |section| %>
 <%= section["title"] %>
 <% Array(section["bullets"]).each do |bullet| %>
 - <%= bullet %>
 <% end %>
 
+<% end %>
+<% end %>
+<% if defined?(@top_collaborators) && @top_collaborators.present? %>
+Top collaborators: <%= format_collaborators(@top_collaborators) %>
 <% end %>
 <% else %>
 We didn't find any notes to summarize this time.

@@ -1,19 +1,49 @@
-<h1 style="font-size: 24px; margin-bottom: 12px; color: #f8fafc; font-weight: 600; letter-spacing: -0.02em;">Your stand-up summary</h1>
-<p style="margin-bottom: 20px; color: rgba(226, 232, 240, 0.78);">
-  Covering <strong><%= formatted_window(@window) %></strong> for <%= @schedule.name %>.
+<h1 style="font-size: 26px; margin-bottom: 8px; color: #f8fafc; font-weight: 600; letter-spacing: -0.02em;">Your stand-up summary</h1>
+<p style="margin-bottom: 28px; color: rgba(148, 163, 184, 0.95); font-size: 15px; line-height: 1.5;">
+  Covering
+  <span style="display: inline-block; color: #a5b4fc; font-weight: 600; padding: 3px 10px; background: rgba(129, 140, 248, 0.15); border-radius: 6px; white-space: nowrap;">
+    <%= formatted_window(@window) %>
+  </span>
+  <span style="color: rgba(226, 232, 240, 0.75);">for <%= @schedule.name %></span>
 </p>
 
 <%= render "mailers/shared/stats_card", stats: @stats %>
 
 <% if @sections.any? %>
-  <% @sections.each do |section| %>
-    <div style="margin-bottom: 20px; padding: 18px 20px; border-radius: 16px; background: rgba(15, 24, 40, 0.78); border: 1px solid rgba(129, 140, 248, 0.18);">
-      <h2 style="font-size: 18px; margin-bottom: 10px; color: #e2e8f0; font-weight: 600; letter-spacing: -0.01em;"><%= section["title"] %></h2>
-      <ul style="padding-left: 20px; margin: 0; color: rgba(226, 232, 240, 0.85);">
-        <% Array(section["bullets"]).each do |bullet| %>
-          <li style="margin-bottom: 6px;"><%= bullet %></li>
-        <% end %>
-      </ul>
+  <% grouped_sections = sections_by_project(@sections) %>
+
+  <% grouped_sections.each do |project_name, project_sections| %>
+    <% project_info = project_sections.first["project"] %>
+
+    <% if project_info.present? %>
+      <!-- Project Header -->
+      <div style="margin: 24px 0 12px 0; padding-left: 12px; border-left: 3px solid <%= project_info['color'] || '#818cf8' %>;">
+        <h2 style="font-size: 16px; margin: 0; color: <%= project_info['color'] || '#818cf8' %>; font-weight: 700; letter-spacing: -0.01em;">
+          <%= project_name %>
+        </h2>
+      </div>
+    <% end %>
+
+    <!-- Project Sections -->
+    <% project_sections.each do |section| %>
+      <div style="margin-bottom: 16px; padding: 18px 20px; border-radius: 16px; background: rgba(15, 24, 40, 0.78); border: 1px solid rgba(129, 140, 248, 0.18);">
+        <h3 style="font-size: 15px; margin-bottom: 10px; color: #e2e8f0; font-weight: 600; letter-spacing: -0.01em;"><%= section["title"] %></h3>
+        <ul style="padding-left: 20px; margin: 0; color: rgba(226, 232, 240, 0.85); line-height: 1.6;">
+          <% Array(section["bullets"]).each do |bullet| %>
+            <li style="margin-bottom: 6px;"><%= bullet %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+  <% end %>
+
+  <!-- Collaborators Section (optional) -->
+  <% if defined?(@top_collaborators) && @top_collaborators.present? %>
+    <div style="margin-top: 24px; padding: 16px 20px; border-radius: 14px; background: rgba(15, 24, 40, 0.5); border: 1px solid rgba(129, 140, 248, 0.12);">
+      <p style="font-size: 13px; margin: 0; color: rgba(148, 163, 184, 0.85);">
+        <strong style="color: #a5b4fc;">Top collaborators:</strong>
+        <%= format_collaborators(@top_collaborators) %>
+      </p>
     </div>
   <% end %>
 <% else %>

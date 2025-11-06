@@ -39,6 +39,31 @@ module SummaryMailerHelper
     count&.to_s || "0"
   end
 
+  def sections_by_project(sections)
+    # Group sections by project name
+    # If a section has no project, group under "General"
+    sections.group_by do |section|
+      project = section["project"] || section[:project]
+      project.present? ? (project["name"] || project[:name]) : "General"
+    end
+  end
+
+  def format_collaborators(collaborators)
+    return "" if collaborators.blank?
+
+    names = collaborators.map { |c| c["name"] || c[:name] }
+    case names.length
+    when 1
+      names.first
+    when 2
+      "#{names[0]} and #{names[1]}"
+    when 3
+      "#{names[0]}, #{names[1]}, and #{names[2]}"
+    else
+      "#{names[0]}, #{names[1]}, and #{names.length - 2} others"
+    end
+  end
+
   private
 
   def parse_time(value)

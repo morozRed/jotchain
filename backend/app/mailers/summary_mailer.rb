@@ -16,6 +16,8 @@ class SummaryMailer < ApplicationMailer
       "end" => @delivery.window_end
     }
     @source_entries = Array(@payload["source_entries"])
+    @projects = Array(@payload["projects"])
+    @top_collaborators = Array(@payload["top_collaborators"])
     @header_tagline = @schedule.name
     @footer_manage_link = manage_notifications_url
 
