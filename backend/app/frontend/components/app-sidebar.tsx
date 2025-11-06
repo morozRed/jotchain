@@ -13,8 +13,9 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar"
-import { billingPath, dashboardPath, insightsPath, notificationsPath } from "@/routes"
+import { analyticsPath, billingPath, dashboardPath, notificationsPath } from "@/routes"
 import type { NavItem, SharedData } from "@/types"
 
 import AppLogo from "./app-logo"
@@ -26,8 +27,8 @@ const mainNavItems: NavItem[] = [
     icon: LayoutGrid,
   },
   {
-    title: "Insights",
-    href: insightsPath(),
+    title: "Analytics",
+    href: analyticsPath(),
     icon: BarChart3,
   },
   {
@@ -44,6 +45,8 @@ const mainNavItems: NavItem[] = [
 
 export function AppSidebar() {
   const { auth } = usePage<SharedData>().props
+  const { state } = useSidebar()
+  const isCollapsed = state === "collapsed"
 
   return (
     <Sidebar collapsible="icon" variant="inset">
@@ -64,7 +67,7 @@ export function AppSidebar() {
       </SidebarContent>
 
       <SidebarFooter>
-        <SubscriptionStatus user={auth.user} />
+        {!isCollapsed ? <SubscriptionStatus user={auth.user} /> : null}
         <FeedbackButton />
         <NavUser />
       </SidebarFooter>

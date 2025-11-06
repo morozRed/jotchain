@@ -51,7 +51,7 @@ Rails.application.routes.draw do
     resources :entries, only: [:create, :update, :destroy]
     resources :feedback, only: [:create]
 
-    get :insights, to: "insights#index"
+    get :analytics, to: "analytics#index"
 
     namespace :api do
       resources :projects, only: [:index, :show, :create, :update, :destroy] do
@@ -59,7 +59,7 @@ Rails.application.routes.draw do
       end
       resources :persons, only: [:index, :show, :create, :update, :destroy]
       resources :mentions, only: [:index]
-      resource :insights, only: [:show]
+      resource :analytics, only: [:show]
     end
 
     root "dashboard#index"

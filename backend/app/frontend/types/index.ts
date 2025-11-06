@@ -46,8 +46,8 @@ export interface Session {
   created_at: string
 }
 
-// Insights types
-export interface InsightsMeta {
+// Analytics types
+export interface AnalyticsMeta {
   range: "week" | "month" | "year"
   projectId: number | null
   tz: string
@@ -55,7 +55,7 @@ export interface InsightsMeta {
   to: string
 }
 
-export interface InsightsCards {
+export interface AnalyticsCards {
   totalEntries: number
   activeDays: number
   currentStreak: number
@@ -99,32 +99,32 @@ export interface StaleProject {
   daysSinceLast: number
 }
 
-export interface InsightsProjectsData {
+export interface AnalyticsProjectsData {
   top: ProjectBreakdown[]
   otherCount: number
   focusScore: number
   stale: StaleProject[]
 }
 
-export interface InsightsPeopleData {
+export interface AnalyticsPeopleData {
   top: PersonBreakdown[]
   otherCount: number
 }
 
-export interface InsightsNeedsAttention {
+export interface AnalyticsNeedsAttention {
   staleProjects: StaleProject[]
   untaggedShare: number
 }
 
-export interface InsightsData {
-  meta: InsightsMeta
-  cards: InsightsCards
+export interface AnalyticsData {
+  meta: AnalyticsMeta
+  cards: AnalyticsCards
   activity: ActivityDataPoint[]
   rolling7: ActivityDataPoint[]
   heatmap: ActivityDataPoint[]
   hourly: HourlyDataPoint[]
   dow: DowDataPoint[]
-  projects: InsightsProjectsData
-  people: InsightsPeopleData
-  needsAttention: InsightsNeedsAttention
+  projects: AnalyticsProjectsData
+  people: AnalyticsPeopleData
+  needsAttention: AnalyticsNeedsAttention
 }

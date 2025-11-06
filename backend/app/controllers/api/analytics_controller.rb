@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Api
-  class InsightsController < Api::BaseController
+  class AnalyticsController < Api::BaseController
     def show
       range = params[:range] || "week"
       project_id = params[:project_id].presence
@@ -28,7 +28,7 @@ module Api
         end
       end
 
-      calculator = Insights::Calculator.new(
+      calculator = Analytics::Calculator.new(
         user: Current.user,
         range: range.to_sym,
         project: project,

@@ -72,7 +72,7 @@ export function DashboardEntriesCard({
   }
 
   return (
-    <Card className="border-border/30 shadow-[0_1px_3px_rgba(0,0,0,0.06)] lg:flex lg:h-[580px] lg:flex-col">
+    <Card className="gap-0 border-border/30 shadow-[0_1px_3px_rgba(0,0,0,0.06)] lg:flex lg:h-[580px] lg:flex-col">
       <CardHeader className="pb-4">
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1">

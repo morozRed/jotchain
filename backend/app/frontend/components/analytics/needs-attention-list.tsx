@@ -1,10 +1,10 @@
 import { AlertCircle, Tag } from "lucide-react"
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import type { InsightsNeedsAttention } from "@/types"
+import type { AnalyticsNeedsAttention } from "@/types"
 
 interface NeedsAttentionListProps {
-  data: InsightsNeedsAttention
+  data: AnalyticsNeedsAttention
   onStaleProjectClick?: (projectId: number) => void
   onUntaggedClick?: () => void
 }

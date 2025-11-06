@@ -2,10 +2,10 @@ import { useState } from "react"
 import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts"
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import type { InsightsProjectsData } from "@/types"
+import type { AnalyticsProjectsData } from "@/types"
 
 interface ProjectDonutProps {
-  data: InsightsProjectsData
+  data: AnalyticsProjectsData
   onProjectClick?: (projectId: number) => void
 }
 

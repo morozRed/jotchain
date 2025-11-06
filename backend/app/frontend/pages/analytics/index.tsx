@@ -2,19 +2,19 @@ import { Head, router } from "@inertiajs/react"
 import { AlertCircle, BarChart3 } from "lucide-react"
 import { useEffect, useState } from "react"
 
-import { ActivityLineChart } from "@/components/insights/activity-line-chart"
-import { DayOfWeekChart } from "@/components/insights/day-of-week-chart"
-import { FilterBar } from "@/components/insights/filter-bar"
-import { HeatmapCalendar } from "@/components/insights/heatmap-calendar"
-import { HourOfDayChart } from "@/components/insights/hour-of-day-chart"
-import { KpiCards } from "@/components/insights/kpi-cards"
-import { NeedsAttentionList } from "@/components/insights/needs-attention-list"
-import { ProjectDonut } from "@/components/insights/project-donut"
-import { TopPeopleBar } from "@/components/insights/top-people-bar"
+import { ActivityLineChart } from "@/components/analytics/activity-line-chart"
+import { DayOfWeekChart } from "@/components/analytics/day-of-week-chart"
+import { FilterBar } from "@/components/analytics/filter-bar"
+import { HeatmapCalendar } from "@/components/analytics/heatmap-calendar"
+import { HourOfDayChart } from "@/components/analytics/hour-of-day-chart"
+import { KpiCards } from "@/components/analytics/kpi-cards"
+import { NeedsAttentionList } from "@/components/analytics/needs-attention-list"
+import { ProjectDonut } from "@/components/analytics/project-donut"
+import { TopPeopleBar } from "@/components/analytics/top-people-bar"
 import { Card, CardContent } from "@/components/ui/card"
 import AppLayout from "@/layouts/app-layout"
-import { insightsPath } from "@/routes"
-import type { BreadcrumbItem, InsightsData } from "@/types"
+import { analyticsPath } from "@/routes"
+import type { AnalyticsData, BreadcrumbItem } from "@/types"
 
 interface Project {
   id: string
@@ -23,16 +23,16 @@ interface Project {
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
-    title: "Insights",
-    href: insightsPath(),
+    title: "Analytics",
+    href: analyticsPath(),
   },
 ]
 
-export default function InsightsPage() {
+export default function AnalyticsPage() {
   const [projects, setProjects] = useState<Project[]>([])
   const [selectedProject, setSelectedProject] = useState<string | null>(null)
   const [selectedRange, setSelectedRange] = useState<"week" | "month" | "year">("week")
-  const [insightsData, setInsightsData] = useState<InsightsData | null>(null)
+  const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -44,12 +44,12 @@ export default function InsightsPage() {
       .catch((err) => console.error("Failed to fetch projects:", err))
   }, [])
 
-  // Fetch insights data when filters change
+  // Fetch analytics data when filters change
   useEffect(() => {
-    fetchInsights()
+    fetchAnalytics()
   }, [selectedProject, selectedRange])
 
-  const fetchInsights = async () => {
+  const fetchAnalytics = async () => {
     setLoading(true)
     setError(null)
 
@@ -63,14 +63,14 @@ export default function InsightsPage() {
         params.append("project_id", selectedProject)
       }
 
-      const response = await fetch(`/api/insights?${params.toString()}`)
+      const response = await fetch(`/api/analytics?${params.toString()}`)
 
       if (!response.ok) {
-        throw new Error("Failed to fetch insights")
+        throw new Error("Failed to fetch analytics")
       }
 
-      const data = (await response.json()) as InsightsData
-      setInsightsData(data)
+      const data = (await response.json()) as AnalyticsData
+      setAnalyticsData(data)
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred")
     } finally {
@@ -134,7 +134,7 @@ export default function InsightsPage() {
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title="Insights" />
+      <Head title="Analytics" />
       <div className="container mx-auto max-w-7xl space-y-8 px-4 py-8">
         <section className="relative overflow-hidden rounded-3xl border border-border/40 bg-gradient-to-br from-background via-card/70 to-muted/40 px-6 py-10 shadow-[0_30px_80px_-60px_rgba(8,15,30,0.75)]">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(129,140,248,0.18),_transparent_55%),radial-gradient(circle_at_bottom_right,_rgba(34,211,238,0.18),_transparent_60%)]" />
@@ -145,14 +145,14 @@ export default function InsightsPage() {
                   Analytics Overview
                 </span>
                 <div className="space-y-2">
-                  <h1 className="text-4xl font-semibold tracking-tight text-foreground">Insights</h1>
+                  <h1 className="text-4xl font-semibold tracking-tight text-foreground">Analytics</h1>
                   <p className="max-w-2xl text-base text-muted-foreground/90">
-                    Analytics and trends from your entries. Explore where time goes, when you work best, and which projects need attention.
+                    Metrics and trends from your entries. Explore where time goes, when you work best, and which projects need attention.
                   </p>
                 </div>
               </div>
 
-              {insightsData && (
+              {analyticsData && (
                 <div className="grid w-full gap-3 sm:grid-cols-2 lg:w-auto">
                   <div className="rounded-2xl border border-border/40 bg-background/70 px-5 py-4 shadow-inner shadow-black/5">
                     <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground/70">Project</p>
@@ -192,40 +192,40 @@ export default function InsightsPage() {
           </div>
         )}
 
-        {!loading && insightsData?.cards.totalEntries === 0 && <EmptyState />}
+        {!loading && analyticsData?.cards.totalEntries === 0 && <EmptyState />}
 
-        {!loading && insightsData && (
+        {!loading && analyticsData && (
           <div className="space-y-8">
             {/* KPI Cards */}
             <div>
-              <KpiCards data={insightsData.cards} />
+              <KpiCards data={analyticsData.cards} />
             </div>
 
             {/* Activity Timeline - Full Width */}
             <ActivityLineChart
-              activity={insightsData.activity}
-              rolling7={insightsData.rolling7}
+              activity={analyticsData.activity}
+              rolling7={analyticsData.rolling7}
               onDateClick={handleDateClick}
             />
 
             {/* Activity Heatmap - Full Width */}
-            <HeatmapCalendar data={insightsData.heatmap} onDateClick={handleDateClick} />
+            <HeatmapCalendar data={analyticsData.heatmap} onDateClick={handleDateClick} />
 
             {/* Time Distribution Charts */}
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-              <HourOfDayChart data={insightsData.hourly} onHourClick={handleHourClick} />
-              <DayOfWeekChart data={insightsData.dow} onDayClick={handleDayClick} />
+              <HourOfDayChart data={analyticsData.hourly} onHourClick={handleHourClick} />
+              <DayOfWeekChart data={analyticsData.dow} onDayClick={handleDayClick} />
             </div>
 
             {/* Project and People */}
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-              <ProjectDonut data={insightsData.projects} onProjectClick={handleProjectClick} />
-              <TopPeopleBar data={insightsData.people} onPersonClick={handlePersonClick} />
+              <ProjectDonut data={analyticsData.projects} onProjectClick={handleProjectClick} />
+              <TopPeopleBar data={analyticsData.people} onPersonClick={handlePersonClick} />
             </div>
 
             {/* Needs Attention */}
             <NeedsAttentionList
-              data={insightsData.needsAttention}
+              data={analyticsData.needsAttention}
               onStaleProjectClick={handleStaleProjectClick}
               onUntaggedClick={handleUntaggedClick}
             />
@@ -243,7 +243,7 @@ export function EmptyState() {
         <BarChart3 className="mb-4 h-16 w-16 text-muted-foreground" />
         <h3 className="mb-2 text-lg font-medium">No data yet</h3>
         <p className="mb-6 text-center text-sm text-muted-foreground">
-          Start logging entries to see your insights and analytics
+          Start logging entries to see your analytics dashboards
         </p>
         <div className="flex flex-col gap-2 text-sm text-muted-foreground">
           <div className="flex items-center gap-2">

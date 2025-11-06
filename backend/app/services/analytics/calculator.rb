@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Insights
+module Analytics
   class Calculator
     def initialize(user:, range:, project: nil, timezone: "UTC")
       @user = user

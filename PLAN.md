@@ -17,14 +17,14 @@ Overall Progress: `0%`
 - [ ] 🟥 Backend APIs & Routes
   - [ ] 🟥 `ProjectsController#index` (q contains, case-insensitive, limit 10)
   - [ ] 🟥 `ProjectsController#create` (validations + normalized uniqueness)
-  - [ ] 🟥 `InsightsController#create` → `{ tokens: [{text, reason}], quality_score }`
+- [ ] 🟥 `AnalyticsController#create` → `{ tokens: [{text, reason}], quality_score }`
   - [ ] 🟥 `EntriesController#create` accepts JSON, extracts mentions, find-or-create projects, link join rows, enqueue scoring job
-  - [ ] 🟥 Wire routes for `projects`, `insights`, and updated `entries`
+- [ ] 🟥 Wire routes for `projects`, `analytics`, and updated `entries`
 
 - [ ] 🟥 Services & Jobs
   - [ ] 🟥 `Mentions::ExtractFromTiptap` (collect mention names, case-insensitive, dedupe)
   - [ ] 🟥 `Content::PlainText` (flatten Tiptap JSON to plain text)
-  - [ ] 🟥 `Insights::Client` (OpenAI call, returns tokens + score)
+- [ ] 🟥 `Analytics::Client` (OpenAI call, returns tokens + score)
   - [ ] 🟥 `EntryQualityScoreJob` (async compute and persist `quality_score`)
 
 - [ ] 🟥 OpenAI Setup
@@ -40,7 +40,7 @@ Overall Progress: `0%`
   - [ ] 🟥 Inline project chips via custom node view (Badge-consistent styling)
 
 - [ ] 🟥 Guidance UI
-  - [ ] 🟥 “Get guidance” button → call `/insights` with editor JSON
+- [ ] 🟥 “Get guidance” button → call `/analytics` with editor JSON
   - [ ] 🟥 Apply case-insensitive whole-word highlight decorations; tooltip on hover with reason
   - [ ] 🟥 Do not block submit
 
@@ -56,4 +56,4 @@ Overall Progress: `0%`
   - [ ] 🟥 Models: project validations + normalized uniqueness; entry plain-text validator
   - [ ] 🟥 Requests: entries create (mentions new/existing), projects index/create
   - [ ] 🟥 Job: `EntryQualityScoreJob` updates `quality_score`
-  - [ ] 🟥 Insights: stub OpenAI client; verify tokens and score shape
+- [ ] 🟥 Analytics: stub OpenAI client; verify tokens and score shape

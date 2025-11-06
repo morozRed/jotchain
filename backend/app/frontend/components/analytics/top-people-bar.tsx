@@ -1,10 +1,10 @@
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import type { InsightsPeopleData } from "@/types"
+import type { AnalyticsPeopleData } from "@/types"
 
 interface TopPeopleBarProps {
-  data: InsightsPeopleData
+  data: AnalyticsPeopleData
   onPersonClick?: (personId: number) => void
 }
 

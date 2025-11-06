@@ -2,10 +2,10 @@ import { Activity, Calendar, Flame, Focus, Target, TrendingUp } from "lucide-rea
 
 import { Card, CardContent } from "@/components/ui/card"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import type { InsightsCards } from "@/types"
+import type { AnalyticsCards } from "@/types"
 
 interface KpiCardsProps {
-  data: InsightsCards
+  data: AnalyticsCards
 }
 
 export function KpiCards({ data }: KpiCardsProps) {
@@ -75,7 +75,7 @@ export function KpiCards({ data }: KpiCardsProps) {
         return (
           <TooltipProvider key={card.title}>
             <Tooltip>
-              <TooltipTrigger asChild>
+              <TooltipTrigger asChild className="pt-0 pb-0">
                 <Card className="group relative overflow-hidden border-border/40 bg-card/60 backdrop-blur-sm transition-all duration-300 hover:border-border/60 hover:shadow-lg dark:bg-card/80">
                   <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 bg-gradient-to-br from-accent-primary/5 via-transparent to-accent-secondary/10" />
                   <CardContent className="relative flex items-center justify-between gap-4 p-4 sm:p-5">
