@@ -74,16 +74,13 @@ module Insights
     end
 
     def heatmap_data
-      # Generate all dates for the last 60 days to show complete heatmap
-      end_date = Time.current.in_time_zone(timezone).to_date
-      start_date = end_date - 59.days # 60 days total including today
+      end_date = heatmap_period_end.to_date
+      start_date = heatmap_period_start.to_date
 
-      all_dates = (start_date..end_date).to_a
-
-      all_dates.map do |date|
+      (start_date..end_date).map do |date|
         {
           date: date.iso8601,
-          count: entries_by_date[date] || 0
+          count: heatmap_entries_by_date[date] || 0
         }
       end
     end
@@ -330,15 +327,7 @@ module Insights
     end
 
     def filtered_entries
-      @filtered_entries ||= begin
-        entries = base_entries
-        if project.present?
-          entries = entries.joins(:entry_mentions)
-                          .where(entry_mentions: {mentionable_type: "Project", mentionable_id: project.id})
-                          .distinct
-        end
-        entries
-      end
+      @filtered_entries ||= apply_project_filter(base_entries)
     end
 
     def entries_by_date
@@ -363,6 +352,39 @@ module Insights
     def user_current_streak
       # Use the User model's method if available
       user.respond_to?(:current_streak) ? user.current_streak : 0
+    end
+
+    def heatmap_entries_by_date
+      @heatmap_entries_by_date ||= begin
+        counts = Hash.new(0)
+        heatmap_entries.each do |entry|
+          date = entry.logged_at.in_time_zone(timezone).to_date
+          counts[date] += 1
+        end
+        counts
+      end
+    end
+
+    def heatmap_entries
+      @heatmap_entries ||= apply_project_filter(
+        user.entries.where(logged_at: heatmap_period_start..heatmap_period_end)
+      )
+    end
+
+    def apply_project_filter(entries)
+      return entries unless project.present?
+
+      entries.joins(:entry_mentions)
+             .where(entry_mentions: {mentionable_type: "Project", mentionable_id: project.id})
+             .distinct
+    end
+
+    def heatmap_period_start
+      @heatmap_period_start ||= 59.days.ago.in_time_zone(timezone).beginning_of_day
+    end
+
+    def heatmap_period_end
+      @heatmap_period_end ||= period_end
     end
   end
 end

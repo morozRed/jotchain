@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
+import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
@@ -38,35 +38,50 @@ export function ActivityLineChart({ activity, rolling7, onDateClick }: ActivityL
   }
 
   return (
-    <Card className="border-border/30 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
-      <CardHeader>
+    <Card className="group relative overflow-hidden border-border/40 bg-card/50 backdrop-blur-sm transition-all duration-300 hover:border-border/60 hover:shadow-xl dark:bg-card/80">
+      {/* Decorative gradient overlay */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-chart-2/5 via-transparent to-chart-3/5 opacity-50" />
+
+      <CardHeader className="relative z-10">
         <div className="flex items-center justify-between">
-          <div>
-            <CardTitle>Activity Timeline</CardTitle>
-            <CardDescription>Daily entry counts over time</CardDescription>
+          <div className="space-y-1">
+            <CardTitle className="text-lg font-semibold">Activity Timeline</CardTitle>
+            <CardDescription className="text-sm text-muted-foreground/80">Daily entry counts over time</CardDescription>
           </div>
           {rolling7 && rolling7.length > 0 && (
             <div className="flex items-center space-x-2">
               <Switch id="rolling-average" checked={showRolling} onCheckedChange={setShowRolling} />
-              <Label htmlFor="rolling-average" className="text-sm">
+              <Label htmlFor="rolling-average" className="text-sm text-muted-foreground">
                 7-day average
               </Label>
             </div>
           )}
         </div>
       </CardHeader>
-      <CardContent>
-        <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={chartData} onClick={handleClick}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(148, 163, 184, 0.2)" vertical={false} />
+      <CardContent className="relative z-10">
+        <ResponsiveContainer width="100%" height={240}>
+          <AreaChart data={chartData} onClick={handleClick}>
+            <defs>
+              <linearGradient id="colorEntries" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#818cf8" stopOpacity={0.3} />
+                <stop offset="95%" stopColor="#818cf8" stopOpacity={0} />
+              </linearGradient>
+              <linearGradient id="colorRolling" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#22d3ee" stopOpacity={0.2} />
+                <stop offset="95%" stopColor="#22d3ee" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(148, 163, 184, 0.15)" vertical={false} />
             <XAxis
               dataKey="date"
-              tick={{ fill: "var(--text-secondary)", fontSize: 12 }}
-              stroke="rgba(148, 163, 184, 0.3)"
+              tick={{ fill: "var(--text-secondary)", fontSize: 11 }}
+              stroke="rgba(148, 163, 184, 0.2)"
+              tickLine={false}
             />
             <YAxis
-              tick={{ fill: "var(--text-secondary)", fontSize: 12 }}
-              stroke="rgba(148, 163, 184, 0.3)"
+              tick={{ fill: "var(--text-secondary)", fontSize: 11 }}
+              stroke="rgba(148, 163, 184, 0.2)"
+              tickLine={false}
             />
             <Tooltip
               contentStyle={{
@@ -74,31 +89,50 @@ export function ActivityLineChart({ activity, rolling7, onDateClick }: ActivityL
                 border: "1px solid rgba(148, 163, 184, 0.2)",
                 borderRadius: "8px",
                 color: "var(--text-primary)",
+                boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
               }}
-              labelStyle={{ color: "var(--text-primary)" }}
+              labelStyle={{ color: "var(--text-primary)", fontWeight: 600 }}
             />
-            <Legend wrapperStyle={{ color: "var(--text-primary)" }} />
-            <Line
+            <Area
               type="monotone"
               dataKey="count"
               stroke="#818cf8"
-              strokeWidth={2}
-              dot={{ fill: "#818cf8", strokeWidth: 2, r: 3 }}
-              activeDot={{ r: 6, fill: "#818cf8", className: "cursor-pointer" }}
+              strokeWidth={2.5}
+              fill="url(#colorEntries)"
               name="Entries"
+              activeDot={{
+                r: 6,
+                fill: "#818cf8",
+                strokeWidth: 2,
+                stroke: "#818cf8",
+                className: "cursor-pointer",
+                style: {
+                  filter: "drop-shadow(0 0 8px rgba(129, 140, 248, 0.8))",
+                },
+              }}
             />
             {showRolling && rolling7 && rolling7.length > 0 && (
-              <Line
+              <Area
                 type="monotone"
                 dataKey="rolling"
                 stroke="#22d3ee"
                 strokeWidth={2}
                 strokeDasharray="5 5"
-                dot={false}
+                fill="url(#colorRolling)"
                 name="7-day Avg"
+                activeDot={{
+                  r: 5,
+                  fill: "#22d3ee",
+                  strokeWidth: 2,
+                  stroke: "#22d3ee",
+                  className: "cursor-pointer",
+                  style: {
+                    filter: "drop-shadow(0 0 8px rgba(34, 211, 238, 0.8))",
+                  },
+                }}
               />
             )}
-          </LineChart>
+          </AreaChart>
         </ResponsiveContainer>
       </CardContent>
     </Card>

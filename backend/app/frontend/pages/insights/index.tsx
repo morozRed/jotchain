@@ -120,75 +120,117 @@ export default function InsightsPage() {
     router.visit(`/dashboard?${params.toString()}`)
   }
 
+  const rangeDescriptions: Record<typeof selectedRange, string> = {
+    week: "Last 7 days",
+    month: "Last 30 days",
+    year: "Last 12 months",
+  }
+
+  const activeProjectLabel = selectedProject
+    ? projects.find((project) => project.id === selectedProject)?.name ?? "Selected project"
+    : "All Projects"
+
+  const rangeText = rangeDescriptions[selectedRange]
+
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Insights" />
-      <div className="container mx-auto max-w-7xl space-y-6 px-4 py-8">
-      <div className="mb-8">
-        <h1 className="mb-2 text-3xl font-bold">Insights</h1>
-        <p className="text-muted-foreground">Analytics and trends from your entries</p>
-      </div>
+      <div className="container mx-auto max-w-7xl space-y-8 px-4 py-8">
+        <section className="relative overflow-hidden rounded-3xl border border-border/40 bg-gradient-to-br from-background via-card/70 to-muted/40 px-6 py-10 shadow-[0_30px_80px_-60px_rgba(8,15,30,0.75)]">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(129,140,248,0.18),_transparent_55%),radial-gradient(circle_at_bottom_right,_rgba(34,211,238,0.18),_transparent_60%)]" />
+          <div className="relative flex flex-col gap-6">
+            <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+              <div className="space-y-4">
+                <span className="inline-flex items-center gap-2 rounded-full border border-border/40 bg-background/70 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.28em] text-muted-foreground/70">
+                  Analytics Overview
+                </span>
+                <div className="space-y-2">
+                  <h1 className="text-4xl font-semibold tracking-tight text-foreground">Insights</h1>
+                  <p className="max-w-2xl text-base text-muted-foreground/90">
+                    Analytics and trends from your entries. Explore where time goes, when you work best, and which projects need attention.
+                  </p>
+                </div>
+              </div>
 
-      <FilterBar
-        projects={projects}
-        selectedProject={selectedProject}
-        selectedRange={selectedRange}
-        onProjectChange={setSelectedProject}
-        onRangeChange={setSelectedRange}
-      />
+              {insightsData && (
+                <div className="grid w-full gap-3 sm:grid-cols-2 lg:w-auto">
+                  <div className="rounded-2xl border border-border/40 bg-background/70 px-5 py-4 shadow-inner shadow-black/5">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground/70">Project</p>
+                    <p className="mt-2 text-base font-semibold text-foreground">{activeProjectLabel}</p>
+                  </div>
+                  <div className="rounded-2xl border border-border/40 bg-background/70 px-5 py-4 shadow-inner shadow-black/5">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground/70">Range</p>
+                    <p className="mt-2 text-base font-semibold text-foreground">{rangeText}</p>
+                    <p className="mt-1 text-xs text-muted-foreground/70">Timezone adjusts automatically</p>
+                  </div>
+                </div>
+              )}
+            </div>
 
-      {error && (
-        <Card className="border-destructive/50 bg-destructive/10">
-          <CardContent className="flex items-center gap-3 py-4">
-            <AlertCircle className="h-5 w-5 text-destructive" />
-            <p className="text-sm text-destructive">{error}</p>
-          </CardContent>
-        </Card>
-      )}
+            <FilterBar
+              projects={projects}
+              selectedProject={selectedProject}
+              selectedRange={selectedRange}
+              onProjectChange={setSelectedProject}
+              onRangeChange={setSelectedRange}
+            />
+          </div>
+        </section>
 
-      {loading && (
-        <div className="flex items-center justify-center py-16">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-accent-primary border-t-transparent" />
-        </div>
-      )}
+        {error && (
+          <Card className="border-destructive/50 bg-destructive/10">
+            <CardContent className="flex items-center gap-3 py-4">
+              <AlertCircle className="h-5 w-5 text-destructive" />
+              <p className="text-sm text-destructive">{error}</p>
+            </CardContent>
+          </Card>
+        )}
 
-      { !loading && insightsData?.cards.totalEntries === 0 && <EmptyState /> }
+        {loading && (
+          <div className="flex items-center justify-center py-16">
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-accent-primary border-t-transparent" />
+          </div>
+        )}
 
-      {!loading && insightsData && (
-        <div className="space-y-6">
-          {/* KPI Cards */}
-          <KpiCards data={insightsData.cards} />
+        {!loading && insightsData?.cards.totalEntries === 0 && <EmptyState />}
 
-          {/* Primary Charts */}
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        {!loading && insightsData && (
+          <div className="space-y-8">
+            {/* KPI Cards */}
+            <div>
+              <KpiCards data={insightsData.cards} />
+            </div>
+
+            {/* Activity Timeline - Full Width */}
             <ActivityLineChart
               activity={insightsData.activity}
               rolling7={insightsData.rolling7}
               onDateClick={handleDateClick}
             />
+
+            {/* Activity Heatmap - Full Width */}
             <HeatmapCalendar data={insightsData.heatmap} onDateClick={handleDateClick} />
-          </div>
 
-          {/* Time Distribution Charts */}
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-            <HourOfDayChart data={insightsData.hourly} onHourClick={handleHourClick} />
-            <DayOfWeekChart data={insightsData.dow} onDayClick={handleDayClick} />
-          </div>
+            {/* Time Distribution Charts */}
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+              <HourOfDayChart data={insightsData.hourly} onHourClick={handleHourClick} />
+              <DayOfWeekChart data={insightsData.dow} onDayClick={handleDayClick} />
+            </div>
 
-          {/* Project and People */}
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-            <ProjectDonut data={insightsData.projects} onProjectClick={handleProjectClick} />
-            <TopPeopleBar data={insightsData.people} onPersonClick={handlePersonClick} />
-          </div>
+            {/* Project and People */}
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+              <ProjectDonut data={insightsData.projects} onProjectClick={handleProjectClick} />
+              <TopPeopleBar data={insightsData.people} onPersonClick={handlePersonClick} />
+            </div>
 
-          {/* Needs Attention */}
-          <NeedsAttentionList
-            data={insightsData.needsAttention}
-            onStaleProjectClick={handleStaleProjectClick}
-            onUntaggedClick={handleUntaggedClick}
-          />
-        </div>
-      )}
+            {/* Needs Attention */}
+            <NeedsAttentionList
+              data={insightsData.needsAttention}
+              onStaleProjectClick={handleStaleProjectClick}
+              onUntaggedClick={handleUntaggedClick}
+            />
+          </div>
+        )}
       </div>
     </AppLayout>
   )

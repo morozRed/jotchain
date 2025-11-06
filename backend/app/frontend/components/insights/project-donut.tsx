@@ -1,3 +1,4 @@
+import { useState } from "react"
 import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts"
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -16,9 +17,9 @@ const CustomTooltip = ({ active, payload }: any) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     const percentage = data.share ? (data.share * 100).toFixed(1) : 0
     return (
-      <div className="rounded-lg border border-border/20 bg-popover p-3 shadow-md">
+      <div className="rounded-lg border border-border/20 bg-card/95 backdrop-blur-sm p-3 shadow-lg">
         {/* eslint-disable-next-line @typescript-eslint/no-unsafe-member-access */}
-        <p className="font-medium text-popover-foreground">{data.name}</p>
+        <p className="font-semibold text-card-foreground">{data.name}</p>
         <p className="text-sm text-muted-foreground">
           {/* eslint-disable-next-line @typescript-eslint/no-unsafe-member-access */}
           {data.value} entries ({percentage}%)
@@ -42,7 +43,21 @@ const COLORS = [
   "#14b8a6", // teal
 ]
 
+// Generate gradient colors for each segment
+const getGradientId = (index: number) => `gradient-${index}`
+const getGradientColor = (baseColor: string, index: number) => {
+  // Create gradients that go from lighter to darker
+  // For now, we'll use the same color with different opacity
+  return {
+    id: getGradientId(index),
+    startColor: baseColor,
+    endColor: baseColor,
+  }
+}
+
 export function ProjectDonut({ data, onProjectClick }: ProjectDonutProps) {
+  const [activeIndex, setActiveIndex] = useState<number | null>(null)
+
   const chartData = [
     ...data.top.map((project, index) => ({
       name: project.name,
@@ -50,6 +65,7 @@ export function ProjectDonut({ data, onProjectClick }: ProjectDonutProps) {
       id: project.id,
       share: project.share,
       color: COLORS[index % COLORS.length],
+      gradient: getGradientColor(COLORS[index % COLORS.length], index),
     })),
   ]
 
@@ -59,7 +75,8 @@ export function ProjectDonut({ data, onProjectClick }: ProjectDonutProps) {
       value: data.otherCount,
       id: -1,
       share: 0,
-      color: "#94a3b8", // muted color for "Other"
+      color: "#94a3b8",
+      gradient: getGradientColor("#94a3b8", chartData.length),
     })
   }
 
@@ -72,13 +89,29 @@ export function ProjectDonut({ data, onProjectClick }: ProjectDonutProps) {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const onPieEnter = (_: any, index: number) => {
+    setActiveIndex(index)
+  }
+
+  const onPieLeave = () => {
+    setActiveIndex(null)
+  }
+
   return (
-    <Card className="border-border/30 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
-      <CardHeader>
-        <CardTitle>Project Breakdown</CardTitle>
-        <CardDescription>Distribution of entries across projects</CardDescription>
+    <Card className="group relative overflow-hidden border-border/40 bg-card/50 backdrop-blur-sm transition-all duration-300 hover:border-border/60 hover:shadow-xl dark:bg-card/80">
+      {/* Decorative gradient overlay */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-chart-3/5 via-transparent to-chart-4/5 opacity-50" />
+
+      <CardHeader className="relative z-10">
+        <div className="space-y-1">
+          <CardTitle className="text-lg font-semibold">Project Breakdown</CardTitle>
+          <CardDescription className="text-sm text-muted-foreground/80">
+            Distribution of entries across projects
+          </CardDescription>
+        </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="relative z-10">
         {chartData.length === 0 ? (
           <div className="flex h-[300px] items-center justify-center">
             <div className="text-center text-muted-foreground">
@@ -87,38 +120,64 @@ export function ProjectDonut({ data, onProjectClick }: ProjectDonutProps) {
             </div>
           </div>
         ) : (
-          <ResponsiveContainer width="100%" height={300}>
-            <PieChart>
-              <Pie
-                data={chartData}
-                cx="50%"
-                cy="50%"
-                innerRadius={60}
-                outerRadius={100}
-                paddingAngle={2}
-                stroke="none"
-                dataKey="value"
-                onClick={handleClick}
-                className="cursor-pointer"
-              >
-                {chartData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.color} />
-                ))}
-              </Pie>
-              <Tooltip content={<CustomTooltip />} />
-              <Legend
-                verticalAlign="bottom"
-                height={36}
-                wrapperStyle={{ color: "var(--text-primary)" }}
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                formatter={(value: string, entry: any) => {
-                  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                  const percentage = entry.payload.share ? (entry.payload.share * 100).toFixed(0) : 0
-                  return `${value} (${percentage}%)`
-                }}
-              />
-            </PieChart>
-          </ResponsiveContainer>
+          <div className="relative">
+            <ResponsiveContainer width="100%" height={320}>
+              <PieChart>
+                <defs>
+                  {chartData.map((entry, index) => (
+                    <linearGradient key={getGradientId(index)} id={getGradientId(index)} x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor={entry.gradient.startColor} stopOpacity={1} />
+                      <stop offset="100%" stopColor={entry.gradient.endColor} stopOpacity={0.75} />
+                    </linearGradient>
+                  ))}
+                </defs>
+                <Pie
+                  data={chartData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={70}
+                  outerRadius={110}
+                  paddingAngle={3}
+                  stroke="none"
+                  dataKey="value"
+                  onClick={handleClick}
+                  onMouseEnter={onPieEnter}
+                  onMouseLeave={onPieLeave}
+                  className="cursor-pointer transition-all duration-300"
+                  animationBegin={0}
+                  animationDuration={800}
+                  animationEasing="ease-out"
+                >
+                  {chartData.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={`url(#${getGradientId(index)})`}
+                      stroke={activeIndex === index ? entry.color : "transparent"}
+                      strokeWidth={activeIndex === index ? 3 : 0}
+                      style={{
+                        filter: activeIndex === index ? `drop-shadow(0 0 8px ${entry.color}80)` : "none",
+                        transform: activeIndex === index ? "scale(1.05)" : "scale(1)",
+                        transformOrigin: "center",
+                        transition: "all 0.3s ease",
+                      }}
+                    />
+                  ))}
+                </Pie>
+                <Tooltip content={<CustomTooltip />} />
+                <Legend
+                  verticalAlign="bottom"
+                  height={36}
+                  wrapperStyle={{ color: "var(--text-primary)", paddingTop: "12px" }}
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  formatter={(value: string, entry: any) => {
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                    const percentage = entry.payload.share ? (entry.payload.share * 100).toFixed(0) : 0
+                    return `${value} (${percentage}%)`
+                  }}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
         )}
       </CardContent>
     </Card>

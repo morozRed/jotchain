@@ -36,27 +36,40 @@ export function HourOfDayChart({ data, onHourClick }: HourOfDayChartProps) {
   }
 
   return (
-    <Card className="border-border/30 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
-      <CardHeader>
-        <CardTitle>Hour of Day</CardTitle>
-        <CardDescription>
-          {peakHour && `Peak: ${formatHour(peakHour.hour)}`}
-          {quietHour && quietHour.hour !== peakHour?.hour && ` • Quiet: ${formatHour(quietHour.hour)}`}
-        </CardDescription>
+    <Card className="group relative overflow-hidden border-border/40 bg-card/50 backdrop-blur-sm transition-all duration-300 hover:border-border/60 hover:shadow-xl dark:bg-card/80">
+      {/* Decorative gradient overlay */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-chart-2/5 via-transparent to-chart-1/5 opacity-50" />
+
+      <CardHeader className="relative z-10">
+        <div className="space-y-1">
+          <CardTitle className="text-lg font-semibold">Hour of Day</CardTitle>
+          <CardDescription className="text-sm text-muted-foreground/80">
+            {peakHour && `Peak: ${formatHour(peakHour.hour)}`}
+            {quietHour && quietHour.hour !== peakHour?.hour && ` • Quiet: ${formatHour(quietHour.hour)}`}
+          </CardDescription>
+        </div>
       </CardHeader>
-      <CardContent>
-        <ResponsiveContainer width="100%" height={300}>
+      <CardContent className="relative z-10">
+        <ResponsiveContainer width="100%" height={320}>
           <BarChart data={chartData} onClick={handleClick}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(148, 163, 184, 0.2)" vertical={false} />
+            <defs>
+              <linearGradient id="colorHour" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#818cf8" stopOpacity={0.8} />
+                <stop offset="95%" stopColor="#818cf8" stopOpacity={0.4} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(148, 163, 184, 0.15)" vertical={false} />
             <XAxis
               dataKey="hourLabel"
               interval={2}
-              tick={{ fill: "var(--text-secondary)", fontSize: 12 }}
-              stroke="rgba(148, 163, 184, 0.3)"
+              tick={{ fill: "var(--text-secondary)", fontSize: 11 }}
+              stroke="rgba(148, 163, 184, 0.2)"
+              tickLine={false}
             />
             <YAxis
-              tick={{ fill: "var(--text-secondary)", fontSize: 12 }}
-              stroke="rgba(148, 163, 184, 0.3)"
+              tick={{ fill: "var(--text-secondary)", fontSize: 11 }}
+              stroke="rgba(148, 163, 184, 0.2)"
+              tickLine={false}
             />
             <Tooltip
               contentStyle={{
@@ -64,11 +77,17 @@ export function HourOfDayChart({ data, onHourClick }: HourOfDayChartProps) {
                 border: "1px solid rgba(148, 163, 184, 0.2)",
                 borderRadius: "8px",
                 color: "var(--text-primary)",
+                boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
               }}
               cursor={{ fill: "rgba(129, 140, 248, 0.1)" }}
-              labelStyle={{ color: "var(--text-primary)" }}
+              labelStyle={{ color: "var(--text-primary)", fontWeight: 600 }}
             />
-            <Bar dataKey="count" fill="#818cf8" radius={[4, 4, 0, 0]} className="cursor-pointer" />
+            <Bar
+              dataKey="count"
+              fill="url(#colorHour)"
+              radius={[6, 6, 0, 0]}
+              className="cursor-pointer transition-opacity hover:opacity-80"
+            />
           </BarChart>
         </ResponsiveContainer>
       </CardContent>
