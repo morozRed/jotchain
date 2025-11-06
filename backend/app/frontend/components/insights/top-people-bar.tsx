@@ -52,19 +52,31 @@ export function TopPeopleBar({ data, onPersonClick }: TopPeopleBarProps) {
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={chartData} onClick={handleClick} layout="vertical">
-            <CartesianGrid strokeDasharray="3 3" className="stroke-border/30" />
-            <XAxis type="number" className="text-xs" />
-            <YAxis dataKey="name" type="category" className="text-xs" width={100} />
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(148, 163, 184, 0.2)" horizontal={false} />
+            <XAxis
+              type="number"
+              tick={{ fill: "var(--text-secondary)", fontSize: 12 }}
+              stroke="rgba(148, 163, 184, 0.3)"
+            />
+            <YAxis
+              dataKey="name"
+              type="category"
+              width={100}
+              tick={{ fill: "var(--text-secondary)", fontSize: 12 }}
+              stroke="rgba(148, 163, 184, 0.3)"
+            />
             <Tooltip
               contentStyle={{
-                backgroundColor: "hsl(var(--surface-card))",
-                border: "1px solid hsl(var(--border))",
+                backgroundColor: "var(--surface-card)",
+                border: "1px solid rgba(148, 163, 184, 0.2)",
                 borderRadius: "8px",
+                color: "var(--text-primary)",
               }}
-              cursor={{ fill: "hsl(var(--accent-secondary) / 0.1)" }}
+              cursor={{ fill: "rgba(34, 211, 238, 0.1)" }}
+              labelStyle={{ color: "var(--text-primary)" }}
               formatter={(value: number) => [`${value} mentions`, "Count"]}
             />
-            <Bar dataKey="count" fill="hsl(var(--accent-secondary))" radius={[0, 4, 4, 0]} className="cursor-pointer" />
+            <Bar dataKey="count" fill="#22d3ee" radius={[0, 4, 4, 0]} className="cursor-pointer" />
           </BarChart>
         </ResponsiveContainer>
       </CardContent>

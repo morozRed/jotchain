@@ -42,22 +42,31 @@ export function DayOfWeekChart({ data, onDayClick }: DayOfWeekChartProps) {
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={chartData} onClick={handleClick}>
-            <CartesianGrid strokeDasharray="3 3" className="stroke-border/30" />
-            <XAxis dataKey="dayShort" className="text-xs" />
-            <YAxis className="text-xs" />
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(148, 163, 184, 0.2)" vertical={false} />
+            <XAxis
+              dataKey="dayShort"
+              tick={{ fill: "var(--text-secondary)", fontSize: 12 }}
+              stroke="rgba(148, 163, 184, 0.3)"
+            />
+            <YAxis
+              tick={{ fill: "var(--text-secondary)", fontSize: 12 }}
+              stroke="rgba(148, 163, 184, 0.3)"
+            />
             <Tooltip
               contentStyle={{
-                backgroundColor: "hsl(var(--surface-card))",
-                border: "1px solid hsl(var(--border))",
+                backgroundColor: "var(--surface-card)",
+                border: "1px solid rgba(148, 163, 184, 0.2)",
                 borderRadius: "8px",
+                color: "var(--text-primary)",
               }}
-              cursor={{ fill: "hsl(var(--accent-primary) / 0.1)" }}
+              cursor={{ fill: "rgba(34, 211, 238, 0.1)" }}
+              labelStyle={{ color: "var(--text-primary)" }}
               formatter={(value: number) => {
                 const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0
                 return [`${value} entries (${percentage}%)`, "Count"]
               }}
             />
-            <Bar dataKey="count" fill="hsl(var(--accent-secondary))" radius={[4, 4, 0, 0]} className="cursor-pointer" />
+            <Bar dataKey="count" fill="#22d3ee" radius={[4, 4, 0, 0]} className="cursor-pointer" />
           </BarChart>
         </ResponsiveContainer>
       </CardContent>

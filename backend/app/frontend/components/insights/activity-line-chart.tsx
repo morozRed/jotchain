@@ -58,31 +58,40 @@ export function ActivityLineChart({ activity, rolling7, onDateClick }: ActivityL
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
           <LineChart data={chartData} onClick={handleClick}>
-            <CartesianGrid strokeDasharray="3 3" className="stroke-border/30" />
-            <XAxis dataKey="date" className="text-xs" />
-            <YAxis className="text-xs" />
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(148, 163, 184, 0.2)" vertical={false} />
+            <XAxis
+              dataKey="date"
+              tick={{ fill: "var(--text-secondary)", fontSize: 12 }}
+              stroke="rgba(148, 163, 184, 0.3)"
+            />
+            <YAxis
+              tick={{ fill: "var(--text-secondary)", fontSize: 12 }}
+              stroke="rgba(148, 163, 184, 0.3)"
+            />
             <Tooltip
               contentStyle={{
-                backgroundColor: "hsl(var(--surface-card))",
-                border: "1px solid hsl(var(--border))",
+                backgroundColor: "var(--surface-card)",
+                border: "1px solid rgba(148, 163, 184, 0.2)",
                 borderRadius: "8px",
+                color: "var(--text-primary)",
               }}
+              labelStyle={{ color: "var(--text-primary)" }}
             />
-            <Legend />
+            <Legend wrapperStyle={{ color: "var(--text-primary)" }} />
             <Line
               type="monotone"
               dataKey="count"
-              stroke="hsl(var(--accent-primary))"
+              stroke="#818cf8"
               strokeWidth={2}
-              dot={{ fill: "hsl(var(--accent-primary))" }}
-              activeDot={{ r: 6, className: "cursor-pointer" }}
+              dot={{ fill: "#818cf8", strokeWidth: 2, r: 3 }}
+              activeDot={{ r: 6, fill: "#818cf8", className: "cursor-pointer" }}
               name="Entries"
             />
             {showRolling && rolling7 && rolling7.length > 0 && (
               <Line
                 type="monotone"
                 dataKey="rolling"
-                stroke="hsl(var(--accent-secondary))"
+                stroke="#22d3ee"
                 strokeWidth={2}
                 strokeDasharray="5 5"
                 dot={false}

@@ -47,18 +47,28 @@ export function HourOfDayChart({ data, onHourClick }: HourOfDayChartProps) {
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={chartData} onClick={handleClick}>
-            <CartesianGrid strokeDasharray="3 3" className="stroke-border/30" />
-            <XAxis dataKey="hourLabel" className="text-xs" interval={2} />
-            <YAxis className="text-xs" />
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(148, 163, 184, 0.2)" vertical={false} />
+            <XAxis
+              dataKey="hourLabel"
+              interval={2}
+              tick={{ fill: "var(--text-secondary)", fontSize: 12 }}
+              stroke="rgba(148, 163, 184, 0.3)"
+            />
+            <YAxis
+              tick={{ fill: "var(--text-secondary)", fontSize: 12 }}
+              stroke="rgba(148, 163, 184, 0.3)"
+            />
             <Tooltip
               contentStyle={{
-                backgroundColor: "hsl(var(--surface-card))",
-                border: "1px solid hsl(var(--border))",
+                backgroundColor: "var(--surface-card)",
+                border: "1px solid rgba(148, 163, 184, 0.2)",
                 borderRadius: "8px",
+                color: "var(--text-primary)",
               }}
-              cursor={{ fill: "hsl(var(--accent-primary) / 0.1)" }}
+              cursor={{ fill: "rgba(129, 140, 248, 0.1)" }}
+              labelStyle={{ color: "var(--text-primary)" }}
             />
-            <Bar dataKey="count" fill="hsl(var(--accent-primary))" radius={[4, 4, 0, 0]} className="cursor-pointer" />
+            <Bar dataKey="count" fill="#818cf8" radius={[4, 4, 0, 0]} className="cursor-pointer" />
           </BarChart>
         </ResponsiveContainer>
       </CardContent>

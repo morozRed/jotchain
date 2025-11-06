@@ -9,16 +9,16 @@ interface ProjectDonutProps {
 }
 
 const COLORS = [
-  "hsl(var(--accent-primary))",
-  "hsl(var(--accent-secondary))",
-  "#8b5cf6",
-  "#ec4899",
-  "#f59e0b",
-  "#10b981",
-  "#3b82f6",
-  "#ef4444",
-  "#6366f1",
-  "#14b8a6",
+  "#818cf8", // accent-primary (indigo)
+  "#22d3ee", // accent-secondary (cyan)
+  "#8b5cf6", // purple
+  "#f472b6", // accent-hot (pink)
+  "#f59e0b", // chart-1 (amber)
+  "#10b981", // chart-4 (green)
+  "#3b82f6", // chart-2 (blue)
+  "#ef4444", // chart-5 (red)
+  "#6366f1", // indigo-500
+  "#14b8a6", // teal
 ]
 
 export function ProjectDonut({ data, onProjectClick }: ProjectDonutProps) {
@@ -38,7 +38,7 @@ export function ProjectDonut({ data, onProjectClick }: ProjectDonutProps) {
       value: data.otherCount,
       id: -1,
       share: 0,
-      color: "hsl(var(--muted-foreground))",
+      color: "#94a3b8", // muted color for "Other"
     })
   }
 
@@ -77,10 +77,12 @@ export function ProjectDonut({ data, onProjectClick }: ProjectDonutProps) {
             </Pie>
             <Tooltip
               contentStyle={{
-                backgroundColor: "hsl(var(--surface-card))",
-                border: "1px solid hsl(var(--border))",
+                backgroundColor: "var(--surface-card)",
+                border: "1px solid rgba(148, 163, 184, 0.2)",
                 borderRadius: "8px",
+                color: "var(--text-primary)",
               }}
+              labelStyle={{ color: "var(--text-primary)" }}
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
               formatter={(value: number, name: string, props: any) => {
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
@@ -91,7 +93,10 @@ export function ProjectDonut({ data, onProjectClick }: ProjectDonutProps) {
             <Legend
               verticalAlign="bottom"
               height={36}
+              wrapperStyle={{ color: "var(--text-primary)" }}
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               formatter={(value: string, entry: any) => {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                 const percentage = entry.payload.share ? (entry.payload.share * 100).toFixed(0) : 0
                 return `${value} (${percentage}%)`
               }}
