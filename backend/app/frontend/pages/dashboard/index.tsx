@@ -162,7 +162,7 @@ export default function Dashboard() {
           </div>
         </header>
 
-        <div className="flex flex-col gap-0 lg:grid lg:grid-cols-[minmax(0,1.35fr)_minmax(0,0.85fr)]">
+        <div className="flex flex-col gap-2 lg:grid lg:grid-cols-[minmax(0,1.35fr)_minmax(0,0.85fr)]">
           <Card className="border-border/30 shadow-[0_1px_3px_rgba(0,0,0,0.06)] flex flex-col">
             <CardHeader className="pb-5">
               <CardTitle className="text-lg font-semibold">
