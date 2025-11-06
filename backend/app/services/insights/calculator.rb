@@ -74,8 +74,18 @@ module Insights
     end
 
     def heatmap_data
-      # Same as activity for MVP
-      activity_data
+      # Generate all dates for the last 60 days to show complete heatmap
+      end_date = Time.current.in_time_zone(timezone).to_date
+      start_date = end_date - 59.days # 60 days total including today
+
+      all_dates = (start_date..end_date).to_a
+
+      all_dates.map do |date|
+        {
+          date: date.iso8601,
+          count: entries_by_date[date] || 0
+        }
+      end
     end
 
     def hourly_data

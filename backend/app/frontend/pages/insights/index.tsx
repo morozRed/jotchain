@@ -14,10 +14,10 @@ import { TopPeopleBar } from "@/components/insights/top-people-bar"
 import { Card, CardContent } from "@/components/ui/card"
 import AppLayout from "@/layouts/app-layout"
 import { insightsPath } from "@/routes"
-import type { BreadcrumbItem, InsightsData, SharedData } from "@/types"
+import type { BreadcrumbItem, InsightsData } from "@/types"
 
 interface Project {
-  id: number
+  id: string
   name: string
 }
 
@@ -30,7 +30,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 export default function InsightsPage() {
   const [projects, setProjects] = useState<Project[]>([])
-  const [selectedProject, setSelectedProject] = useState<number | null>(null)
+  const [selectedProject, setSelectedProject] = useState<string | null>(null)
   const [selectedRange, setSelectedRange] = useState<"week" | "month" | "year">("week")
   const [insightsData, setInsightsData] = useState<InsightsData | null>(null)
   const [loading, setLoading] = useState(true)
@@ -60,7 +60,7 @@ export default function InsightsPage() {
       })
 
       if (selectedProject) {
-        params.append("project_id", selectedProject.toString())
+        params.append("project_id", selectedProject)
       }
 
       const response = await fetch(`/api/insights?${params.toString()}`)
@@ -81,7 +81,7 @@ export default function InsightsPage() {
   const handleDateClick = (date: string) => {
     const params = new URLSearchParams({ date })
     if (selectedProject) {
-      params.append("project_id", selectedProject.toString())
+      params.append("project_id", selectedProject)
     }
     router.visit(`/dashboard?${params.toString()}`)
   }
@@ -89,7 +89,7 @@ export default function InsightsPage() {
   const handleHourClick = (hour: number) => {
     const params = new URLSearchParams({ hour: hour.toString(), range: selectedRange })
     if (selectedProject) {
-      params.append("project_id", selectedProject.toString())
+      params.append("project_id", selectedProject)
     }
     router.visit(`/dashboard?${params.toString()}`)
   }
@@ -97,7 +97,7 @@ export default function InsightsPage() {
   const handleDayClick = (dow: number) => {
     const params = new URLSearchParams({ dow: dow.toString(), range: selectedRange })
     if (selectedProject) {
-      params.append("project_id", selectedProject.toString())
+      params.append("project_id", selectedProject)
     }
     router.visit(`/dashboard?${params.toString()}`)
   }
@@ -118,41 +118,6 @@ export default function InsightsPage() {
   const handleUntaggedClick = () => {
     const params = new URLSearchParams({ untagged: "true", range: selectedRange })
     router.visit(`/dashboard?${params.toString()}`)
-  }
-
-  // Zero-data state
-  if (!loading && insightsData?.cards.totalEntries === 0) {
-    return (
-      <AppLayout breadcrumbs={breadcrumbs}>
-        <Head title="Insights" />
-        <div className="container mx-auto max-w-7xl space-y-6 px-4 py-8">
-          <div className="mb-8">
-            <h1 className="mb-2 text-3xl font-bold">Insights</h1>
-            <p className="text-muted-foreground">Analytics and trends from your entries</p>
-          </div>
-
-          <Card className="border-border/30">
-            <CardContent className="flex flex-col items-center justify-center py-16">
-              <BarChart3 className="mb-4 h-16 w-16 text-muted-foreground" />
-              <h3 className="mb-2 text-lg font-medium">No data yet</h3>
-              <p className="mb-6 text-center text-sm text-muted-foreground">
-                Start logging entries to see your insights and analytics
-              </p>
-              <div className="flex flex-col gap-2 text-sm text-muted-foreground">
-                <div className="flex items-center gap-2">
-                  <span className="text-accent-primary">→</span>
-                  <span>Add your first entry</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-accent-primary">→</span>
-                  <span>Tag a project or person</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </AppLayout>
-    )
   }
 
   return (
@@ -186,6 +151,8 @@ export default function InsightsPage() {
           <div className="h-8 w-8 animate-spin rounded-full border-4 border-accent-primary border-t-transparent" />
         </div>
       )}
+
+      { !loading && insightsData?.cards.totalEntries === 0 && <EmptyState /> }
 
       {!loading && insightsData && (
         <div className="space-y-6">
@@ -224,5 +191,29 @@ export default function InsightsPage() {
       )}
       </div>
     </AppLayout>
+  )
+}
+
+export function EmptyState() {
+  return (
+    <Card className="border-border/30">
+      <CardContent className="flex flex-col items-center justify-center py-16">
+        <BarChart3 className="mb-4 h-16 w-16 text-muted-foreground" />
+        <h3 className="mb-2 text-lg font-medium">No data yet</h3>
+        <p className="mb-6 text-center text-sm text-muted-foreground">
+          Start logging entries to see your insights and analytics
+        </p>
+        <div className="flex flex-col gap-2 text-sm text-muted-foreground">
+          <div className="flex items-center gap-2">
+            <span className="text-accent-primary">→</span>
+            <span>Add your first entry</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-accent-primary">→</span>
+            <span>Tag a project or person</span>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   )
 }

@@ -8,9 +8,9 @@ interface Project {
 
 interface FilterBarProps {
   projects: Project[]
-  selectedProject: number | null
+  selectedProject: string | null
   selectedRange: "week" | "month" | "year"
-  onProjectChange: (projectId: number | null) => void
+  onProjectChange: (projectId: string | null) => void
   onRangeChange: (range: "week" | "month" | "year") => void
 }
 
@@ -26,7 +26,7 @@ export function FilterBar({
       <div className="w-full sm:w-64">
         <Select
           value={selectedProject?.toString() ?? "all"}
-          onValueChange={(value) => onProjectChange(value === "all" ? null : parseInt(value))}
+          onValueChange={(value) => onProjectChange(value === "all" ? null : value)}
         >
           <SelectTrigger>
             <SelectValue placeholder="All Projects" />
