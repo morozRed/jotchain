@@ -1,0 +1,187 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import Header from '../../components/Header.astro';
+import CTA from '../../components/CTA.astro';
+import Footer from '../../components/Footer.astro';
+
+const professions = await getCollection('professions');
+const sortedProfessions = professions.sort((a, b) => a.data.name.localeCompare(b.data.name));
+const appSignupUrl = 'https://app.jotchain.com/sign_up';
+---
+
+<Layout title="Work Journal for Every Profession | JotChain" description="Find the perfect work journal solution for your profession. From software developers to product managers, JotChain helps professionals document their work." useSEO={true}>
+	<div class="shell">
+		<Header />
+
+		<section class="hero">
+			<h1>Work Journal for Every Profession</h1>
+			<p class="subtitle">
+				Find the perfect work journal solution tailored to your profession. Document your work effortlessly and generate AI-powered summaries.
+			</p>
+		</section>
+
+		<section class="section intro">
+			<div class="section__intro">
+				<h2>Never Forget What You Worked On</h2>
+				<p>
+					Whether you're a software developer, product manager, consultant, or any other professional,
+					JotChain helps you log your daily work and get AI-powered summaries before meetings.
+					Stop scrambling to remember what you did—your work journal has it covered.
+				</p>
+			</div>
+		</section>
+
+		<section class="section professions-grid">
+			<div class="section__intro">
+				<h2>Find Your Profession</h2>
+				<p>
+					See how JotChain helps professionals in your field stay organized and prepared for every meeting.
+				</p>
+			</div>
+			<div class="professions-list">
+				{sortedProfessions.map((profession) => (
+					<a href={`/for/${profession.slug}`} class="profession-card">
+						<h3>{profession.data.name}</h3>
+						<p>{profession.data.metaDescription}</p>
+					</a>
+				))}
+			</div>
+		</section>
+
+		<section class="section cta-section">
+			<div class="section__intro">
+				<h2>Ready to Start Your Work Journal?</h2>
+				<p>
+					Join professionals who never forget their wins. Start with a 14-day free trial—no credit card required.
+				</p>
+			</div>
+			<div class="cta-actions">
+				<CTA text="Start free trial" href={appSignupUrl} variant="primary" />
+			</div>
+		</section>
+	</div>
+	<Footer />
+</Layout>
+
+<style>
+	.shell {
+		width: 100%;
+		max-width: var(--max-width);
+		display: flex;
+		flex-direction: column;
+		gap: 4rem;
+	}
+
+	.hero {
+		display: flex;
+		flex-direction: column;
+		gap: 1.75rem;
+		text-align: center;
+		align-items: center;
+		padding-top: 2rem;
+	}
+
+	.hero h1 {
+		font-size: clamp(2.5rem, 5vw, 3.6rem);
+		line-height: 1.1;
+		letter-spacing: -0.03em;
+		font-weight: 600;
+	}
+
+	.subtitle {
+		color: var(--text-secondary);
+		font-size: 1.05rem;
+		line-height: 1.65;
+		max-width: 34rem;
+	}
+
+	.section {
+		display: flex;
+		flex-direction: column;
+		gap: 3.5rem;
+	}
+
+	.section__intro {
+		max-width: 44rem;
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+		text-align: center;
+		margin: 0 auto;
+	}
+
+	.section__intro h2 {
+		font-size: clamp(2rem, 4vw, 2.5rem);
+		font-weight: 600;
+	}
+
+	.section__intro p {
+		color: var(--text-secondary);
+		font-size: 1.05rem;
+		line-height: 1.7;
+	}
+
+	.professions-list {
+		display: grid;
+		gap: 1.5rem;
+		grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+		margin-bottom: 2rem;
+	}
+
+	.profession-card {
+		padding: 1.8rem;
+		border-radius: 20px;
+		background: rgba(10, 14, 24, 0.82);
+		border: 1px solid rgba(148, 163, 184, 0.1);
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
+		transition: all 0.3s ease;
+	}
+
+	.profession-card:hover {
+		background: rgba(13, 18, 28, 0.92);
+		border-color: rgba(129, 140, 248, 0.25);
+		transform: translateY(-2px);
+		box-shadow: 0 12px 32px -16px rgba(129, 140, 248, 0.35);
+	}
+
+	.profession-card h3 {
+		font-size: 1.25rem;
+		margin: 0;
+	}
+
+	.profession-card p {
+		color: var(--text-secondary);
+		line-height: 1.6;
+		margin: 0;
+		font-size: 0.95rem;
+	}
+
+	.cta-section {
+		text-align: center;
+		padding: 2rem 0;
+	}
+
+	.cta-actions {
+		display: flex;
+		justify-content: center;
+		margin-top: 1rem;
+	}
+
+	@media (max-width: 640px) {
+		.shell {
+			gap: 3rem;
+		}
+
+		.hero {
+			padding-top: 1rem;
+		}
+
+		.section {
+			gap: 2.5rem;
+		}
+	}
+</style>
+

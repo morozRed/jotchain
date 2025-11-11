@@ -1,0 +1,597 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import CTA from '../../components/CTA.astro';
+import Footer from '../../components/Footer.astro';
+import Header from '../../components/Header.astro';
+import Testimonial from '../../components/Testimonial.astro';
+import lucideIcons from 'lucide-static';
+
+export async function getStaticPaths() {
+	const useCases = await getCollection('use-cases');
+	return useCases.map((useCase) => ({
+		params: { usecase: useCase.slug },
+		props: { useCase },
+	}));
+}
+
+const { useCase } = Astro.props;
+const { data, body } = useCase;
+const appSignupUrl = 'https://app.jotchain.com/sign_up';
+
+const steps = data.howItWorks.map((step) => step);
+
+const icons = (lucideIcons as Record<string, string>) ?? {};
+
+const heroHighlights = data.benefits.slice(0, 3);
+const heroSteps = steps.slice(0, 3);
+const heroStepIcons = [
+	icons['NotebookPen'],
+	icons['MessageSquare'],
+	icons['Sparkles'],
+];
+const defaultWorkflowHeadings = [
+	'Capture wins quickly',
+	'Add rich context',
+	'Generate the update',
+	'Share asynchronously',
+	'Keep everyone aligned',
+];
+const workflowIconSet = [
+	icons['Clock'],
+	icons['MessageSquare'],
+	icons['Sparkles'],
+	icons['Share2'],
+	icons['Users'],
+];
+
+const workflowSections = steps.map((text, index) => {
+	let heading = defaultWorkflowHeadings[index % defaultWorkflowHeadings.length];
+	let description = text;
+	if (text.includes(':')) {
+		const [, rest] = text.split(/:(.+)/);
+		const [rawHeading, rawDescription] = text.split(/:(.+)/);
+		if (rawHeading) heading = rawHeading.trim();
+		if (rawDescription) description = rawDescription.trim();
+	}
+	const icon = workflowIconSet[index % workflowIconSet.length] ?? icons['Check'];
+	return {
+		heading,
+		description,
+		icon,
+	};
+});
+const { Content } = await useCase.render();
+const bodyText = typeof body === 'string' ? body.trim() : '';
+const hasBody = bodyText.length > 100;
+---
+
+<Layout title={data.title} description={data.metaDescription} useSEO={true}>
+	<script type="application/ld+json" set:html={JSON.stringify({
+		"@context": "https://schema.org",
+		"@type": "Article",
+		"headline": data.title,
+		"description": data.metaDescription,
+		"author": {
+			"@type": "Organization",
+			"name": "JotChain"
+		}
+	})} />
+	<div class="shell">
+		<Header />
+		<section class="hero">
+			<div class="hero__layout">
+				<div class="hero__content">
+					<span class="hero__eyebrow">{data.name} • Use Case</span>
+					<h1>{data.h1}</h1>
+					<p class="hero__lead">{data.problem}</p>
+
+					{heroHighlights.length > 0 && (
+						<ul class="hero__highlights">
+							{heroHighlights.map((highlight) => (
+								<li>
+									<span class="hero__icon">✓</span>
+									<p>{highlight}</p>
+								</li>
+							))}
+						</ul>
+					)}
+
+					<div class="hero__actions">
+						<CTA text="Start free trial" href={appSignupUrl} variant="primary" />
+						<a class="hero__link" href="mailto:grig@jotchain.com">Talk with us</a>
+					</div>
+
+					<p class="hero__meta">14-day free trial · No credit card required · Cancel anytime</p>
+				</div>
+
+				<div class="hero__card">
+					<div class="hero__card-headline">
+						<span class="hero__card-label">How JotChain helps</span>
+						<h2>{data.name}</h2>
+					</div>
+					<p class="hero__card-body">{data.solution}</p>
+
+					{heroSteps.length > 0 && (
+						<ol class="hero__card-steps">
+							{heroSteps.map((step, index) => (
+								<li>
+									<div class="hero__card-step-icon" set:html={heroStepIcons[index % heroStepIcons.length] ?? icons.Sparkles} />
+									<p>{step}</p>
+								</li>
+							))}
+						</ol>
+					)}
+				</div>
+			</div>
+		</section>
+
+		<section class="impact">
+			<header class="impact__header">
+				<h2>Why teams trust JotChain for {data.name.toLowerCase()}</h2>
+				<p>
+					Capture work the moment it happens, surface it when it matters, and let AI assemble the update for you.
+				</p>
+			</header>
+			<div class="impact__grid">
+				{data.benefits.slice(0, 4).map((benefit, index) => (
+					<div class="impact__card">
+						<span class="impact__badge">Outcome {index + 1}</span>
+						<p>{benefit}</p>
+					</div>
+				))}
+			</div>
+		</section>
+
+		<section class="workflow">
+			<header class="workflow__header">
+				<h2>What the workflow looks like</h2>
+				<p>
+					It takes a few intentional minutes per day. JotChain turns those notes into the updates you need later.
+				</p>
+			</header>
+			<div class="workflow__timeline">
+				{workflowSections.slice(0, 4).map((section) => (
+					<div class="workflow__step">
+						<div class="workflow__icon" set:html={section.icon} />
+						<div class="workflow__content">
+							<h3>{section.heading}</h3>
+							<p>{section.description}</p>
+						</div>
+					</div>
+				))}
+			</div>
+		</section>
+
+		<Testimonial
+			quote={`JotChain keeps our ${data.name.toLowerCase()} updates sharp. By the time review time hits, the story writes itself.`}
+			author={`${data.name} lead, fast-growing product team`}
+		/>
+
+		{hasBody && (
+			<section class="deep-dive">
+				<header class="deep-dive__header">
+					<h2>Learn more about {data.name.toLowerCase()}</h2>
+				</header>
+				<div class="deep-dive__card">
+					<Content />
+				</div>
+			</section>
+		)}
+
+		<section class="cta-block">
+			<div class="cta-block__content">
+				<h2>{data.cta}</h2>
+				<p>
+					Spin up JotChain, capture a week of notes, and watch the summaries write themselves. You’ll never scramble for updates again.
+				</p>
+				<div class="cta-block__actions">
+					<CTA text="Start free trial" href={appSignupUrl} variant="primary" />
+					<a class="cta-block__link" href="mailto:grig@jotchain.com">Need a team plan?</a>
+				</div>
+				<span class="cta-block__meta">14-day free trial · No credit card required</span>
+			</div>
+		</section>
+
+		<Footer />
+	</div>
+</Layout>
+
+<style>
+	.shell {
+		width: 100%;
+		max-width: var(--max-width);
+		display: flex;
+		flex-direction: column;
+		gap: 4rem;
+	}
+
+	.hero__layout {
+		display: grid;
+		gap: 2.5rem;
+		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+		align-items: start;
+	}
+
+	.hero__eyebrow {
+		font-size: 0.75rem;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		color: rgba(165, 180, 252, 0.85);
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.5rem;
+		padding: 0.4rem 0.9rem;
+		border-radius: 999px;
+		border: 1px solid rgba(129, 140, 248, 0.35);
+		background: rgba(21, 24, 40, 0.7);
+		text-align: center;
+	}
+
+	.hero__content {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+	}
+
+	.hero__lead {
+		color: var(--text-secondary);
+		font-size: 1.05rem;
+		line-height: 1.65;
+	}
+
+	.hero__highlights {
+		display: flex;
+		flex-direction: column;
+		gap: 0.85rem;
+		padding: 0;
+		margin: 0;
+		list-style: none;
+	}
+
+	.hero__highlights li {
+		display: flex;
+		gap: 0.75rem;
+		align-items: flex-start;
+		padding: 0.95rem 1.15rem;
+		border-radius: 14px;
+		background: rgba(14, 18, 30, 0.72);
+		border: 1px solid rgba(148, 163, 184, 0.12);
+		box-shadow: inset 0 1px 0 rgba(148, 163, 184, 0.08);
+	}
+
+	.hero__icon {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 24px;
+		height: 24px;
+		border-radius: 999px;
+		background: rgba(129, 140, 248, 0.18);
+		color: rgba(195, 203, 255, 0.95);
+		font-size: 0.85rem;
+	}
+
+	.hero__actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.9rem;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.hero__link {
+		color: rgba(195, 203, 255, 0.95);
+		font-weight: 500;
+	}
+
+	.hero__link:hover {
+		color: var(--text-primary);
+	}
+
+	.hero__meta {
+		font-size: 0.85rem;
+		color: rgba(203, 213, 225, 0.65);
+	}
+
+	.hero__card {
+		position: relative;
+		padding: 2.4rem 2.2rem;
+		border-radius: 26px;
+		background: radial-gradient(circle at top left, rgba(129, 140, 248, 0.32), rgba(15, 23, 42, 0.92));
+		border: 1px solid rgba(129, 140, 248, 0.28);
+		box-shadow:
+			0 25px 60px -35px rgba(12, 17, 33, 0.9),
+			inset 0 1px 0 rgba(255, 255, 255, 0.05);
+		display: flex;
+		flex-direction: column;
+		gap: 1.8rem;
+	}
+
+	.hero__card-headline {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
+	.hero__card-label {
+		font-size: 0.75rem;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		color: rgba(226, 232, 240, 0.75);
+	}
+
+	.hero__card-body {
+		color: rgba(226, 232, 255, 0.88);
+		line-height: 1.65;
+		margin: 0;
+	}
+
+	.hero__card-steps {
+		display: flex;
+		flex-direction: column;
+		gap: 1.1rem;
+		padding: 0;
+		margin: 0;
+		list-style: none;
+	}
+
+	.hero__card-steps li {
+		display: flex;
+		gap: 0.85rem;
+		align-items: center;
+	}
+
+	.hero__card-step-icon {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 40px;
+		height: 40px;
+		padding: 0.5rem;
+		border-radius: 999px;
+		background: rgba(15, 23, 42, 0.55);
+		border: 1px solid rgba(129, 140, 248, 0.4);
+		color: rgba(226, 232, 255, 0.92);
+		box-shadow: 0 10px 18px -12px rgba(129, 140, 248, 0.55);
+		flex-shrink: 0;
+	}
+
+	.hero__card-step-icon svg {
+		width: 20px;
+		height: 20px;
+	}
+
+	.impact {
+		display: flex;
+		flex-direction: column;
+		gap: 2rem;
+	}
+
+	.impact__header {
+		text-align: center;
+		max-width: 48rem;
+		margin: 0 auto;
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+
+	.impact__header p {
+		color: var(--text-secondary);
+		line-height: 1.7;
+	}
+
+	.impact__grid {
+		display: grid;
+		gap: 1.6rem;
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	@media (max-width: 640px) {
+		.impact__grid {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	.impact__card {
+		padding: 1.8rem;
+		border-radius: 20px;
+		background: rgba(18, 22, 35, 0.6);
+		border: 1px solid rgba(129, 140, 248, 0.18);
+		display: flex;
+		flex-direction: column;
+		gap: 0.8rem;
+		transition: transform 0.25s ease, border-color 0.25s ease;
+	}
+
+	.impact__card:hover {
+		transform: translateY(-3px);
+		border-color: rgba(129, 140, 248, 0.45);
+	}
+
+	.impact__badge {
+		font-size: 0.68rem;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
+		color: rgba(195, 203, 255, 0.8);
+	}
+
+	.impact__card p {
+		margin: 0;
+		color: var(--text-secondary);
+		line-height: 1.6;
+	}
+
+	.workflow {
+		display: flex;
+		flex-direction: column;
+		gap: 2rem;
+	}
+
+	.workflow__header {
+		text-align: center;
+		max-width: 40rem;
+		margin: 0 auto;
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+
+	.workflow__header p {
+		color: var(--text-secondary);
+		line-height: 1.65;
+	}
+
+	.workflow__timeline {
+		display: grid;
+		gap: 1.6rem;
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	@media (max-width: 640px) {
+		.workflow__timeline {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	.workflow__step {
+		position: relative;
+		padding: 1.8rem;
+		border-radius: 20px;
+		background: rgba(14, 18, 30, 0.78);
+		border: 1px solid rgba(129, 140, 248, 0.18);
+		display: flex;
+		gap: 1rem;
+		align-items: center;
+		transition: transform 0.25s ease, border-color 0.25s ease;
+	}
+
+	.workflow__step:hover {
+		transform: translateY(-2px);
+		border-color: rgba(129, 140, 248, 0.4);
+	}
+
+	.workflow__icon {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 40px;
+		height: 40px;
+		border-radius: 14px;
+		background: rgba(21, 30, 52, 0.88);
+		border: 1px solid rgba(129, 140, 248, 0.35);
+		color: rgba(195, 203, 255, 0.95);
+	}
+
+	.workflow__content {
+		display: flex;
+		flex-direction: column;
+		gap: 0.55rem;
+	}
+
+	.workflow__content h3 {
+		margin: 0;
+		font-size: 1.1rem;
+		color: rgba(226, 232, 255, 0.92);
+	}
+
+	.workflow__content p {
+		margin: 0;
+		color: var(--text-secondary);
+		line-height: 1.6;
+	}
+
+	.deep-dive {
+		display: flex;
+		flex-direction: column;
+		gap: 2rem;
+		align-items: center;
+	}
+
+	.deep-dive__header {
+		text-align: center;
+		max-width: 48rem;
+		margin: 0 auto;
+	}
+
+	.deep-dive__header h2 {
+		font-size: clamp(1.75rem, 3vw, 2.25rem);
+		margin: 0;
+	}
+
+	.deep-dive__card {
+		max-width: 760px;
+		width: 100%;
+		padding: 2.4rem;
+		border-radius: 24px;
+		background: rgba(10, 14, 24, 0.75);
+		border: 1px solid rgba(148, 163, 184, 0.15);
+		box-shadow: inset 0 1px 0 rgba(148, 163, 184, 0.08);
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+		color: var(--text-secondary);
+		line-height: 1.65;
+	}
+
+	.deep-dive__card :global(h2),
+	.deep-dive__card :global(h3) {
+		color: var(--text-primary);
+	}
+
+	.cta-block {
+		display: flex;
+		justify-content: center;
+	}
+
+	.cta-block__content {
+		max-width: 620px;
+		width: 100%;
+		padding: 3rem;
+		border-radius: 28px;
+		background: rgba(15, 20, 34, 0.92);
+		border: 1px solid rgba(129, 140, 248, 0.35);
+		display: flex;
+		flex-direction: column;
+		gap: 1.4rem;
+		text-align: center;
+		box-shadow: 0 28px 60px -38px rgba(8, 11, 20, 0.85);
+	}
+
+	.cta-block__content p {
+		color: var(--text-secondary);
+		line-height: 1.65;
+		margin: 0;
+	}
+
+	.cta-block__actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.9rem;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.cta-block__link {
+		color: rgba(195, 203, 255, 0.95);
+		font-weight: 500;
+	}
+
+	.cta-block__link:hover {
+		color: var(--text-primary);
+	}
+
+	.cta-block__meta {
+		font-size: 0.85rem;
+		color: rgba(203, 213, 225, 0.65);
+	}
+
+	@media (max-width: 640px) {
+		.hero__card {
+			padding: 2rem 1.8rem;
+		}
+	}
+</style>
+

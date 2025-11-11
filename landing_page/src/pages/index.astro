@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
 
 const features = [
 	{
@@ -139,20 +140,6 @@ const commitments = [
 					<a class="button button--primary" href={appSignupUrl}>Start free trial</a>
 					<a class="button button--secondary" href="#workflow">See how it works</a>
 				</div>
-				<ul class="hero__metrics">
-					<li>
-						<strong>2 minutes</strong>
-						<span>Daily logging takes less time than your coffee break</span>
-					</li>
-					<li>
-						<strong>30 mins before</strong>
-						<span>Summaries arrive in your inbox before each meeting</span>
-					</li>
-					<li>
-						<strong>Zero friction</strong>
-						<span>Simple text field, no complex forms or setup</span>
-					</li>
-				</ul>
 			</div>
 			<div class="hero__visual">
 				<div class="panel panel--standup">
@@ -200,6 +187,20 @@ const commitments = [
 					</div>
 				</div>
 			</div>
+			<ul class="hero__metrics">
+				<li>
+					<strong>2 minutes</strong>
+					<span>Daily logging takes less time than your coffee break</span>
+				</li>
+				<li>
+					<strong>30 mins before</strong>
+					<span>Summaries arrive in your inbox before each meeting</span>
+				</li>
+				<li>
+					<strong>Zero friction</strong>
+					<span>Simple text field, no complex forms or setup</span>
+				</li>
+			</ul>
 		</section>
 
 		<section class="section section--features" id="features">
@@ -320,23 +321,7 @@ const commitments = [
 			</div>
 		</section>
 
-		<footer class="footer">
-			<div class="brand">
-				<span class="brand__glyph"></span>
-				<span class="brand__name">JotChain</span>
-			</div>
-			<div class="footer__meta">
-				<span>© {new Date().getFullYear()} JotChain. Never blank in meetings again.</span>
-				<nav>
-					<a href="#features">Product</a>
-					<a href="#workflow">Workflow</a>
-					<a href="#pricing">Pricing</a>
-					<a href="mailto:grig@jotchain.com">Contact</a>
-					<a href="/privacy">Privacy</a>
-					<a href="/terms">Terms</a>
-				</nav>
-			</div>
-		</footer>
+		<Footer />
 	</div>
 </Layout>
 
@@ -978,46 +963,25 @@ const commitments = [
 		color: rgba(248, 250, 252, 0.7);
 	}
 
-	.footer {
-		display: flex;
-		flex-direction: column;
-		gap: 1.2rem;
-		padding: 2.5rem 0 1rem;
-		border-top: 1px solid rgba(148, 163, 184, 0.12);
-		color: var(--text-secondary);
-	}
-
-	.footer__meta {
-		display: flex;
-		flex-direction: column;
-		gap: 0.75rem;
-		font-size: 0.85rem;
-	}
-
-	.footer__meta nav {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 1rem;
-	}
-
-	.sr-only {
-		position: absolute;
-		width: 1px;
-		height: 1px;
-		padding: 0;
-		margin: -1px;
-		overflow: hidden;
-		clip: rect(0, 0, 0, 0);
-		border: 0;
-	}
-
 	@media (min-width: 768px) {
 		.hero {
 			grid-template-columns: 1.1fr 0.9fr;
+			grid-template-rows: auto auto;
+		}
+
+		.hero__content {
+			grid-row: 1;
 		}
 
 		.hero__visual {
+			grid-row: 1;
 			margin-right: 1.5rem;
+		}
+
+		.hero__metrics {
+			grid-row: 2;
+			grid-column: 1 / -1;
+			margin-top: 0;
 		}
 
 		.panel--summary {
@@ -1028,20 +992,9 @@ const commitments = [
 			transform: translateX(10%);
 		}
 
-			.cta {
-				align-self: center;
-				width: 100%;
-			}
-
-		.footer {
-			flex-direction: row;
-			align-items: center;
-			justify-content: space-between;
-		}
-
-		.footer__meta {
-			align-items: center;
-			text-align: right;
+		.cta {
+			align-self: center;
+			width: 100%;
 		}
 	}
 

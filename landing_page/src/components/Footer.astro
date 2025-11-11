@@ -1,0 +1,148 @@
+---
+import { getCollection } from 'astro:content';
+
+const appSignupUrl = 'https://app.jotchain.com/sign_up';
+
+// Get popular professions and use cases for footer links
+const allProfessions = await getCollection('professions');
+const allUseCases = await getCollection('use-cases');
+
+// Select popular ones (for now, just take first few)
+const popularProfessions = allProfessions.slice(0, 3);
+const popularUseCases = allUseCases.slice(0, 3);
+---
+
+<footer class="footer">
+	<div class="brand">
+		<span class="brand__glyph"></span>
+		<span class="brand__name">JotChain</span>
+	</div>
+	<div class="footer__content">
+		<div class="footer__section">
+			<h3 class="footer__heading">Product</h3>
+			<nav class="footer__nav">
+				<a href="/#features">Features</a>
+				<a href="/#workflow">Workflow</a>
+				<a href="/#pricing">Pricing</a>
+			</nav>
+		</div>
+		<div class="footer__section">
+			<h3 class="footer__heading">Use Cases</h3>
+			<nav class="footer__nav">
+				{popularUseCases.map((useCase) => (
+					<a href={`/use-cases/${useCase.slug}`}>{useCase.data.name}</a>
+				))}
+				<a href="/use-cases">All Use Cases</a>
+			</nav>
+		</div>
+		<div class="footer__section">
+			<h3 class="footer__heading">For</h3>
+			<nav class="footer__nav">
+				{popularProfessions.map((profession) => (
+					<a href={`/for/${profession.slug}`}>{profession.data.name}</a>
+				))}
+				<a href="/for">All Professions</a>
+			</nav>
+		</div>
+		<div class="footer__section">
+			<h3 class="footer__heading">Company</h3>
+			<nav class="footer__nav">
+				<a href="mailto:grig@jotchain.com">Contact</a>
+				<a href="/privacy">Privacy</a>
+				<a href="/terms">Terms</a>
+			</nav>
+		</div>
+	</div>
+	<div class="footer__meta">
+		<span>© {new Date().getFullYear()} JotChain. Never blank in meetings again.</span>
+	</div>
+</footer>
+
+<style>
+	.footer {
+		display: flex;
+		flex-direction: column;
+		gap: 2rem;
+		padding: 2.5rem 0 1rem;
+		border-top: 1px solid rgba(148, 163, 184, 0.12);
+		color: var(--text-secondary);
+		width: 100%;
+		max-width: var(--max-width);
+	}
+
+	.brand {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.65rem;
+		font-weight: 600;
+		letter-spacing: -0.01em;
+		opacity: 1;
+		transition: opacity 0.2s ease;
+	}
+
+	.brand:hover {
+		opacity: 0.85;
+	}
+
+	.brand__glyph {
+		width: 28px;
+		height: 28px;
+		border-radius: 10px;
+		background: url('/favicon.svg') center/cover;
+		box-shadow: 0 4px 14px rgba(129, 140, 248, 0.25);
+	}
+
+	.brand__name {
+		font-size: 1rem;
+	}
+
+	.footer__content {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+		gap: 2rem;
+	}
+
+	.footer__section {
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
+	}
+
+	.footer__heading {
+		font-size: 0.9rem;
+		font-weight: 600;
+		color: var(--text-primary);
+		margin: 0;
+	}
+
+	.footer__nav {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		font-size: 0.85rem;
+	}
+
+	.footer__nav a {
+		color: var(--text-secondary);
+		opacity: 0.85;
+		transition: opacity 0.2s ease;
+	}
+
+	.footer__nav a:hover {
+		opacity: 1;
+		color: var(--text-primary);
+	}
+
+	.footer__meta {
+		font-size: 0.85rem;
+		padding-top: 1.5rem;
+		border-top: 1px solid rgba(148, 163, 184, 0.08);
+	}
+
+	@media (min-width: 768px) {
+		.footer__content {
+			grid-template-columns: repeat(4, 1fr);
+		}
+	}
+</style>
+

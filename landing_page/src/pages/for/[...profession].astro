@@ -1,0 +1,311 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import Header from '../../components/Header.astro';
+import CTA from '../../components/CTA.astro';
+import FeatureGrid from '../../components/FeatureGrid.astro';
+import Testimonial from '../../components/Testimonial.astro';
+import Footer from '../../components/Footer.astro';
+
+export async function getStaticPaths() {
+	const professions = await getCollection('professions');
+	return professions.map((profession) => ({
+		params: { profession: profession.slug },
+		props: { profession },
+	}));
+}
+
+const { profession } = Astro.props;
+const { data, body } = profession;
+const appSignupUrl = 'https://app.jotchain.com/sign_up';
+
+// Convert benefits to feature grid format
+const benefitItems = data.benefits.map((benefit) => ({
+	title: benefit,
+	description: '',
+}));
+
+// Convert pain points to feature grid format
+const painItems = data.painPoints.map((pain) => ({
+	title: pain,
+	description: '',
+}));
+---
+
+<Layout title={data.title} description={data.metaDescription} useSEO={true}>
+	<script type="application/ld+json" set:html={JSON.stringify({
+		"@context": "https://schema.org",
+		"@type": "SoftwareApplication",
+		"name": "JotChain",
+		"applicationCategory": "ProductivityApplication",
+		"description": data.metaDescription,
+		"offers": {
+			"@type": "Offer",
+			"price": "0",
+			"priceCurrency": "USD"
+		}
+	})} />
+	<div class="shell">
+		<Header />
+
+		<!-- Hero Section -->
+		<section class="hero">
+			<h1>{data.h1}</h1>
+			<p class="subtitle">
+				Stop forgetting what you worked on. JotChain helps {data.name.toLowerCase()}s
+				document their work effortlessly and generate AI-powered summaries.
+			</p>
+			<div class="hero__actions">
+				<CTA text={data.cta} href={appSignupUrl} variant="primary" />
+			</div>
+		</section>
+
+		<!-- Pain Points Section -->
+		<section class="section pain-points">
+			<div class="section__intro">
+				<h2>Sound Familiar?</h2>
+			</div>
+			<FeatureGrid items={painItems} />
+		</section>
+
+		<!-- Solution Section -->
+		<section class="section solution">
+			<div class="section__intro">
+				<h2>How JotChain Helps {data.name}s</h2>
+			</div>
+			<FeatureGrid items={benefitItems} />
+		</section>
+
+		<!-- Use Cases Section -->
+		<section class="section use-cases">
+			<div class="section__intro">
+				<h2>What {data.name}s Use JotChain For</h2>
+			</div>
+			<ul class="use-case-list">
+				{data.useCases.map((useCase) => (
+					<li>{useCase}</li>
+				))}
+			</ul>
+		</section>
+
+		<!-- How It Works -->
+		<section class="section how-it-works">
+			<div class="section__intro">
+				<h2>Dead Simple. Actually Works.</h2>
+			</div>
+			<div class="steps">
+				<div class="step">
+					<span class="step-number">1</span>
+					<h3>Jot Notes Throughout Your Day</h3>
+					<p>Quick notes about what you're working on. No structure required.</p>
+				</div>
+				<div class="step">
+					<span class="step-number">2</span>
+					<h3>Mention Projects & People</h3>
+					<p>Use @mentions to tag coworkers and projects for context.</p>
+				</div>
+				<div class="step">
+					<span class="step-number">3</span>
+					<h3>Get AI Summaries</h3>
+					<p>Select a date range, get a polished summary of everything you did.</p>
+				</div>
+			</div>
+		</section>
+
+		<!-- Social Proof -->
+		<section class="section testimonial-section">
+			<Testimonial
+				quote="I used to forget what I did by Friday. Now I have a perfect summary of my week in 10 seconds."
+				author={`${data.name} at Tech Startup`}
+			/>
+		</section>
+
+		<!-- CTA Section -->
+		<section class="section final-cta">
+			<div class="section__intro">
+				<h2>Start Your Work Journal Today</h2>
+				<p>Join {data.name.toLowerCase()}s who never forget their wins.</p>
+			</div>
+			<CTA text={data.cta} href={appSignupUrl} variant="primary" />
+		</section>
+
+		<Footer />
+	</div>
+</Layout>
+
+<style>
+	.shell {
+		width: 100%;
+		max-width: var(--max-width);
+		display: flex;
+		flex-direction: column;
+		gap: 4rem;
+	}
+
+	.hero {
+		display: flex;
+		flex-direction: column;
+		gap: 1.75rem;
+		text-align: center;
+		align-items: center;
+		padding-top: 2rem;
+	}
+
+	.hero h1 {
+		font-size: clamp(2.5rem, 5vw, 3.6rem);
+		line-height: 1.1;
+		letter-spacing: -0.03em;
+		font-weight: 600;
+	}
+
+	.subtitle {
+		color: var(--text-secondary);
+		font-size: 1.05rem;
+		line-height: 1.65;
+		max-width: 34rem;
+	}
+
+	.hero__actions {
+		display: flex;
+		justify-content: center;
+		margin-top: 0.5rem;
+	}
+
+	.section {
+		display: flex;
+		flex-direction: column;
+		gap: 3.5rem;
+	}
+
+	.section__intro {
+		max-width: 44rem;
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+		text-align: center;
+		margin: 0 auto;
+	}
+
+	.section__intro h2 {
+		font-size: clamp(2rem, 4vw, 2.5rem);
+	}
+
+	.section__intro p {
+		color: var(--text-secondary);
+		font-size: 1.05rem;
+		line-height: 1.7;
+	}
+
+	.use-case-list {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		display: grid;
+		gap: 1rem;
+		max-width: 600px;
+		margin: 0 auto;
+	}
+
+	.use-case-list li {
+		padding: 1.2rem 1.5rem;
+		border-radius: 16px;
+		background: rgba(10, 14, 24, 0.82);
+		border: 1px solid rgba(148, 163, 184, 0.1);
+		color: var(--text-secondary);
+		position: relative;
+		padding-left: 2.5rem;
+		transition: all 0.2s ease;
+	}
+
+	.use-case-list li:hover {
+		background: rgba(13, 18, 28, 0.92);
+		border-color: rgba(129, 140, 248, 0.2);
+		transform: translateY(-1px);
+	}
+
+	.use-case-list li::before {
+		content: '•';
+		position: absolute;
+		left: 1.2rem;
+		color: var(--accent-primary);
+		font-size: 1.2rem;
+		font-weight: 600;
+	}
+
+	.steps {
+		display: grid;
+		gap: 1.6rem;
+		grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+	}
+
+	.step {
+		padding: 1.9rem;
+		border-radius: 20px;
+		background: rgba(18, 22, 35, 0.6);
+		border: 1px solid rgba(124, 125, 254, 0.15);
+		display: flex;
+		flex-direction: column;
+		gap: 0.9rem;
+		position: relative;
+		overflow: hidden;
+		transition: all 0.3s ease;
+	}
+
+	.step:hover {
+		transform: translateY(-3px);
+		border-color: rgba(129, 140, 248, 0.35);
+	}
+
+	.step-number {
+		font-size: 0.8rem;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: rgba(203, 213, 225, 0.45);
+		font-weight: 600;
+	}
+
+	.step h3 {
+		font-size: 1.3rem;
+		margin: 0;
+		font-weight: 600;
+	}
+
+	.step p {
+		color: var(--text-secondary);
+		line-height: 1.6;
+		margin: 0;
+		font-size: 0.95rem;
+	}
+
+	.testimonial-section {
+		gap: 0;
+	}
+
+	.final-cta {
+		text-align: center;
+		padding: 3rem 0;
+	}
+
+	.final-cta .section__intro {
+		gap: 1.5rem;
+	}
+
+	.final-cta .section__intro h2 {
+		font-size: clamp(1.8rem, 4vw, 2.4rem);
+	}
+
+	@media (max-width: 640px) {
+		.shell {
+			gap: 3rem;
+		}
+
+		.hero {
+			padding-top: 1rem;
+		}
+
+		.section {
+			gap: 2.5rem;
+		}
+	}
+</style>
+
