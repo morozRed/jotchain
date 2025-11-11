@@ -109,7 +109,7 @@ export default function Dashboard() {
 
       <div className="flex h-full flex-1 flex-col gap-6 px-4 pb-10 pt-6 md:px-6">
         <header className="flex flex-col gap-2">
-          <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+          <div className="flex flex-col gap-2 lg:grid lg:grid-cols-[minmax(0,1.35fr)_minmax(0,0.85fr)]">
             <div>
               <h1 className="text-2xl font-semibold leading-tight text-foreground md:text-3xl">
                 Keep track of what you&apos;re building
@@ -118,7 +118,7 @@ export default function Dashboard() {
                 Jot down your daily wins, challenges, and ideas. Stay organized and never forget what you worked on.
               </p>
             </div>
-            <div className="relative overflow-hidden rounded-xl border border-primary/40 bg-gradient-to-r from-primary/15 via-primary/10 to-transparent px-5 py-4 text-sm shadow-sm">
+            <div className="flex overflow-hidden rounded-xl border border-primary/40 bg-gradient-to-r from-primary/15 via-primary/10 to-transparent px-5 py-4 text-sm shadow-sm">
               <div
                 aria-hidden
                 className="pointer-events-none absolute -top-16 -right-12 h-36 w-36 rounded-full bg-primary/30 opacity-60 blur-3xl"
@@ -129,7 +129,7 @@ export default function Dashboard() {
               />
               <div className="relative flex items-center gap-4">
                 <div className="flex size-11 items-center justify-center rounded-full border border-primary/40 bg-background/80 text-primary shadow-sm">
-                  <Sparkles className="size-5" />
+                  <Flame className="size-5" />
                 </div>
                 <div className="flex flex-col gap-1">
                   <span className="text-xs font-semibold uppercase tracking-[0.18em] text-primary/70">
@@ -139,17 +139,14 @@ export default function Dashboard() {
                     <>
                       <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-primary">
                         <span className="text-base font-semibold text-foreground">
-                          {pluralize(entryStats.count, "entry", "entries")}
+                          {pluralize(entryStats.count, "entry", "entries")} logged
                         </span>
-                        <span className="text-sm text-primary/80">logged</span>
                         {entryStats.currentStreak && entryStats.currentStreak > 0 ? (
                           <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
-                            <Flame aria-hidden className="size-3.5" />
-                            {pluralize(entryStats.currentStreak, "day")}
+                            {pluralize(entryStats.currentStreak, "day")} streak
                           </span>
                         ) : null}
                       </div>
-                      <span className="text-xs text-primary/70">Keep stacking wins.</span>
                     </>
                   ) : (
                     <span className="text-sm text-primary">
