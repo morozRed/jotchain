@@ -36,6 +36,7 @@ module Api
       # Filter by projects if specified
       if project_ids.present? && !project_ids.include?("all")
         scope = scope.joins(:entry_mentions)
+          .where(entry_mentions: {mentionable_type: "Project", mentionable_id: project_ids})
           .distinct
       end
 
