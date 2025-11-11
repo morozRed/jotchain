@@ -74,16 +74,16 @@ module Insights
       # Filter by projects if specified
       if insight_request.project_ids.present? && !insight_request.project_ids.include?("all")
         project_ids = insight_request.project_ids
-        scope = scope.joins(:entry_mentions)
-          .where(entry_mentions: {mentionable_type: "Project", mentionable_id: project_ids})
+        scope = scope.joins(:project_entry_mentions)
+          .merge(EntryMention.projects.where(mentionable_id: project_ids))
           .distinct
       end
 
-      # Filter by persons if specified (future enhancement)
+      # Filter by persons if specified
       if insight_request.person_ids.present? && !insight_request.person_ids.include?("all")
         person_ids = insight_request.person_ids
-        scope = scope.joins(:entry_mentions)
-          .where(entry_mentions: {mentionable_type: "Person", mentionable_id: person_ids})
+        scope = scope.joins(:person_entry_mentions)
+          .merge(EntryMention.persons.where(mentionable_id: person_ids))
           .distinct
       end
 

@@ -35,15 +35,15 @@ module Api
       scope = Current.user.entries.for_period(date_range).includes(:mentioned_projects, :mentioned_persons)
       # Filter by projects if specified
       if project_ids.present? && !project_ids.include?("all")
-        scope = scope.joins(:entry_mentions)
-          .where(entry_mentions: {mentionable_type: "Project", mentionable_id: project_ids})
+        scope = scope.joins(:project_entry_mentions)
+          .merge(EntryMention.projects.where(mentionable_id: project_ids))
           .distinct
       end
 
       # Filter by persons if specified
       if person_ids.present? && !person_ids.include?("all")
-        scope = scope.joins(:entry_mentions)
-          .where(entry_mentions: {mentionable_type: "Person", mentionable_id: person_ids})
+        scope = scope.joins(:person_entry_mentions)
+          .merge(EntryMention.persons.where(mentionable_id: person_ids))
           .distinct
       end
 
