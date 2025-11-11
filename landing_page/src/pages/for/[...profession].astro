@@ -32,7 +32,7 @@ const painItems = data.painPoints.map((pain) => ({
 }));
 ---
 
-<Layout title={data.title} description={data.metaDescription} useSEO={true}>
+<Layout title={data.title} description={data.metaDescription}>
 	<script type="application/ld+json" set:html={JSON.stringify({
 		"@context": "https://schema.org",
 		"@type": "SoftwareApplication",
