@@ -58,7 +58,7 @@ export function HeatmapCalendar({ data, onDateClick }: HeatmapCalendarProps) {
         <CardContent className="relative z-10">
           <div className="space-y-4">
             {/* Horizontal bar chart */}
-            <div className="flex h-16 gap-0.5 overflow-hidden rounded-lg p-1">
+            <div className="flex h-16 gap-0.5 overflow-hidden rounded-lg p-4">
               {dates.map((date) => {
                 const dateStr = date.toISOString().split("T")[0]
                 const count = dataByDate.get(dateStr) ?? 0
@@ -97,7 +97,7 @@ export function HeatmapCalendar({ data, onDateClick }: HeatmapCalendarProps) {
                     </TooltipTrigger>
                     <TooltipContent side="top" className="bg-card/95 backdrop-blur-sm">
                       <div className="space-y-1">
-                        <p className="font-semibold">
+                        <p className="font-semibold text-primary">
                           {date.toLocaleDateString("en-US", {
                             weekday: "long",
                             month: "long",
