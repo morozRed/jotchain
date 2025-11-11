@@ -49,6 +49,31 @@ class NotificationsController < InertiaController
     redirect_to notifications_path, notice: "Notification deleted"
   end
 
+  def history
+    page = params[:page]&.to_i || 1
+    per_page = 20
+    offset = (page - 1) * per_page
+
+    deliveries = Current.user.notification_deliveries
+      .where(status: :delivered)
+      .includes(:notification_schedule)
+      .order(Arel.sql("COALESCE(delivered_at, created_at) DESC"))
+      .limit(per_page)
+      .offset(offset)
+
+    total_count = Current.user.notification_deliveries.where(status: :delivered).count
+
+    render inertia: "notifications/history", props: {
+      deliveries: delivery_payloads(deliveries),
+      pagination: {
+        currentPage: page,
+        perPage: per_page,
+        totalCount: total_count,
+        totalPages: (total_count.to_f / per_page).ceil
+      }
+    }
+  end
+
   private
 
   BOOLEAN_TYPE = ActiveModel::Type::Boolean.new
@@ -134,5 +159,23 @@ class NotificationsController < InertiaController
       lookbackPresets: NotificationSchedule::LOOKBACK_TYPES.keys - [:custom_days],
       defaultWeeklyDay: 1
     }
+  end
+
+  def delivery_payloads(deliveries)
+    deliveries.map do |delivery|
+      {
+        id: delivery.id,
+        status: delivery.status,
+        deliveredAt: delivery.delivered_at&.iso8601,
+        occurrenceAt: delivery.occurrence_at.iso8601,
+        windowStart: delivery.window_start.iso8601,
+        windowEnd: delivery.window_end.iso8601,
+        scheduleName: delivery.notification_schedule.name,
+        summaryPayload: delivery.summary_payload,
+        errorMessage: delivery.error_message,
+        createdAt: delivery.created_at.iso8601,
+        updatedAt: delivery.updated_at.iso8601
+      }
+    end
   end
 end
