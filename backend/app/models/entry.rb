@@ -5,8 +5,10 @@ class Entry < ApplicationRecord
 
   belongs_to :user
   has_many :entry_mentions, dependent: :destroy
-  has_many :mentioned_projects, -> { where(entry_mentions: {mentionable_type: "Project"}) }, through: :entry_mentions, source: :mentionable, source_type: "Project"
-  has_many :mentioned_persons, -> { where(entry_mentions: {mentionable_type: "Person"}) }, through: :entry_mentions, source: :mentionable, source_type: "Person"
+  has_many :project_entry_mentions, -> { where(mentionable_type: "Project") }, class_name: "EntryMention"
+  has_many :person_entry_mentions, -> { where(mentionable_type: "Person") }, class_name: "EntryMention"
+  has_many :mentioned_projects, through: :project_entry_mentions, source: :mentionable, source_type: "Project"
+  has_many :mentioned_persons, through: :person_entry_mentions, source: :mentionable, source_type: "Person"
 
   encrypts :body
 

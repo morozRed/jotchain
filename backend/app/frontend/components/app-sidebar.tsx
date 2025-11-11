@@ -1,5 +1,5 @@
 import { Link, usePage } from "@inertiajs/react"
-import { BarChart3, Bell, CreditCard, LayoutGrid } from "lucide-react"
+import { BarChart3, Bell, CreditCard, LayoutGrid, Lightbulb } from "lucide-react"
 
 import { FeedbackButton } from "@/components/feedback-button"
 import { NavMain } from "@/components/nav-main"
@@ -15,7 +15,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
-import { analyticsPath, billingPath, dashboardPath, notificationsPath } from "@/routes"
+import { analyticsPath, billingPath, dashboardPath, insightsPath, notificationsPath } from "@/routes"
 import type { NavItem, SharedData } from "@/types"
 
 import AppLogo from "./app-logo"
@@ -30,6 +30,11 @@ const mainNavItems: NavItem[] = [
     title: "Analytics",
     href: analyticsPath(),
     icon: BarChart3,
+  },
+  {
+    title: "Insights",
+    href: insightsPath(),
+    icon: Lightbulb,
   },
   {
     title: "Notifications",

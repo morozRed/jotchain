@@ -32,6 +32,12 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :insights, only: [:index, :create, :show, :update, :destroy] do
+      collection do
+        get :history
+      end
+    end
+
     get "billing", to: "subscriptions#index", as: :billing
     post "billing/checkout", to: "subscriptions#create_checkout_session", as: :billing_checkout
     get "billing/success", to: "subscriptions#success", as: :billing_success
@@ -64,6 +70,11 @@ Rails.application.routes.draw do
       resources :persons, only: [:index, :show, :create, :update, :destroy]
       resources :mentions, only: [:index]
       resource :analytics, only: [:show]
+      resources :insights, only: [] do
+        collection do
+          get :preview
+        end
+      end
     end
 
     root "dashboard#index"

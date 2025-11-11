@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_06_132432) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_11_155332) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -38,6 +38,29 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_06_132432) do
     t.index ["entry_id", "mentionable_type", "mentionable_id"], name: "index_entry_mentions_uniqueness", unique: true
     t.index ["entry_id"], name: "index_entry_mentions_on_entry_id"
     t.index ["mentionable_type", "mentionable_id"], name: "index_entry_mentions_on_mentionable"
+  end
+
+  create_table "insight_requests", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.string "name", null: false
+    t.string "query_type", null: false
+    t.text "custom_query"
+    t.datetime "date_range_start", null: false
+    t.datetime "date_range_end", null: false
+    t.jsonb "project_ids", default: []
+    t.jsonb "person_ids", default: []
+    t.string "status", default: "pending", null: false
+    t.jsonb "result_payload"
+    t.text "content"
+    t.string "result_model"
+    t.integer "prompt_tokens"
+    t.integer "completion_tokens"
+    t.text "error_message"
+    t.datetime "completed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "created_at"], name: "index_insight_requests_on_user_id_and_created_at"
+    t.index ["user_id", "status"], name: "index_insight_requests_on_user_id_and_status"
   end
 
   create_table "notification_deliveries", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -145,6 +168,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_06_132432) do
 
   add_foreign_key "entries", "users"
   add_foreign_key "entry_mentions", "entries"
+  add_foreign_key "insight_requests", "users"
   add_foreign_key "notification_deliveries", "notification_schedules"
   add_foreign_key "notification_deliveries", "users"
   add_foreign_key "notification_schedules", "users"

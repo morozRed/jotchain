@@ -18,6 +18,7 @@ class User < ApplicationRecord
   has_many :notification_schedules, dependent: :destroy
   has_many :sessions, dependent: :destroy
   has_many :notification_deliveries, dependent: :destroy
+  has_many :insight_requests, dependent: :destroy
   has_many :projects, dependent: :destroy
   has_many :persons, dependent: :destroy
 
