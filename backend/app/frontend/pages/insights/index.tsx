@@ -1,6 +1,6 @@
-import { Head, usePage } from "@inertiajs/react"
+import { Head, router, usePage } from "@inertiajs/react"
 import { Lightbulb } from "lucide-react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 import { InsightForm } from "@/components/insights/insight-form"
 import { InsightModal } from "@/components/insights/insight-modal"
@@ -15,6 +15,7 @@ import type { BreadcrumbItem, SharedData } from "@/types"
 
 type PageProps = SharedData & {
   recentInsights: InsightRequest[]
+  hasActiveInsights: boolean
   meta: InsightsMeta
 }
 
@@ -26,12 +27,47 @@ const breadcrumbs: BreadcrumbItem[] = [
 ]
 
 export default function Insights() {
-  const { recentInsights, meta } = usePage<PageProps>().props
+  const { recentInsights, hasActiveInsights: initialHasActiveInsights, meta } = usePage<PageProps>().props
 
   const [dateRangeStart, setDateRangeStart] = useState<Date | undefined>()
   const [dateRangeEnd, setDateRangeEnd] = useState<Date | undefined>()
   const [selectedProjects, setSelectedProjects] = useState<string[]>(["all"])
   const [selectedInsight, setSelectedInsight] = useState<InsightRequest | null>(null)
+  const [hasActiveInsights, setHasActiveInsights] = useState(initialHasActiveInsights)
+
+  // Poll for active insights on page load
+  useEffect(() => {
+    if (!hasActiveInsights) return
+
+    const activeInsights = recentInsights.filter(
+      (insight) => insight.status === "pending" || insight.status === "generating"
+    )
+
+    if (activeInsights.length === 0) {
+      setHasActiveInsights(false)
+      return
+    }
+
+    const intervals = activeInsights.map((insight) => {
+      return setInterval(async () => {
+        try {
+          const response = await fetch(`/insights/${insight.id}`)
+          const updatedInsight: InsightRequest = await response.json()
+
+          if (updatedInsight.status === "completed" || updatedInsight.status === "failed") {
+            // Reload page to get updated insights list
+            router.reload({ only: ["recentInsights", "hasActiveInsights"] })
+          }
+        } catch (error) {
+          console.error("Failed to poll insight status", error)
+        }
+      }, 2000)
+    })
+
+    return () => {
+      intervals.forEach((interval) => clearInterval(interval))
+    }
+  }, [hasActiveInsights, recentInsights])
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
@@ -78,7 +114,12 @@ export default function Insights() {
               dateRangeStart={dateRangeStart}
               dateRangeEnd={dateRangeEnd}
               projectIds={selectedProjects}
-              onInsightGenerated={setSelectedInsight}
+              hasActiveInsights={hasActiveInsights}
+              onInsightGenerated={(insight) => {
+                setSelectedInsight(insight)
+              }}
+              onGenerationStarted={() => setHasActiveInsights(true)}
+              onGenerationCompleted={() => setHasActiveInsights(false)}
             />
           </CardContent>
         </Card>

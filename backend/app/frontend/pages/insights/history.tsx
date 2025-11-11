@@ -1,5 +1,6 @@
-import { Head, Link, usePage } from "@inertiajs/react"
+import { Head, Link, router, usePage } from "@inertiajs/react"
 import { Lightbulb } from "lucide-react"
+import { useEffect } from "react"
 
 import { EmptyState } from "@/components/empty-state"
 import { InsightItem } from "@/components/insights/insight-item"
@@ -30,6 +31,35 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 export default function InsightsHistory() {
   const { insights, pagination } = usePage<PageProps>().props
+
+  // Poll for active insights
+  useEffect(() => {
+    const activeInsights = insights.filter(
+      (insight) => insight.status === "pending" || insight.status === "generating"
+    )
+
+    if (activeInsights.length === 0) return
+
+    const intervals = activeInsights.map((insight) => {
+      return setInterval(async () => {
+        try {
+          const response = await fetch(`/insights/${insight.id}`)
+          const updatedInsight: InsightRequest = await response.json()
+
+          if (updatedInsight.status === "completed" || updatedInsight.status === "failed") {
+            // Reload page to get updated insights list
+            router.reload({ only: ["insights"] })
+          }
+        } catch (error) {
+          console.error("Failed to poll insight status", error)
+        }
+      }, 2000)
+    })
+
+    return () => {
+      intervals.forEach((interval) => clearInterval(interval))
+    }
+  }, [insights])
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>

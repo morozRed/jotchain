@@ -1,4 +1,3 @@
-import { router } from "@inertiajs/react"
 import {
   BookOpen,
   FileText,
@@ -20,7 +19,10 @@ interface InsightTemplateCardsProps {
   dateRangeStart?: Date
   dateRangeEnd?: Date
   projectIds: string[]
+  hasActiveInsights?: boolean
   onInsightGenerated: (insight: InsightRequest) => void
+  onGenerationStarted?: () => void
+  onGenerationCompleted?: () => void
 }
 
 const templateIcons = {
@@ -38,9 +40,17 @@ export function InsightTemplateCards({
   dateRangeStart,
   dateRangeEnd,
   projectIds,
+  hasActiveInsights = false,
   onInsightGenerated,
+  onGenerationStarted,
+  onGenerationCompleted,
 }: InsightTemplateCardsProps) {
   const [generating, setGenerating] = useState<QueryType | null>(null)
+
+  const finalizeGeneration = () => {
+    setGenerating(null)
+    onGenerationCompleted?.()
+  }
 
   const handleGenerate = async (queryType: QueryType) => {
     if (!dateRangeStart || !dateRangeEnd) {
@@ -48,7 +58,13 @@ export function InsightTemplateCards({
       return
     }
 
+    if (hasActiveInsights) {
+      alert("Please wait for the current insight generation to complete before generating a new one.")
+      return
+    }
+
     setGenerating(queryType)
+    onGenerationStarted?.()
 
     try {
       const response = await fetch("/insights", {
@@ -72,13 +88,22 @@ export function InsightTemplateCards({
 
       const data = await response.json()
 
+      if (!response.ok) {
+        alert(data.error || "Failed to generate insight")
+        finalizeGeneration()
+        return
+      }
+
       if (data.id) {
         // Poll for completion
         pollInsightStatus(data.id)
+      } else {
+        finalizeGeneration()
       }
     } catch (error) {
       console.error("Failed to generate insight", error)
-      setGenerating(null)
+      alert("Failed to generate insight. Please try again.")
+      finalizeGeneration()
     }
   }
 
@@ -90,17 +115,19 @@ export function InsightTemplateCards({
 
         if (insight.status === "completed") {
           clearInterval(interval)
-          setGenerating(null)
+          finalizeGeneration()
           onInsightGenerated(insight)
         } else if (insight.status === "failed") {
           clearInterval(interval)
-          setGenerating(null)
+          finalizeGeneration()
           alert(`Failed to generate insight: ${insight.errorMessage}`)
         }
+        // Continue polling if status is pending or generating
       } catch (error) {
         console.error("Failed to poll insight status", error)
         clearInterval(interval)
-        setGenerating(null)
+        finalizeGeneration()
+        alert("We ran into a problem while checking on your insight. Please try again.")
       }
     }, 2000)
   }
@@ -130,9 +157,9 @@ export function InsightTemplateCards({
                 <Button
                   className="w-full"
                   onClick={() => handleGenerate(template.value)}
-                  disabled={isGenerating || !!generating}
+                  disabled={isGenerating || !!generating || hasActiveInsights}
                 >
-                  {isGenerating ? "Generating..." : "Generate"}
+                  {isGenerating ? "Generating..." : hasActiveInsights ? "Generation in progress..." : "Generate"}
                 </Button>
               </CardContent>
             </Card>

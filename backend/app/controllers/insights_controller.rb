@@ -5,17 +5,30 @@ class InsightsController < InertiaController
 
   def index
     recent_insights = Current.user.insight_requests
-      .completed
+      .where(status: %w[pending generating completed])
       .recent_first
       .limit(10)
 
+    # Check if there are any active (pending or generating) insights
+    has_active_insights = Current.user.insight_requests
+      .where(status: %w[pending generating])
+      .exists?
+
     render inertia: "insights/index", props: {
       recentInsights: insight_payloads(recent_insights),
+      hasActiveInsights: has_active_insights,
       meta: meta_payload
     }
   end
 
   def create
+    # Prevent creating new insights if there are active ones
+    if Current.user.insight_requests.where(status: %w[pending generating]).exists?
+      return render json: {
+        error: "Please wait for the current insight generation to complete before generating a new one."
+      }, status: :unprocessable_entity
+    end
+
     insight = Current.user.insight_requests.build(insight_params)
 
     if insight.save
@@ -55,14 +68,14 @@ class InsightsController < InertiaController
     per_page = 20
     offset = (page - 1) * per_page
 
-    # Filter to show only pending or completed (succeeded) insights
+    # Filter to show pending, generating, or completed (succeeded) insights
     insights = Current.user.insight_requests
-      .where(status: %w[pending completed])
+      .where(status: %w[pending generating completed])
       .recent_first
       .limit(per_page)
       .offset(offset)
 
-    total_count = Current.user.insight_requests.where(status: %w[pending completed]).count
+    total_count = Current.user.insight_requests.where(status: %w[pending generating completed]).count
 
     render inertia: "insights/history", props: {
       insights: insight_payloads(insights),
@@ -168,7 +181,7 @@ class InsightsController < InertiaController
   def query_type_options
     [
       {value: "summary", label: "Summary", description: "Quick recap of your work (150-300 words)"},
-      {value: "tweets", label: "Tweet Thread", description: "3-5 tweets for X/LinkedIn"},
+      {value: "tweets", label: "Tweet Thread", description: "3-5 tweets for X"},
       {value: "review", label: "Performance Review", description: "Formal accomplishments summary"},
       {value: "blog", label: "Blog Post Draft", description: "Long-form article (800-1200 words)"},
       {value: "update", label: "Team Update", description: "Status email for stakeholders"},
