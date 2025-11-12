@@ -2,7 +2,7 @@ import { Eye } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 
 export interface DeliveryItemProps {
   id: string
@@ -17,14 +17,12 @@ export interface DeliveryItemProps {
   onViewSummary: () => void
 }
 
-function formatDateTime(dateString: string): string {
+function formatDate(dateString: string): string {
   const date = new Date(dateString)
-  return date.toLocaleString("en-US", {
+  return date.toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
     year: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
   })
 }
 
@@ -86,47 +84,47 @@ export function DeliveryItem({
   const hasSummary = summaryPayload !== null && Object.keys(summaryPayload).length > 0
 
   return (
-    <Card>
-      <CardHeader className="pb-3">
-        <div className="flex items-start justify-between gap-4">
-          <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-foreground truncate">{scheduleName}</h3>
-            <p className="text-sm text-muted-foreground mt-1">
-              {formatWindow(windowStart, windowEnd)}
-            </p>
-          </div>
-          <Badge variant={getStatusVariant(status)} className="shrink-0">
-            {getStatusLabel(status)}
-          </Badge>
-        </div>
-      </CardHeader>
-      <CardContent className="pt-0">
-        <div className="space-y-2 text-sm">
-          <div className="flex items-center justify-between">
-            <span className="text-muted-foreground">Occurrence:</span>
-            <span className="text-foreground font-medium">{formatDateTime(occurrenceAt)}</span>
-          </div>
-          {deliveredAt && (
-            <div className="flex items-center justify-between">
-              <span className="text-muted-foreground">Delivered:</span>
-              <span className="text-foreground font-medium">{formatDateTime(deliveredAt)}</span>
+    <Card className="hover:shadow-md transition-shadow">
+      <CardContent className="p-4">
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex-1 min-w-0 space-y-1">
+            <div className="flex items-center gap-3">
+              <h3 className="text-base font-semibold text-foreground truncate">{scheduleName}</h3>
+              <Badge variant={getStatusVariant(status)} className="shrink-0 text-xs">
+                {getStatusLabel(status)}
+              </Badge>
             </div>
-          )}
-          {errorMessage && (
-            <div className="mt-2 p-2 rounded-md bg-destructive/10 border border-destructive/20">
-              <p className="text-xs text-destructive">{errorMessage}</p>
+            <div className="flex items-center gap-4 text-sm text-muted-foreground">
+              <span>{formatWindow(windowStart, windowEnd)}</span>
+              {deliveredAt && (
+                <>
+                  <span>•</span>
+                  <span>Delivered {formatDate(deliveredAt)}</span>
+                </>
+              )}
+              {!deliveredAt && (
+                <>
+                  <span>•</span>
+                  <span>Occurrence: {formatDate(occurrenceAt)}</span>
+                </>
+              )}
+            </div>
+            {errorMessage && (
+              <div className="mt-2 p-2 rounded-md bg-destructive/10 border border-destructive/20">
+                <p className="text-xs text-destructive">{errorMessage}</p>
+              </div>
+            )}
+          </div>
+          {hasSummary && (
+            <div className="flex items-center gap-2 shrink-0">
+              <Button variant="outline" size="sm" onClick={onViewSummary}>
+                <Eye className="size-4 mr-2" />
+                View Summary
+              </Button>
             </div>
           )}
         </div>
       </CardContent>
-      {hasSummary && (
-        <CardFooter className="pt-3 border-t">
-          <Button variant="outline" size="sm" onClick={onViewSummary} className="w-full">
-            <Eye className="size-4 mr-2" />
-            View Summary
-          </Button>
-        </CardFooter>
-      )}
     </Card>
   )
 }

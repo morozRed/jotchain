@@ -16,7 +16,7 @@ module Ai
       keyword_init: true
     )
 
-    DEFAULT_TIMEOUT = (ENV.fetch("AI_TIMEOUT_SECONDS", 90).to_i).clamp(5, 120)
+    DEFAULT_TIMEOUT = (ENV.fetch("AI_TIMEOUT_SECONDS", 120).to_i).clamp(5, 120)
 
     def self.call!(prompt:, **options)
       new.call!(prompt:, **options)

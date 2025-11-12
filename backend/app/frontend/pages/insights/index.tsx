@@ -73,17 +73,16 @@ export default function Insights() {
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Insights" />
 
-      <div className="space-y-6 px-4 pb-10 pt-6 md:px-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">Insights</h1>
-            <p className="text-muted-foreground mt-2">
+      <InsightsSubmenu>
+        <div className="flex flex-1 flex-col gap-6">
+          <header className="space-y-2">
+            <h1 className="text-2xl font-semibold leading-tight text-foreground md:text-3xl">
+              Insights
+            </h1>
+            <p className="max-w-2xl text-sm text-muted-foreground md:text-base">
               Generate AI-powered insights from your entries
             </p>
-          </div>
-        </div>
-
-        <InsightsSubmenu />
+          </header>
 
         <Card>
           <CardHeader>
@@ -161,6 +160,7 @@ export default function Insights() {
           />
         )}
       </div>
+      </InsightsSubmenu>
     </AppLayout>
   )
 }

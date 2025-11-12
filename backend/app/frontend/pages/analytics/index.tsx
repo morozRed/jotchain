@@ -120,51 +120,17 @@ export default function AnalyticsPage() {
     router.visit(`/dashboard?${params.toString()}`)
   }
 
-  const rangeDescriptions: Record<typeof selectedRange, string> = {
-    week: "Last 7 days",
-    month: "Last 30 days",
-    year: "Last 12 months",
-  }
-
-  const activeProjectLabel = selectedProject
-    ? projects.find((project) => project.id === selectedProject)?.name ?? "Selected project"
-    : "All Projects"
-
-  const rangeText = rangeDescriptions[selectedRange]
-
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Analytics" />
-      <div className="container mx-auto max-w-7xl space-y-8 px-4 py-8">
-        <section className="relative overflow-hidden rounded-3xl border border-border/40 bg-gradient-to-br from-background via-card/70 to-muted/40 px-6 py-10 shadow-[0_30px_80px_-60px_rgba(8,15,30,0.75)]">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(129,140,248,0.18),_transparent_55%),radial-gradient(circle_at_bottom_right,_rgba(34,211,238,0.18),_transparent_60%)]" />
-          <div className="relative flex flex-col gap-6">
-            <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-              <div className="space-y-4">
-                <span className="inline-flex items-center gap-2 rounded-full border border-border/40 bg-background/70 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.28em] text-muted-foreground/70">
-                  Analytics Overview
-                </span>
-                <div className="space-y-2">
-                  <h1 className="text-4xl font-semibold tracking-tight text-foreground">Analytics</h1>
-                  <p className="max-w-2xl text-base text-muted-foreground/90">
+      <div className="space-y-6 px-4 pb-10 pt-6 md:px-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-semibold leading-tight text-foreground md:text-3xl">Analytics</h1>
+            <p className="max-w-2xl text-sm text-muted-foreground md:text-base mt-2">
                     Metrics and trends from your entries. Explore where time goes, when you work best, and which projects need attention.
                   </p>
                 </div>
-              </div>
-
-              {analyticsData && (
-                <div className="grid w-full gap-3 sm:grid-cols-2 lg:w-auto">
-                  <div className="rounded-2xl border border-border/40 bg-background/70 px-5 py-4 shadow-inner shadow-black/5">
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground/70">Project</p>
-                    <p className="mt-2 text-base font-semibold text-foreground">{activeProjectLabel}</p>
-                  </div>
-                  <div className="rounded-2xl border border-border/40 bg-background/70 px-5 py-4 shadow-inner shadow-black/5">
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground/70">Range</p>
-                    <p className="mt-2 text-base font-semibold text-foreground">{rangeText}</p>
-                    <p className="mt-1 text-xs text-muted-foreground/70">Timezone adjusts automatically</p>
-                  </div>
-                </div>
-              )}
             </div>
 
             <FilterBar
@@ -174,8 +140,6 @@ export default function AnalyticsPage() {
               onProjectChange={setSelectedProject}
               onRangeChange={setSelectedRange}
             />
-          </div>
-        </section>
 
         {error && (
           <Card className="border-destructive/50 bg-destructive/10">
@@ -195,7 +159,7 @@ export default function AnalyticsPage() {
         {!loading && analyticsData?.cards.totalEntries === 0 && <EmptyState />}
 
         {!loading && analyticsData && (
-          <div className="space-y-8">
+          <div className="space-y-6">
             {/* KPI Cards */}
             <div>
               <KpiCards data={analyticsData.cards} />

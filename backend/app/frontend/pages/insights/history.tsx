@@ -65,17 +65,16 @@ export default function InsightsHistory() {
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Insights History" />
 
-      <div className="space-y-6 px-4 pb-10 pt-6 md:px-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">History</h1>
-            <p className="text-muted-foreground mt-2">
+      <InsightsSubmenu>
+        <div className="flex flex-1 flex-col gap-6">
+          <header className="space-y-2">
+            <h1 className="text-2xl font-semibold leading-tight text-foreground md:text-3xl">
+              History
+            </h1>
+            <p className="max-w-2xl text-sm text-muted-foreground md:text-base">
               View all generated insights from your entries
             </p>
-          </div>
-        </div>
-
-        <InsightsSubmenu />
+          </header>
 
         {insights.length === 0 ? (
           <Card className="border-dashed">
@@ -101,18 +100,20 @@ export default function InsightsHistory() {
               ))}
             </div>
 
-            {pagination.totalPages > 1 && (
+              {pagination.totalCount > 0 && (
               <Pagination
                 currentPage={pagination.currentPage}
                 totalPages={pagination.totalPages}
                 totalCount={pagination.totalCount}
                 perPage={pagination.perPage}
                 baseUrl={historyInsightsPath()}
+                  itemName="insights"
               />
             )}
           </>
         )}
       </div>
+      </InsightsSubmenu>
     </AppLayout>
   )
 }

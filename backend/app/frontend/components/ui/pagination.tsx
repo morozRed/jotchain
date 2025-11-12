@@ -10,6 +10,7 @@ interface PaginationProps {
   totalCount: number
   perPage: number
   baseUrl: string
+  itemName?: string
 }
 
 export function Pagination({
@@ -18,6 +19,7 @@ export function Pagination({
   totalCount,
   perPage,
   baseUrl,
+  itemName = "items",
 }: PaginationProps) {
   const startItem = totalCount === 0 ? 0 : (currentPage - 1) * perPage + 1
   const endItem = Math.min(currentPage * perPage, totalCount)
@@ -30,7 +32,7 @@ export function Pagination({
   return (
     <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
       <div className="text-sm text-muted-foreground">
-        Showing {startItem}-{endItem} of {totalCount} deliveries
+        Showing {startItem}-{endItem} of {totalCount} {itemName}
       </div>
 
       <div className="flex items-center gap-2">

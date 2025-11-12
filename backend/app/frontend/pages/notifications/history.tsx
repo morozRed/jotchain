@@ -96,13 +96,14 @@ export default function NotificationsHistory() {
                 ))}
               </div>
 
-              {pagination.totalPages > 1 && (
+              {pagination.totalCount > 0 && (
                 <Pagination
                   currentPage={pagination.currentPage}
                   totalPages={pagination.totalPages}
                   totalCount={pagination.totalCount}
                   perPage={pagination.perPage}
                   baseUrl={`${notificationsPath()}/history`}
+                  itemName="deliveries"
                 />
               )}
             </>
