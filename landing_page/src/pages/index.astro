@@ -5,49 +5,49 @@ import Footer from '../components/Footer.astro';
 
 const features = [
 	{
-		label: 'Daily log',
-		title: 'Capture wins, blockers, and context in seconds',
+		label: 'Entries & mentions',
+		title: 'Capture context as you work',
 		description:
-			'Compose a plain-text note with an optional tag at the end of each day. Submit instantly with Command/Ctrl + Enter.',
+			'Log entries in the TipTap editor with inline @project and @person creation so insights, analytics, and digests stay grounded in real work.',
 	},
 	{
-		label: 'Email digests',
-		title: 'AI turns your notes into meeting-ready briefs',
+		label: 'On-demand insights',
+		title: 'Generate summaries, posts, and reviews',
 		description:
-			'We compile the entries you logged and generate clear summaries with sections and stats, ready to skim before you share updates.',
+			'Pick templates like stand-up recap, X post, blog update, performance review, or custom prompts. Filter by date or project, edit, then share.',
 	},
 	{
-		label: 'Flexible schedules',
-		title: 'Control cadence, timezone, and lead time',
+		label: 'Scheduled digests',
+		title: 'Automate meeting prep',
 		description:
-			'Pick daily, weekly, monthly, or custom intervals, choose the summary window, and decide how many minutes before the meeting your email should land.',
+			'Flexible cadence, timezone, lookback, and lead time ensure AI emails arrive before stand-ups, weeklies, and exec reviews.',
 	},
 	{
-		label: 'Timeline & streaks',
-		title: 'Review your history without losing momentum',
+		label: 'Analytics overview',
+		title: 'Spot trends and collaborators',
 		description:
-			'Scroll a per-day timeline, see your current streak, and tidy up entries from the same dashboard—on desktop or phone.',
+			'Dashboards highlight streaks, project breakdowns, collaborators, and “needs attention” lists so you never miss important work.',
 	},
 ];
 
 const workflow = [
 	{
 		step: '01',
-		title: 'Log what you worked on',
+		title: 'Log entries with @-mentions',
 		description:
-			'Capture wins, blockers, and context at the end of your day. Add an optional tag to keep related work together.',
+			'TipTap editor + inline creation for projects and people keeps every note searchable for analytics, insights, and digests.',
 	},
 	{
 		step: '02',
-		title: 'Schedule when summaries go out',
+		title: 'Generate AI outputs on demand',
 		description:
-			'Create email notifications with the cadence, timezone, lookback window, and lead time that match your stand-ups and reviews.',
+			'Choose templates (summary, tweet/X post, blog, review, update, ideas) with date + project filters, then edit before publishing.',
 	},
 	{
 		step: '03',
-		title: 'Skim the email before the meeting',
+		title: 'Schedule notifications & digests',
 		description:
-			'AI assembles your recent notes into sections and stats so you can walk in prepared without rewriting anything.',
+			'Flexible timezone, cadence, lookback, and lead time deliver polished briefs exactly when your meetings happen.',
 	},
 ];
 
@@ -130,11 +130,17 @@ const commitments = [
 
 		<section class="hero" id="top">
 			<div class="hero__content">
-				<span class="hero__pill">14-day free trial · No credit card required</span>
-				<h1>Stop digging for "what did I do yesterday?"</h1>
+				<span class="hero__pill">Log once → reuse everywhere</span>
+				<h1>
+					Turn your notes into
+					<span class="hero__placeholder">
+						<span class="hero__placeholder-measure" aria-hidden="true">executive updates</span>
+						<span class="hero__placeholder-text" data-hero-placeholder>X posts</span>
+					</span>
+				</h1>
 				<p>
-					Log what you did in 2 minutes. Get AI-generated summaries before every meeting.
-					JotChain turns your daily work into clear, professional updates for stand-ups, syncs, and reviews.
+					Log entries with @-mentions, then spin up stand-up briefs, X posts, blog updates, performance reviews,
+					and executive-ready recaps on demand. JotChain keeps insights, analytics, and scheduled digests in one AI-ready workspace.
 				</p>
 				<div class="hero__actions">
 					<a class="button button--primary" href={appSignupUrl}>Start free trial</a>
@@ -144,21 +150,21 @@ const commitments = [
 			<div class="hero__visual">
 				<div class="panel panel--standup">
 					<header>
-						<span class="chip chip--glow">Your daily stand-up prep</span>
-						<span class="panel__time">8:30 AM · Inbox</span>
+						<span class="chip chip--glow">Your AI output queue</span>
+						<span class="panel__time">Last synced · 2 minutes ago</span>
 					</header>
 					<ul>
 						<li class="flex items-center">
 							<span class="dot dot--accent"></span>
-							<span>Finished API authentication refactor</span>
+							<span>Entries tagged @Payments, @Ops, @Sarah</span>
 						</li>
 						<li class="flex items-center">
 							<span class="dot"></span>
-							<span>Fixed bug in payment flow</span>
+							<span>Insights · Stand-up recap, X post, blog draft</span>
 						</li>
 						<li class="flex items-center">
 							<span class="dot"></span>
-							<span>Code reviewed 3 PRs for Sarah's team</span>
+							<span>Digest scheduled — Friday review @ 9:00 AM</span>
 						</li>
 					</ul>
 					<footer>
@@ -171,12 +177,12 @@ const commitments = [
 				</div>
 				<div class="panel panel--summary">
 					<header>
-						<span class="chip">Weekly sync</span>
-						<span class="panel__time">Friday 1:30 PM · Inbox</span>
+						<span class="chip">Performance review</span>
+						<span class="panel__time">Ready to share</span>
 					</header>
 					<p>
-						This week you completed the auth refactor, fixed 5 production bugs,
-						and reviewed 12 PRs. Blocker: database performance on staging needs attention.
+						You shipped the auth refactor, closed 5 production bugs, coached 3 teammates, and unblocked launch metrics.
+						Next focus: staging database performance.
 					</p>
 					<div class="panel__progress">
 						<span style="width: 78%"></span>
@@ -189,26 +195,26 @@ const commitments = [
 			</div>
 			<ul class="hero__metrics">
 				<li>
-					<strong>2 minutes</strong>
-					<span>Daily logging takes less time than your coffee break</span>
+					<strong>1 secure workspace</strong>
+					<span>Entries, projects, people, analytics, and insights stay linked</span>
 				</li>
 				<li>
-					<strong>30 mins before</strong>
-					<span>Summaries arrive in your inbox before each meeting</span>
+					<strong>7+ AI templates</strong>
+					<span>Stand-up recap, X post, blog, review, exec update, ideas, custom</span>
 				</li>
 				<li>
-					<strong>Zero friction</strong>
-					<span>Simple text field, no complex forms or setup</span>
+					<strong>Flexible delivery</strong>
+					<span>On-demand outputs plus scheduled digests with timezone & lead time</span>
 				</li>
 			</ul>
 		</section>
 
 		<section class="section section--features" id="features">
 			<div class="section__intro">
-				<h2>Everything you need to prep for meetings</h2>
+				<h2>Log once, repurpose everywhere</h2>
 				<p>
-					Purpose-built for engineers and managers who want to show up prepared
-					without spending hours trying to remember what they did.
+					Purpose-built for technical teams who need trustworthy records, flexible AI outputs,
+					and scheduled digests without extra busywork.
 				</p>
 			</div>
 			<div class="feature-grid">
@@ -321,6 +327,63 @@ const commitments = [
 			</div>
 		</section>
 
+		<script type="module">
+			const initHeroPlaceholder = () => {
+				const el = document.querySelector('[data-hero-placeholder]');
+				if (!el) return;
+
+				const phrases = ['X posts', 'blog posts', 'performance reviews', 'meeting prep', 'executive updates'];
+				const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+				let index = 0;
+				let timeoutId;
+
+				const schedule = (fn, delay) => {
+					timeoutId = window.setTimeout(() => {
+						timeoutId = undefined;
+						fn();
+					}, delay);
+				};
+
+				const typePhrase = () => {
+					const phrase = phrases[index];
+					let charIndex = 0;
+
+					const typeNext = () => {
+						if (!el.isConnected) return;
+						el.textContent = phrase.slice(0, charIndex);
+						charIndex += 1;
+
+						if (charIndex <= phrase.length) {
+							schedule(typeNext, 80);
+							return;
+						}
+
+						schedule(() => {
+							index = (index + 1) % phrases.length;
+							typePhrase();
+						}, 2000);
+					};
+
+					typeNext();
+				};
+
+				if (phrases.length === 0) return;
+
+				if (prefersReducedMotion.matches) {
+					el.textContent = phrases[0];
+					return;
+				}
+
+				typePhrase();
+			};
+
+			if (document.readyState === 'loading') {
+				document.addEventListener('DOMContentLoaded', initHeroPlaceholder, { once: true });
+			} else {
+				initHeroPlaceholder();
+			}
+		</script>
+
 		<Footer />
 	</div>
 </Layout>
@@ -365,6 +428,50 @@ const commitments = [
 		letter-spacing: -0.03em;
 	}
 
+	.hero__placeholder {
+		position: relative;
+		display: inline-flex;
+		align-items: flex-start;
+		margin-left: 0.35rem;
+	}
+
+	.hero__placeholder-measure {
+		visibility: hidden;
+		pointer-events: none;
+		white-space: nowrap;
+	}
+
+	.hero__placeholder-text {
+		color: var(--accent-primary);
+		position: absolute;
+		left: 0;
+		top: 0;
+		display: inline-flex;
+		white-space: nowrap;
+	}
+
+	.hero__placeholder-text::after {
+		content: '';
+		width: 2px;
+		height: 1.1em;
+		background: currentColor;
+		margin-left: 0.15rem;
+		align-self: center;
+		animation: blink 1.1s steps(2, start) infinite;
+		opacity: 0.65;
+	}
+
+	@keyframes blink {
+		0%,
+		49% {
+			opacity: 0;
+		}
+		50%,
+		100% {
+			opacity: 1;
+		}
+	}
+
 	.hero p {
 		color: var(--text-secondary);
 		font-size: 1.05rem;
@@ -382,11 +489,11 @@ const commitments = [
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
-		gap: 0.4rem;
-		border-radius: 12px;
-		padding: 0.85rem 1.55rem;
-		font-weight: 500;
-		font-size: 0.96rem;
+		gap: 0.5rem;
+		border-radius: 14px;
+		padding: 1rem 1.9rem;
+		font-weight: 600;
+		font-size: 1.05rem;
 		border: 1px solid transparent;
 		transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 	}
