@@ -2,6 +2,7 @@ import {
   BookOpen,
   FileText,
   Lightbulb,
+  Loader2,
   Mail,
   MessageSquare,
   Star,
@@ -9,10 +10,11 @@ import {
 } from "lucide-react"
 import { useState } from "react"
 
-import type { InsightRequest, InsightsMeta, QueryType } from "./types"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { insightPath } from "@/routes"
+
+import type { InsightRequest, InsightsMeta, QueryType } from "./types"
 
 interface InsightTemplateCardsProps {
   meta: InsightsMeta
@@ -20,6 +22,9 @@ interface InsightTemplateCardsProps {
   dateRangeEnd?: Date
   projectIds: string[]
   hasActiveInsights?: boolean
+  generationLimit: number
+  remainingGenerations: number
+  onQuotaConsumed?: () => void
   onInsightGenerated: (insight: InsightRequest) => void
   onGenerationStarted?: () => void
   onGenerationCompleted?: () => void
@@ -35,17 +40,26 @@ const templateIcons = {
   custom: MessageSquare,
 }
 
+interface InsightGenerationResponse {
+  id?: string
+  error?: string
+}
+
 export function InsightTemplateCards({
   meta,
   dateRangeStart,
   dateRangeEnd,
   projectIds,
   hasActiveInsights = false,
+  generationLimit,
+  remainingGenerations,
+  onQuotaConsumed,
   onInsightGenerated,
   onGenerationStarted,
   onGenerationCompleted,
 }: InsightTemplateCardsProps) {
   const [generating, setGenerating] = useState<QueryType | null>(null)
+  const limitReached = remainingGenerations <= 0
 
   const finalizeGeneration = () => {
     setGenerating(null)
@@ -53,6 +67,13 @@ export function InsightTemplateCards({
   }
 
   const handleGenerate = async (queryType: QueryType) => {
+    if (limitReached) {
+      alert(
+        `You've reached the monthly AI generation limit of ${generationLimit} runs. Please wait for next month or upgrade your plan.`,
+      )
+      return
+    }
+
     if (!dateRangeStart || !dateRangeEnd) {
       alert("Please select a date range")
       return
@@ -73,7 +94,7 @@ export function InsightTemplateCards({
           "Content-Type": "application/json",
           "X-CSRF-Token": document
             .querySelector('meta[name="csrf-token"]')
-            ?.getAttribute("content") || "",
+            ?.getAttribute("content") ?? "",
         },
         body: JSON.stringify({
           insight_request: {
@@ -86,10 +107,10 @@ export function InsightTemplateCards({
         }),
       })
 
-      const data = await response.json()
+      const data = (await response.json()) as InsightGenerationResponse
 
       if (!response.ok) {
-        alert(data.error || "Failed to generate insight")
+        alert(data.error ?? "Failed to generate insight")
         finalizeGeneration()
         return
       }
@@ -111,10 +132,11 @@ export function InsightTemplateCards({
     const interval = setInterval(async () => {
       try {
         const response = await fetch(insightPath(insightId))
-        const insight: InsightRequest = await response.json()
+        const insight = (await response.json()) as InsightRequest
 
         if (insight.status === "completed") {
           clearInterval(interval)
+          onQuotaConsumed?.()
           finalizeGeneration()
           onInsightGenerated(insight)
         } else if (insight.status === "failed") {
@@ -133,39 +155,58 @@ export function InsightTemplateCards({
   }
 
   return (
-    <div>
-      <h3 className="text-lg font-semibold mb-4">Generate</h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="space-y-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {meta.queryTypes
           .filter((template) => template.value !== "custom")
           .map((template) => {
-          const Icon = templateIcons[template.value]
-          const isGenerating = generating === template.value
+            const Icon = templateIcons[template.value]
+            const isGenerating = generating === template.value
+            const isAnotherTemplateGenerating =
+              generating !== null && generating !== template.value
+            const buttonDisabled =
+              limitReached || hasActiveInsights || isGenerating || isAnotherTemplateGenerating
 
-          return (
-            <Card key={template.value} className="relative flex flex-col">
-              <CardHeader>
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-primary/10">
-                    <Icon className="h-5 w-5 text-primary" />
+            return (
+              <Card key={template.value} className="relative flex flex-col">
+                <CardHeader>
+                  <div className="flex items-center gap-3">
+                    <div className="rounded-lg bg-primary/10 p-2">
+                      <Icon className="h-5 w-5 text-primary" />
+                    </div>
+                    <CardTitle className="text-base">{template.label}</CardTitle>
                   </div>
-                  <CardTitle className="text-base">{template.label}</CardTitle>
-                </div>
-                <CardDescription className="text-sm">{template.description}</CardDescription>
-              </CardHeader>
-              <CardContent className="flex-1 flex flex-col justify-end">
-                <Button
-                  className="w-full"
-                  onClick={() => handleGenerate(template.value)}
-                  disabled={isGenerating || !!generating || hasActiveInsights}
-                >
-                  {isGenerating ? "Generating..." : hasActiveInsights ? "Generation in progress..." : "Generate"}
-                </Button>
-              </CardContent>
-            </Card>
-          )
-        })}
+                  <CardDescription className="text-sm">{template.description}</CardDescription>
+                </CardHeader>
+                <CardContent className="flex flex-1 flex-col justify-end">
+                  <Button
+                    className="w-full"
+                    onClick={() => void handleGenerate(template.value)}
+                    disabled={buttonDisabled}
+                  >
+                    {isGenerating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    {limitReached
+                      ? "Monthly limit reached"
+                      : hasActiveInsights
+                        ? "Finish current insight"
+                        : isGenerating
+                          ? "Generating..."
+                          : isAnotherTemplateGenerating
+                            ? "Please wait..."
+                            : "Generate"}
+                  </Button>
+                </CardContent>
+              </Card>
+            )
+          })}
       </div>
+
+      {limitReached && (
+        <p className="text-sm text-destructive">
+          You&apos;ve used all {generationLimit} runs available this month. Contact support if you
+          need additional capacity.
+        </p>
+      )}
     </div>
   )
 }

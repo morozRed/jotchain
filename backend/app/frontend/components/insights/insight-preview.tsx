@@ -72,7 +72,11 @@ export function InsightPreview({
     )
   }
 
-  if (!preview || preview.totalNotes === 0) {
+  if (!preview) {
+    return null
+  }
+
+  if (preview.totalNotes === 0) {
     return (
       <Card className="border-dashed">
         <CardContent className="flex items-start gap-3 p-4">
@@ -85,38 +89,5 @@ export function InsightPreview({
     )
   }
 
-  return (
-    <Card className="bg-primary/5 border-primary/20 pt-3 pb-3">
-      <CardContent className="p-4">
-        <div className="flex items-start gap-3">
-          <FileText className="h-5 w-5 text-primary mt-0.5" />
-          <div className="space-y-2 flex-1">
-            <p className="font-medium">Analyzing {preview.totalNotes} notes from this selection</p>
-
-            {Object.keys(preview.breakdown).length > 0 && (
-              <div className="text-sm">
-                <p className="font-medium mb-1">Breakdown:</p>
-                <ul className="list-disc list-inside space-y-0.5 text-muted-foreground">
-                  {Object.entries(preview.breakdown).map(([project, count]) => (
-                    <li key={project}>
-                      {project}: {count} notes
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            {preview.topCollaborators.length > 0 && (
-              <div className="text-sm">
-                <p className="font-medium mb-1">Top collaborators:</p>
-                <p className="text-muted-foreground">
-                  {preview.topCollaborators.map((c) => `${c.name} (${c.count})`).join(", ")}
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  )
+  return null
 }

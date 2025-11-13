@@ -15,7 +15,15 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
-import { analyticsPath, billingPath, dashboardPath, insightsPath, notificationsPath } from "@/routes"
+import {
+  analyticsPath,
+  billingPath,
+  dashboardPath,
+  historyInsightsPath,
+  historyNotificationsPath,
+  insightsPath,
+  notificationsPath,
+} from "@/routes"
 import type { NavItem, SharedData } from "@/types"
 
 import AppLogo from "./app-logo"
@@ -35,11 +43,31 @@ const mainNavItems: NavItem[] = [
     title: "Insights",
     href: insightsPath(),
     icon: Lightbulb,
+    items: [
+      {
+        title: "Generate",
+        href: insightsPath(),
+      },
+      {
+        title: "History",
+        href: historyInsightsPath(),
+      },
+    ],
   },
   {
     title: "Notifications",
     href: notificationsPath(),
     icon: Bell,
+    items: [
+      {
+        title: "Settings",
+        href: notificationsPath(),
+      },
+      {
+        title: "History",
+        href: historyNotificationsPath(),
+      },
+    ],
   },
   {
     title: "Billing",

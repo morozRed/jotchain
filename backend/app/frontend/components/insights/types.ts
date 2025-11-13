@@ -61,6 +61,8 @@ export interface InsightsMeta {
   persons: PersonOption[];
   queryTypes: QueryTypeOption[];
   datePresets: DatePresetOption[];
+  monthlyGenerationLimit?: number;
+  monthlyGenerationUsage?: number;
 }
 
 export interface PreviewData {

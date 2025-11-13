@@ -22,6 +22,12 @@ class InsightsController < InertiaController
   end
 
   def create
+    if insight_quota.limit_reached?
+      return render json: {
+        error: quota_limit_reached_error
+      }, status: :unprocessable_entity
+    end
+
     # Prevent creating new insights if there are active ones
     if Current.user.insight_requests.where(status: %w[pending generating]).exists?
       return render json: {
@@ -158,11 +164,15 @@ class InsightsController < InertiaController
   end
 
   def meta_payload
+    quota = insight_quota
+
     {
       projects: project_options,
       persons: person_options,
       queryTypes: query_type_options,
-      datePresets: date_preset_options
+      datePresets: date_preset_options,
+      monthlyGenerationLimit: quota.monthly_limit,
+      monthlyGenerationUsage: quota.monthly_usage
     }
   end
 
@@ -200,5 +210,13 @@ class InsightsController < InertiaController
       {value: "this_year", label: "This year"},
       {value: "custom", label: "Custom range"}
     ]
+  end
+
+  def insight_quota
+    @insight_quota ||= Insights::Quota.new(user: Current.user)
+  end
+
+  def quota_limit_reached_error
+    "You've reached the monthly AI generation limit of #{insight_quota.monthly_limit} runs. Please wait for next month or upgrade your plan."
   end
 end

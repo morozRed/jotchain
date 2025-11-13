@@ -1,13 +1,13 @@
 import { Head, router, usePage } from "@inertiajs/react"
 import { Lightbulb } from "lucide-react"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 
 import { InsightForm } from "@/components/insights/insight-form"
 import { InsightModal } from "@/components/insights/insight-modal"
 import { InsightPreview } from "@/components/insights/insight-preview"
 import { InsightTemplateCards } from "@/components/insights/insight-template-cards"
-import InsightsSubmenu from "@/components/insights/insights-submenu"
 import type { InsightRequest, InsightsMeta } from "@/components/insights/types"
+import { PageBody } from "@/components/page/page-body"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import AppLayout from "@/layouts/app-layout"
 import { insightsPath } from "@/routes"
@@ -27,13 +27,28 @@ const breadcrumbs: BreadcrumbItem[] = [
 ]
 
 export default function Insights() {
-  const { recentInsights, hasActiveInsights: initialHasActiveInsights, meta } = usePage<PageProps>().props
+  const page = usePage<PageProps>()
+  const { recentInsights, hasActiveInsights: initialHasActiveInsights, meta } =
+    page.props as PageProps
 
   const [dateRangeStart, setDateRangeStart] = useState<Date | undefined>()
   const [dateRangeEnd, setDateRangeEnd] = useState<Date | undefined>()
   const [selectedProjects, setSelectedProjects] = useState<string[]>(["all"])
   const [selectedInsight, setSelectedInsight] = useState<InsightRequest | null>(null)
   const [hasActiveInsights, setHasActiveInsights] = useState(initialHasActiveInsights)
+
+  const generationLimit = meta.monthlyGenerationLimit ?? 20
+  const initialUsage = meta.monthlyGenerationUsage ?? 0
+  const initialRemainingQuota = useMemo(
+    () => Math.max(generationLimit - initialUsage, 0),
+    [generationLimit, initialUsage],
+  )
+  const [remainingGenerations, setRemainingGenerations] = useState(initialRemainingQuota)
+  const limitReached = remainingGenerations <= 0
+
+  useEffect(() => {
+    setRemainingGenerations(initialRemainingQuota)
+  }, [initialRemainingQuota])
 
   // Poll for active insights on page load
   useEffect(() => {
@@ -52,7 +67,7 @@ export default function Insights() {
       return setInterval(async () => {
         try {
           const response = await fetch(`/insights/${insight.id}`)
-          const updatedInsight: InsightRequest = await response.json()
+          const updatedInsight = (await response.json()) as InsightRequest
 
           if (updatedInsight.status === "completed" || updatedInsight.status === "failed") {
             // Reload page to get updated insights list
@@ -73,52 +88,87 @@ export default function Insights() {
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Insights" />
 
-      <InsightsSubmenu>
-        <div className="flex flex-1 flex-col gap-6">
-          <header className="space-y-2">
-            <h1 className="text-2xl font-semibold leading-tight text-foreground md:text-3xl">
-              Insights
-            </h1>
-            <p className="max-w-2xl text-sm text-muted-foreground md:text-base">
-              Generate AI-powered insights from your entries
-            </p>
-          </header>
+      <PageBody>
+        <header className="space-y-2">
+          <h1 className="text-2xl font-semibold leading-tight text-foreground md:text-3xl">
+            Insights
+          </h1>
+          <p className="max-w-2xl text-sm text-muted-foreground md:text-base">
+            Generate AI-powered insights from your entries
+          </p>
+        </header>
 
         <Card>
-          <CardHeader>
-            <CardTitle>Generate Insights</CardTitle>
-            <CardDescription>
-              Select filters and choose a template to generate insights
-            </CardDescription>
+          <CardHeader className="flex flex-col gap-4 lg:flex-row lg:items-stretch lg:justify-between">
+            <div className="flex-1 space-y-4">
+              <div className="space-y-1">
+                <CardTitle>Generate Insights</CardTitle>
+                <CardDescription>
+                  Select filters and choose a template to generate insights
+                </CardDescription>
+              </div>
+              <InsightForm
+                meta={meta}
+                dateRangeStart={dateRangeStart}
+                dateRangeEnd={dateRangeEnd}
+                selectedProjects={selectedProjects}
+                onDateRangeStartChange={setDateRangeStart}
+                onDateRangeEndChange={setDateRangeEnd}
+                onProjectsChange={setSelectedProjects}
+              />
+            </div>
+            <div className="hidden rounded-lg border border-dashed border-primary/25 bg-primary/5 p-4 text-sm text-muted-foreground lg:block lg:w-[18rem] lg:self-start space-y-3">
+              <div className="space-y-1">
+                <p className="text-xs uppercase tracking-wide text-primary">Quota</p>
+                <p className="font-semibold text-foreground">AI generations</p>
+                <p className="text-2xl font-bold text-primary">
+                  {generationLimit - remainingGenerations}
+                  <span className="text-base text-muted-foreground"> / {generationLimit} used</span>
+                </p>
+              </div>
+              <div className="space-y-2">
+                <div className="h-1.5 w-full rounded-full bg-primary/15">
+                  <div
+                    className={`h-full rounded-full ${
+                      limitReached ? "bg-destructive" : "bg-primary"
+                    }`}
+                    style={{
+                      width: `${Math.min(
+                        (generationLimit - remainingGenerations) / generationLimit * 100,
+                        100,
+                      )}%`,
+                    }}
+                  />
+                </div>
+                {limitReached && (
+                  <p className="text-xs font-medium text-destructive">Monthly limit reached</p>
+                )}
+              </div>
+            </div>
           </CardHeader>
-          <CardContent className="space-y-6">
-            <InsightForm
-              meta={meta}
-              dateRangeStart={dateRangeStart}
-              dateRangeEnd={dateRangeEnd}
-              selectedProjects={selectedProjects}
-              onDateRangeStartChange={setDateRangeStart}
-              onDateRangeEndChange={setDateRangeEnd}
-              onProjectsChange={setSelectedProjects}
-            />
-
-            <InsightPreview
-              dateRangeStart={dateRangeStart}
-              dateRangeEnd={dateRangeEnd}
-              projectIds={selectedProjects}
-            />
-
+          <CardContent className="space-y-4">
             <InsightTemplateCards
               meta={meta}
               dateRangeStart={dateRangeStart}
               dateRangeEnd={dateRangeEnd}
               projectIds={selectedProjects}
               hasActiveInsights={hasActiveInsights}
+              generationLimit={generationLimit}
+              remainingGenerations={remainingGenerations}
+              onQuotaConsumed={() =>
+                setRemainingGenerations((prev) => Math.max(prev - 1, 0))
+              }
               onInsightGenerated={(insight) => {
                 setSelectedInsight(insight)
               }}
               onGenerationStarted={() => setHasActiveInsights(true)}
               onGenerationCompleted={() => setHasActiveInsights(false)}
+            />
+
+            <InsightPreview
+              dateRangeStart={dateRangeStart}
+              dateRangeEnd={dateRangeEnd}
+              projectIds={selectedProjects}
             />
           </CardContent>
         </Card>
@@ -134,7 +184,7 @@ export default function Insights() {
                   <button
                     key={insight.id}
                     onClick={() => setSelectedInsight(insight)}
-                    className="w-full text-left p-3 rounded-lg border hover:bg-accent transition-colors"
+                    className="w-full rounded-lg border p-3 text-left transition-colors hover:bg-accent"
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
@@ -159,8 +209,7 @@ export default function Insights() {
             onClose={() => setSelectedInsight(null)}
           />
         )}
-      </div>
-      </InsightsSubmenu>
+      </PageBody>
     </AppLayout>
   )
 }

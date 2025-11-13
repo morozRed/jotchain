@@ -1,15 +1,18 @@
 import { Head, usePage } from "@inertiajs/react"
+import type { ComponentProps } from "react"
 import { useState } from "react"
 
-import { DeliveryItem } from "@/components/notifications/delivery-item"
-import NotificationsSubmenu from "@/components/notifications/notifications-submenu"
-import { SummaryDialog } from "@/components/notifications/summary-dialog"
 import { EmptyState } from "@/components/empty-state"
+import { DeliveryItem } from "@/components/notifications/delivery-item"
+import { SummaryDialog } from "@/components/notifications/summary-dialog"
+import { PageBody } from "@/components/page/page-body"
 import { Card, CardContent } from "@/components/ui/card"
 import { Pagination } from "@/components/ui/pagination"
 import AppLayout from "@/layouts/app-layout"
 import { notificationsPath } from "@/routes"
 import type { BreadcrumbItem, SharedData } from "@/types"
+
+type SummaryDialogProps = ComponentProps<typeof SummaryDialog>
 
 interface DeliveryPayload {
   id: string
@@ -19,7 +22,7 @@ interface DeliveryPayload {
   windowStart: string
   windowEnd: string
   scheduleName: string
-  summaryPayload: Record<string, unknown> | null
+  summaryPayload: SummaryDialogProps["summaryPayload"]
   errorMessage: string | null
   createdAt: string
   updatedAt: string
@@ -54,68 +57,68 @@ export default function NotificationsHistory() {
     setIsDialogOpen(true)
   }
 
-  const handleCloseDialog = () => {
-    setIsDialogOpen(false)
-    setSelectedDelivery(null)
+  const handleDialogChange = (open: boolean) => {
+    setIsDialogOpen(open)
+    if (!open) {
+      setSelectedDelivery(null)
+    }
   }
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Notification History" />
 
-      <NotificationsSubmenu>
-        <div className="flex flex-1 flex-col gap-6">
-          <header className="space-y-2">
-            <h1 className="text-2xl font-semibold leading-tight text-foreground md:text-3xl">
-              History
-            </h1>
-            <p className="max-w-2xl text-sm text-muted-foreground md:text-base">
-              View past notification deliveries and their summaries.
-            </p>
-          </header>
+      <PageBody>
+        <header className="space-y-2">
+          <h1 className="text-2xl font-semibold leading-tight text-foreground md:text-3xl">
+            History
+          </h1>
+          <p className="max-w-2xl text-sm text-muted-foreground md:text-base">
+            View past notification deliveries and their summaries.
+          </p>
+        </header>
 
-          {deliveries.length === 0 ? (
-            <Card className="border-dashed">
-              <CardContent>
-                <EmptyState
-                  title="No delivery history"
-                  description="Notification deliveries will appear here once they are sent."
-                  className="border-0 bg-transparent p-0"
+        {deliveries.length === 0 ? (
+          <Card className="border-dashed">
+            <CardContent>
+              <EmptyState
+                title="No delivery history"
+                description="Notification deliveries will appear here once they are sent."
+                className="border-0 bg-transparent p-0"
+              />
+            </CardContent>
+          </Card>
+        ) : (
+          <>
+            <div className="grid gap-4">
+              {deliveries.map((delivery) => (
+                <DeliveryItem
+                  key={delivery.id}
+                  {...delivery}
+                  onViewSummary={() => handleViewSummary(delivery)}
                 />
-              </CardContent>
-            </Card>
-          ) : (
-            <>
-              <div className="grid gap-4">
-                {deliveries.map((delivery) => (
-                  <DeliveryItem
-                    key={delivery.id}
-                    {...delivery}
-                    onViewSummary={() => handleViewSummary(delivery)}
-                  />
-                ))}
-              </div>
+              ))}
+            </div>
 
-              {pagination.totalCount > 0 && (
-                <Pagination
-                  currentPage={pagination.currentPage}
-                  totalPages={pagination.totalPages}
-                  totalCount={pagination.totalCount}
-                  perPage={pagination.perPage}
-                  baseUrl={`${notificationsPath()}/history`}
-                  itemName="deliveries"
-                />
-              )}
-            </>
-          )}
-        </div>
-      </NotificationsSubmenu>
+            {pagination.totalCount > 0 && (
+              <Pagination
+                currentPage={pagination.currentPage}
+                totalPages={pagination.totalPages}
+                totalCount={pagination.totalCount}
+                perPage={pagination.perPage}
+                baseUrl={`${notificationsPath()}/history`}
+                itemName="deliveries"
+              />
+            )}
+          </>
+        )}
+      </PageBody>
 
       {selectedDelivery && (
         <SummaryDialog
           open={isDialogOpen}
-          onOpenChange={setIsDialogOpen}
-          summaryPayload={selectedDelivery.summaryPayload as any}
+          onOpenChange={handleDialogChange}
+          summaryPayload={selectedDelivery.summaryPayload}
           errorMessage={selectedDelivery.errorMessage}
           windowStart={selectedDelivery.windowStart}
           windowEnd={selectedDelivery.windowEnd}

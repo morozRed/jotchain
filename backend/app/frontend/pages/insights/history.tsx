@@ -4,8 +4,8 @@ import { useEffect } from "react"
 
 import { EmptyState } from "@/components/empty-state"
 import { InsightItem } from "@/components/insights/insight-item"
-import InsightsSubmenu from "@/components/insights/insights-submenu"
 import type { InsightRequest, PaginationData } from "@/components/insights/types"
+import { PageBody } from "@/components/page/page-body"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Pagination } from "@/components/ui/pagination"
@@ -65,16 +65,15 @@ export default function InsightsHistory() {
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Insights History" />
 
-      <InsightsSubmenu>
-        <div className="flex flex-1 flex-col gap-6">
-          <header className="space-y-2">
-            <h1 className="text-2xl font-semibold leading-tight text-foreground md:text-3xl">
-              History
-            </h1>
-            <p className="max-w-2xl text-sm text-muted-foreground md:text-base">
-              View all generated insights from your entries
-            </p>
-          </header>
+      <PageBody>
+        <header className="space-y-2">
+          <h1 className="text-2xl font-semibold leading-tight text-foreground md:text-3xl">
+            History
+          </h1>
+          <p className="max-w-2xl text-sm text-muted-foreground md:text-base">
+            View all generated insights from your entries
+          </p>
+        </header>
 
         {insights.length === 0 ? (
           <Card className="border-dashed">
@@ -100,20 +99,19 @@ export default function InsightsHistory() {
               ))}
             </div>
 
-              {pagination.totalCount > 0 && (
+            {pagination.totalCount > 0 && (
               <Pagination
                 currentPage={pagination.currentPage}
                 totalPages={pagination.totalPages}
                 totalCount={pagination.totalCount}
                 perPage={pagination.perPage}
                 baseUrl={historyInsightsPath()}
-                  itemName="insights"
+                itemName="insights"
               />
             )}
           </>
         )}
-      </div>
-      </InsightsSubmenu>
+      </PageBody>
     </AppLayout>
   )
 }
