@@ -4,6 +4,3 @@ class AddDeletedAtToInsightRequests < ActiveRecord::Migration[8.0]
     add_index :insight_requests, :deleted_at
   end
 end
-
-
-
