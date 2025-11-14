@@ -15,6 +15,7 @@ class InsightRequest < ApplicationRecord
   scope :recent_first, -> { order(created_at: :desc) }
   scope :completed, -> { where(status: "completed") }
   scope :for_period, ->(range) { where(created_at: range) }
+  scope :visible, -> { where(deleted_at: nil) }
 
   def generating?
     status == "generating"
@@ -26,6 +27,14 @@ class InsightRequest < ApplicationRecord
 
   def failed?
     status == "failed"
+  end
+
+  def deleted?
+    deleted_at.present?
+  end
+
+  def soft_delete!
+    update!(deleted_at: Time.current)
   end
 
   private

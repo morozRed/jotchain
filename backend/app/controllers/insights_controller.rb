@@ -1,21 +1,37 @@
 # frozen_string_literal: true
 
 class InsightsController < InertiaController
+  VISIBLE_STATUSES = %w[pending generating completed].freeze
+  ACTIVE_STATUSES = %w[pending generating].freeze
+
   before_action :set_insight, only: [:show, :update, :destroy]
 
   def index
-    recent_insights = Current.user.insight_requests
-      .where(status: %w[pending generating completed])
+    page = params[:page]&.to_i || 1
+    per_page = 20
+    offset = (page - 1) * per_page
+
+    # Filter to show pending, generating, or completed insights
+    insights_scope = visible_insight_requests
+    insights = insights_scope
+      .where(status: VISIBLE_STATUSES)
       .recent_first
-      .limit(10)
+      .limit(per_page)
+      .offset(offset)
+
+    total_count = insights_scope.where(status: VISIBLE_STATUSES).count
 
     # Check if there are any active (pending or generating) insights
-    has_active_insights = Current.user.insight_requests
-      .where(status: %w[pending generating])
-      .exists?
+    has_active_insights = insights_scope.where(status: ACTIVE_STATUSES).exists?
 
     render inertia: "insights/index", props: {
-      recentInsights: insight_payloads(recent_insights),
+      insights: insight_payloads(insights),
+      pagination: {
+        currentPage: page,
+        perPage: per_page,
+        totalCount: total_count,
+        totalPages: (total_count.to_f / per_page).ceil
+      },
       hasActiveInsights: has_active_insights,
       meta: meta_payload
     }
@@ -29,7 +45,7 @@ class InsightsController < InertiaController
     end
 
     # Prevent creating new insights if there are active ones
-    if Current.user.insight_requests.where(status: %w[pending generating]).exists?
+    if visible_insight_requests.where(status: ACTIVE_STATUSES).exists?
       return render json: {
         error: "Please wait for the current insight generation to complete before generating a new one."
       }, status: :unprocessable_entity
@@ -65,7 +81,7 @@ class InsightsController < InertiaController
   end
 
   def destroy
-    @insight.destroy
+    @insight.soft_delete!
     redirect_to insights_path, notice: "Insight deleted"
   end
 
@@ -75,13 +91,14 @@ class InsightsController < InertiaController
     offset = (page - 1) * per_page
 
     # Filter to show pending, generating, or completed (succeeded) insights
-    insights = Current.user.insight_requests
-      .where(status: %w[pending generating completed])
+    insights_scope = visible_insight_requests
+    insights = insights_scope
+      .where(status: VISIBLE_STATUSES)
       .recent_first
       .limit(per_page)
       .offset(offset)
 
-    total_count = Current.user.insight_requests.where(status: %w[pending generating completed]).count
+    total_count = insights_scope.where(status: VISIBLE_STATUSES).count
 
     render inertia: "insights/history", props: {
       insights: insight_payloads(insights),
@@ -97,7 +114,7 @@ class InsightsController < InertiaController
   private
 
   def set_insight
-    @insight = Current.user.insight_requests.find(params[:id])
+    @insight = visible_insight_requests.find(params[:id])
   end
 
   def insight_params
@@ -207,8 +224,7 @@ class InsightsController < InertiaController
       {value: "this_week", label: "This week"},
       {value: "this_month", label: "This month"},
       {value: "this_quarter", label: "This quarter"},
-      {value: "this_year", label: "This year"},
-      {value: "custom", label: "Custom range"}
+      {value: "this_year", label: "This year"}
     ]
   end
 
@@ -218,5 +234,9 @@ class InsightsController < InertiaController
 
   def quota_limit_reached_error
     "You've reached the monthly AI generation limit of #{insight_quota.monthly_limit} runs. Please wait for next month or upgrade your plan."
+  end
+
+  def visible_insight_requests
+    Current.user.insight_requests.visible
   end
 end

@@ -49,5 +49,27 @@ RSpec.describe "Insights", type: :request do
       end
     end
   end
+
+  describe "DELETE /insights/:id" do
+    let(:user) { create(:user) }
+    let!(:insight) { create(:insight_request, user:) }
+
+    before { sign_in_as(user) }
+
+    it "soft deletes the insight request" do
+      delete insight_path(insight)
+
+      expect(response).to redirect_to(insights_path)
+      expect(insight.reload.deleted_at).to be_present
+    end
+
+    it "does not change the monthly quota usage" do
+      quota_before = Insights::Quota.new(user:).monthly_usage
+
+      delete insight_path(insight)
+
+      expect(Insights::Quota.new(user:).monthly_usage).to eq(quota_before)
+    end
+  end
 end
 

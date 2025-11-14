@@ -19,7 +19,6 @@ import {
   analyticsPath,
   billingPath,
   dashboardPath,
-  historyInsightsPath,
   historyNotificationsPath,
   insightsPath,
   notificationsPath,
@@ -43,16 +42,6 @@ const mainNavItems: NavItem[] = [
     title: "Insights",
     href: insightsPath(),
     icon: Lightbulb,
-    items: [
-      {
-        title: "Generate",
-        href: insightsPath(),
-      },
-      {
-        title: "History",
-        href: historyInsightsPath(),
-      },
-    ],
   },
   {
     title: "Notifications",

@@ -24,6 +24,13 @@ RSpec.describe Insights::Quota do
 
       expect(quota.monthly_usage).to eq(3)
     end
+
+    it "includes soft-deleted insight requests" do
+      insight = create(:insight_request, user:, created_at: Time.zone.local(2024, 1, 5))
+      insight.update!(deleted_at: Time.zone.local(2024, 1, 10))
+
+      expect(quota.monthly_usage).to eq(1)
+    end
   end
 
   describe "#remaining" do

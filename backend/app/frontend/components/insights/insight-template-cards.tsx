@@ -26,6 +26,7 @@ interface InsightTemplateCardsProps {
   remainingGenerations: number
   onQuotaConsumed?: () => void
   onInsightGenerated: (insight: InsightRequest) => void
+  onInsightQueued?: (insight: InsightRequest) => void
   onGenerationStarted?: () => void
   onGenerationCompleted?: () => void
 }
@@ -55,11 +56,25 @@ export function InsightTemplateCards({
   remainingGenerations,
   onQuotaConsumed,
   onInsightGenerated,
+  onInsightQueued,
   onGenerationStarted,
   onGenerationCompleted,
 }: InsightTemplateCardsProps) {
   const [generating, setGenerating] = useState<QueryType | null>(null)
   const limitReached = remainingGenerations <= 0
+
+  const notifyQueuedInsight = async (insightId: string) => {
+    if (!onInsightQueued) return
+
+    try {
+      const response = await fetch(insightPath(insightId))
+      if (!response.ok) return
+      const insight = (await response.json()) as InsightRequest
+      onInsightQueued(insight)
+    } catch (error) {
+      console.error("Failed to fetch queued insight", error)
+    }
+  }
 
   const finalizeGeneration = () => {
     setGenerating(null)
@@ -116,6 +131,7 @@ export function InsightTemplateCards({
       }
 
       if (data.id) {
+        void notifyQueuedInsight(data.id)
         // Poll for completion
         pollInsightStatus(data.id)
       } else {
@@ -156,7 +172,7 @@ export function InsightTemplateCards({
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {meta.queryTypes
           .filter((template) => template.value !== "custom")
           .map((template) => {
@@ -168,44 +184,58 @@ export function InsightTemplateCards({
               limitReached || hasActiveInsights || isGenerating || isAnotherTemplateGenerating
 
             return (
-              <Card key={template.value} className="relative flex flex-col">
-                <CardHeader>
-                  <div className="flex items-center gap-3">
-                    <div className="rounded-lg bg-primary/10 p-2">
+              <button
+                key={template.value}
+                onClick={() => void handleGenerate(template.value)}
+                disabled={buttonDisabled}
+                className="group relative flex flex-col overflow-hidden rounded-lg border bg-card p-4 text-left transition-all hover:border-primary/50 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:border-border shadow-none"
+              >
+                <div className="flex items-start justify-between gap-3 mb-3">
+                  <div className="flex items-center gap-3 flex-1 min-w-0">
+                    <div className="rounded-lg bg-primary/10 p-2.5 group-hover:bg-primary/20 transition-colors shrink-0">
                       <Icon className="h-5 w-5 text-primary" />
                     </div>
-                    <CardTitle className="text-base">{template.label}</CardTitle>
+                    <div className="min-w-0">
+                      <h3 className="font-semibold text-sm text-foreground mb-1 truncate">{template.label}</h3>
+                      <p className="text-xs text-muted-foreground line-clamp-2">
+                        {template.description}
+                      </p>
+                    </div>
                   </div>
-                  <CardDescription className="text-sm">{template.description}</CardDescription>
-                </CardHeader>
-                <CardContent className="flex flex-1 flex-col justify-end">
-                  <Button
-                    className="w-full"
-                    onClick={() => void handleGenerate(template.value)}
-                    disabled={buttonDisabled}
-                  >
-                    {isGenerating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    {limitReached
-                      ? "Monthly limit reached"
-                      : hasActiveInsights
-                        ? "Finish current insight"
-                        : isGenerating
-                          ? "Generating..."
-                          : isAnotherTemplateGenerating
-                            ? "Please wait..."
-                            : "Generate"}
-                  </Button>
-                </CardContent>
-              </Card>
+                  {isGenerating && (
+                    <Loader2 className="h-4 w-4 animate-spin text-primary shrink-0" />
+                  )}
+                </div>
+
+                <div className="mt-auto pt-3 border-t">
+                  <div className="flex items-center justify-center gap-2 text-xs font-medium">
+                    {limitReached ? (
+                      <span className="text-destructive">Quota reached</span>
+                    ) : hasActiveInsights && !isGenerating ? (
+                      <span className="text-muted-foreground">Please wait...</span>
+                    ) : isGenerating ? (
+                      <span className="text-primary">Generating...</span>
+                    ) : isAnotherTemplateGenerating ? (
+                      <span className="text-muted-foreground">Please wait...</span>
+                    ) : (
+                      <span className="text-primary group-hover:text-primary/80">
+                        Click to generate
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </button>
             )
           })}
       </div>
 
       {limitReached && (
-        <p className="text-sm text-destructive">
-          You&apos;ve used all {generationLimit} runs available this month. Contact support if you
-          need additional capacity.
-        </p>
+        <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-4">
+          <p className="text-sm text-destructive font-medium">
+            You&apos;ve used all {generationLimit} runs available this month. Contact support if you
+            need additional capacity.
+          </p>
+        </div>
       )}
     </div>
   )
