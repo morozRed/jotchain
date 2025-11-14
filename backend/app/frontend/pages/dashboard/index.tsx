@@ -179,7 +179,7 @@ export default function Dashboard() {
                       onKeyDown={handleEntryShortcut}
                       placeholder="Shipped auth refactor, fixed API timeout issues, reviewed @backend PRs..."
                       autoFocus
-                      className="min-h-0 flex-1 pb-12 text-[15px] leading-relaxed"
+                      className="min-h-[220px] sm:min-h-0 flex-1 pb-12 text-[15px] leading-relaxed"
                     />
                     <Button
                       type="submit"
