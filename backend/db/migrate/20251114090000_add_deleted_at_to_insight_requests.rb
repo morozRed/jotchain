@@ -6,3 +6,4 @@ class AddDeletedAtToInsightRequests < ActiveRecord::Migration[8.0]
 end
 
 
+
