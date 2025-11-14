@@ -28,4 +28,17 @@ class ApplicationController < ActionController::Base
     Current.user_agent = request.user_agent
     Current.ip_address = request.ip
   end
+
+  def datafast_visitor_id
+    cookies[:datafast_visitor_id].presence
+  end
+
+  def track_datafast_goal(goal_method, metadata: nil)
+    visitor_id = datafast_visitor_id
+    return unless visitor_id.present?
+
+    Datafast::Goals.public_send(goal_method, visitor_id:, metadata:)
+  rescue NoMethodError, Datafast::Base::Error => e
+    Rails.logger.warn("[Datafast] Failed to track #{goal_method}: #{e.message}")
+  end
 end

@@ -49,6 +49,8 @@ class SubscriptionsController < InertiaController
       cancel_url: billing_url
     )
 
+    track_datafast_goal(:checkout_initiated, metadata: {plan_type: plan_type})
+
     # Return the Stripe URL to the frontend for client-side navigation
     render inertia: "billing/index", props: {
       subscription: subscription_payload,

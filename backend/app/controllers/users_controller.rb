@@ -17,6 +17,7 @@ class UsersController < InertiaController
       cookies.signed.permanent[:session_token] = {value: session_record.id, httponly: true}
 
       send_email_verification
+      track_datafast_goal(:sign_up, metadata: {email: @user.email})
       redirect_to dashboard_path, notice: "Welcome! You have signed up successfully"
     else
       redirect_to sign_up_path, inertia: inertia_errors(@user)
