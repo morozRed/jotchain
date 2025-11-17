@@ -3,54 +3,6 @@ import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 
-const features = [
-	{
-		label: 'Entries & mentions',
-		title: 'Capture context as you work',
-		description:
-			'Log entries in the TipTap editor with inline @project and @person creation so insights, analytics, and digests stay grounded in real work.',
-	},
-	{
-		label: 'On-demand insights',
-		title: 'Generate summaries, posts, and reviews',
-		description:
-			'Pick templates like stand-up recap, X post, blog update, performance review, or custom prompts. Filter by date or project, edit, then share.',
-	},
-	{
-		label: 'Scheduled digests',
-		title: 'Automate meeting prep',
-		description:
-			'Flexible cadence, timezone, lookback, and lead time ensure AI emails arrive before stand-ups, weeklies, and exec reviews.',
-	},
-	{
-		label: 'Analytics overview',
-		title: 'Spot trends and collaborators',
-		description:
-			'Dashboards highlight streaks, project breakdowns, collaborators, and “needs attention” lists so you never miss important work.',
-	},
-];
-
-const workflow = [
-	{
-		step: '01',
-		title: 'Log entries with @-mentions',
-		description:
-			'TipTap editor + inline creation for projects and people keeps every note searchable for analytics, insights, and digests.',
-	},
-	{
-		step: '02',
-		title: 'Generate AI outputs on demand',
-		description:
-			'Choose templates (summary, tweet/X post, blog, review, update, ideas) with date + project filters, then edit before publishing.',
-	},
-	{
-		step: '03',
-		title: 'Schedule notifications & digests',
-		description:
-			'Flexible timezone, cadence, lookback, and lead time deliver polished briefs exactly when your meetings happen.',
-	},
-];
-
 const audience = [
 	{
 		name: 'Nico · Engineering Manager',
@@ -220,14 +172,78 @@ const commitments = [
 					and scheduled digests without extra busywork.
 				</p>
 			</div>
-			<div class="feature-grid">
-				{features.map((feature) => (
-					<article class="feature-card">
-						<span class="feature-card__label">{feature.label}</span>
-						<h3>{feature.title}</h3>
-						<p>{feature.description}</p>
-					</article>
-				))}
+			<div class="features-showcase">
+				<div class="feature-showcase">
+					<div class="feature-showcase__content">
+						<span class="feature-showcase__label">Entries & mentions</span>
+						<h3>Capture context as you work</h3>
+						<p>
+							Log entries in the TipTap editor with inline @project and @person creation so insights, analytics, and digests stay grounded in real work.
+						</p>
+						<ul class="feature-showcase__points">
+							<li>Rich text editor with @-mentions</li>
+							<li>Tag people and projects inline</li>
+							<li>Auto-save with timestamps</li>
+						</ul>
+					</div>
+					<div class="feature-showcase__visual">
+						<img src="/screenshots/entries-list.png" alt="JotChain entry editor with @-mentions" loading="lazy" />
+					</div>
+				</div>
+
+				<div class="feature-showcase feature-showcase--reverse">
+					<div class="feature-showcase__content">
+						<span class="feature-showcase__label">On-demand insights</span>
+						<h3>Generate summaries, posts, and reviews</h3>
+						<p>
+							Pick templates like stand-up recap, X post, blog update, performance review, or custom prompts. Filter by date or project, edit, then share.
+						</p>
+						<ul class="feature-showcase__points">
+							<li>7+ AI-powered templates</li>
+							<li>Date and project filtering</li>
+							<li>Edit before sharing</li>
+						</ul>
+					</div>
+					<div class="feature-showcase__visual">
+						<img src="/screenshots/insight-result.png" alt="AI-generated weekly summary" loading="lazy" />
+					</div>
+				</div>
+
+				<div class="feature-showcase">
+					<div class="feature-showcase__content">
+						<span class="feature-showcase__label">Scheduled digests</span>
+						<h3>Automate meeting prep</h3>
+						<p>
+							Flexible cadence, timezone, lookback, and lead time ensure AI emails arrive before stand-ups, weeklies, and exec reviews.
+						</p>
+						<ul class="feature-showcase__points">
+							<li>Daily, weekly, monthly cadences</li>
+							<li>Timezone-aware scheduling</li>
+							<li>Email delivery before meetings</li>
+						</ul>
+					</div>
+					<div class="feature-showcase__visual">
+						<img src="/screenshots/email-example.png" alt="Stand-up summary email digest" loading="lazy" />
+					</div>
+				</div>
+
+				<div class="feature-showcase feature-showcase--reverse">
+					<div class="feature-showcase__content">
+						<span class="feature-showcase__label">Analytics overview</span>
+						<h3>Spot trends and collaborators</h3>
+						<p>
+							Dashboards highlight streaks, project breakdowns, collaborators, and "needs attention" lists so you never miss important work.
+						</p>
+						<ul class="feature-showcase__points">
+							<li>Activity heatmaps and streaks</li>
+							<li>Top collaborators insights</li>
+							<li>Project breakdowns</li>
+						</ul>
+					</div>
+					<div class="feature-showcase__visual">
+						<img src="/screenshots/analytics.png" alt="Top people analytics" loading="lazy" />
+					</div>
+				</div>
 			</div>
 		</section>
 
@@ -239,14 +255,57 @@ const commitments = [
 					It takes 2 minutes a day and runs on autopilot.
 				</p>
 			</div>
-			<div class="workflow">
-				{workflow.map((item) => (
-					<div class="workflow__step">
-						<span class="workflow__index">{item.step}</span>
-						<h3>{item.title}</h3>
-						<p>{item.description}</p>
+			<div class="workflow-visual">
+				<div class="workflow-visual__step">
+					<div class="workflow-visual__number">
+						<span>01</span>
 					</div>
-				))}
+					<div class="workflow-visual__content">
+						<h3>Log entries with @-mentions</h3>
+						<p>TipTap editor + inline creation for projects and people keeps every note searchable for analytics, insights, and digests.</p>
+						<div class="workflow-visual__image">
+							<img src="/screenshots/entry-field.png" alt="Creating an entry with @-mentions" loading="lazy" />
+						</div>
+					</div>
+				</div>
+
+				<div class="workflow-visual__connector">
+					<svg viewBox="0 0 100 40" preserveAspectRatio="none">
+						<path d="M 0,20 Q 50,0 100,20" stroke="rgba(129, 140, 248, 0.3)" stroke-width="2" fill="none" stroke-dasharray="5,5" />
+					</svg>
+				</div>
+
+				<div class="workflow-visual__step">
+					<div class="workflow-visual__number">
+						<span>02</span>
+					</div>
+					<div class="workflow-visual__content">
+						<h3>Generate AI outputs on demand</h3>
+						<p>Choose templates (summary, tweet/X post, blog, review, update, ideas) with date + project filters, then edit before publishing.</p>
+						<div class="workflow-visual__image">
+							<img src="/screenshots/insight-result.png" alt="AI-generated insights and summaries" loading="lazy" />
+						</div>
+					</div>
+				</div>
+
+				<div class="workflow-visual__connector">
+					<svg viewBox="0 0 100 40" preserveAspectRatio="none">
+						<path d="M 0,20 Q 50,0 100,20" stroke="rgba(129, 140, 248, 0.3)" stroke-width="2" fill="none" stroke-dasharray="5,5" />
+					</svg>
+				</div>
+
+				<div class="workflow-visual__step">
+					<div class="workflow-visual__number">
+						<span>03</span>
+					</div>
+					<div class="workflow-visual__content">
+						<h3>Schedule notifications & digests</h3>
+						<p>Flexible timezone, cadence, lookback, and lead time deliver polished briefs exactly when your meetings happen.</p>
+						<div class="workflow-visual__image">
+							<img src="/screenshots/notification.png" alt="Scheduled digest configuration" loading="lazy" />
+						</div>
+					</div>
+				</div>
 			</div>
 		</section>
 
@@ -982,104 +1041,238 @@ const commitments = [
 		line-height: 1.7;
 	}
 
-	.feature-grid {
-		display: grid;
-		gap: 1.8rem;
-		grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-	}
-
-	.feature-card {
-		padding: 1.8rem;
-		border-radius: 20px;
-		background: rgba(10, 14, 24, 0.82);
-		border: 1px solid rgba(148, 163, 184, 0.1);
+	.features-showcase {
 		display: flex;
 		flex-direction: column;
-		gap: 1.1rem;
-		box-shadow: inset 0 1px 0 rgba(148, 163, 184, 0.06);
-		transition: all 0.3s ease;
+		gap: 5rem;
 	}
 
-	.feature-card:hover {
-		background: rgba(13, 18, 28, 0.92);
-		border-color: rgba(129, 140, 248, 0.25);
-		transform: translateY(-2px);
-		box-shadow: inset 0 1px 0 rgba(148, 163, 184, 0.1), 0 12px 32px -16px rgba(129, 140, 248, 0.35);
+	.feature-showcase {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 4rem;
+		align-items: center;
 	}
 
-	.feature-card__label {
+	.feature-showcase--reverse {
+		direction: rtl;
+	}
+
+	.feature-showcase--reverse .feature-showcase__content {
+		direction: ltr;
+	}
+
+	.feature-showcase__content {
+		display: flex;
+		flex-direction: column;
+		gap: 1.2rem;
+	}
+
+	.feature-showcase__label {
 		font-size: 0.8rem;
 		text-transform: uppercase;
 		letter-spacing: 0.12em;
 		color: rgba(165, 180, 252, 0.78);
+		display: inline-flex;
+		align-self: flex-start;
+		padding: 0.4rem 0.85rem;
+		border-radius: 999px;
+		background: rgba(129, 140, 248, 0.08);
+		border: 1px solid rgba(129, 140, 248, 0.2);
 	}
 
-	.feature-card h3 {
-		font-size: 1.25rem;
+	.feature-showcase h3 {
+		font-size: 1.8rem;
+		margin: 0;
 	}
 
-	.feature-card p {
+	.feature-showcase p {
 		color: var(--text-secondary);
-		line-height: 1.6;
+		line-height: 1.7;
+		font-size: 1.05rem;
 	}
 
-	.workflow {
-		display: grid;
-		gap: 1.6rem;
-		grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-	}
-
-	.workflow__step {
-		padding: 1.9rem;
-		border-radius: 20px;
-		background: rgba(18, 22, 35, 0.6);
-		border: 1px solid rgba(124, 125, 254, 0.15);
+	.feature-showcase__points {
+		list-style: none;
+		margin: 0;
+		padding: 0;
 		display: flex;
 		flex-direction: column;
-		gap: 0.9rem;
+		gap: 0.8rem;
+	}
+
+	.feature-showcase__points li {
+		display: flex;
+		align-items: center;
+		gap: 0.8rem;
+		color: rgba(226, 232, 240, 0.8);
+		font-size: 0.95rem;
+	}
+
+	.feature-showcase__points li::before {
+		content: '✓';
+		width: 24px;
+		height: 24px;
+		border-radius: 50%;
+		background: rgba(129, 140, 248, 0.15);
+		color: rgba(129, 140, 248, 0.9);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 0.75rem;
+		font-weight: 600;
+		flex-shrink: 0;
+	}
+
+	.feature-showcase__visual {
 		position: relative;
+		border-radius: 24px;
 		overflow: hidden;
+		background: rgba(15, 18, 32, 0.5);
+		border: 1px solid rgba(129, 140, 248, 0.2);
+		box-shadow: 0 20px 50px -20px rgba(0, 0, 0, 0.8);
+		transition: all 0.4s ease;
+	}
+
+	.feature-showcase__visual:hover {
+		transform: translateY(-4px) scale(1.02);
+		box-shadow: 0 25px 60px -25px rgba(129, 140, 248, 0.5);
+		border-color: rgba(129, 140, 248, 0.4);
+	}
+
+	.feature-showcase__visual img {
+		width: 100%;
+		height: auto;
+		display: block;
+	}
+
+	.feature-showcase__visual--split {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 1px;
+		background: rgba(129, 140, 248, 0.2);
+	}
+
+	.feature-showcase__visual--split img {
+		background: rgba(15, 18, 32, 0.95);
+	}
+
+	.workflow-visual {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+		align-items: center;
+		max-width: 56rem;
+		margin: 0 auto;
+	}
+
+	.workflow-visual__step {
+		display: grid;
+		grid-template-columns: auto 1fr;
+		gap: 2rem;
+		align-items: start;
+		width: 100%;
+	}
+
+	.workflow-visual__number {
+		width: 60px;
+		height: 60px;
+		border-radius: 50%;
+		background: linear-gradient(135deg, rgba(129, 140, 248, 0.2), rgba(99, 102, 241, 0.1));
+		border: 2px solid rgba(129, 140, 248, 0.4);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 1.25rem;
+		font-weight: 600;
+		color: rgba(165, 180, 252, 0.9);
+		box-shadow: 0 8px 24px -12px rgba(129, 140, 248, 0.5);
+		position: relative;
 		transition: all 0.3s ease;
 	}
 
-	.workflow__step::after {
+	.workflow-visual__step:hover .workflow-visual__number {
+		transform: scale(1.1);
+		border-color: rgba(129, 140, 248, 0.7);
+		box-shadow: 0 12px 32px -16px rgba(129, 140, 248, 0.7);
+	}
+
+	.workflow-visual__number::before {
 		content: '';
 		position: absolute;
-		inset: 0;
-		background: rgba(129, 140, 248, 0.08);
+		inset: -8px;
+		border-radius: 50%;
+		background: radial-gradient(circle, rgba(129, 140, 248, 0.15), transparent 70%);
 		opacity: 0;
 		transition: opacity 0.3s ease;
-		z-index: 0;
 	}
 
-	.workflow__step:hover {
-		transform: translateY(-3px);
-		border-color: rgba(129, 140, 248, 0.35);
-	}
-
-	.workflow__step:hover::after {
+	.workflow-visual__step:hover .workflow-visual__number::before {
 		opacity: 1;
 	}
 
-	.workflow__step > * {
-		position: relative;
-		z-index: 1;
+	.workflow-visual__content {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
 	}
 
-	.workflow__index {
-		font-size: 0.8rem;
-		letter-spacing: 0.12em;
-		text-transform: uppercase;
-		color: rgba(203, 213, 225, 0.45);
+	.workflow-visual__content h3 {
+		font-size: 1.5rem;
+		margin: 0;
+		color: var(--text-primary);
 	}
 
-	.workflow__step h3 {
-		font-size: 1.3rem;
-	}
-
-	.workflow__step p {
+	.workflow-visual__content p {
 		color: var(--text-secondary);
-		line-height: 1.6;
+		line-height: 1.7;
+		margin: 0;
+		font-size: 1.05rem;
+	}
+
+	.workflow-visual__image {
+		margin-top: 1.2rem;
+		border-radius: 20px;
+		overflow: hidden;
+		background: rgba(15, 18, 32, 0.5);
+		border: 1px solid rgba(129, 140, 248, 0.2);
+		box-shadow: 0 16px 40px -16px rgba(0, 0, 0, 0.7);
+		transition: all 0.4s ease;
+		max-width: 100%;
+	}
+
+	.workflow-visual__image:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 20px 50px -20px rgba(129, 140, 248, 0.4);
+		border-color: rgba(129, 140, 248, 0.35);
+	}
+
+	.workflow-visual__image img {
+		width: 100%;
+		height: auto;
+		display: block;
+	}
+
+	.workflow-visual__connector {
+		width: 100px;
+		height: 40px;
+		margin: 1rem 0;
+		opacity: 0.7;
+		animation: pulse 3s ease-in-out infinite;
+	}
+
+	@keyframes pulse {
+		0%, 100% {
+			opacity: 0.5;
+		}
+		50% {
+			opacity: 0.9;
+		}
+	}
+
+	.workflow-visual__connector svg {
+		width: 100%;
+		height: 100%;
 	}
 
 	.section--audience {
@@ -1350,6 +1543,49 @@ const commitments = [
 		}
 	}
 
+	@media (max-width: 768px) {
+		.feature-showcase {
+			grid-template-columns: 1fr;
+			gap: 2rem;
+		}
+
+		.feature-showcase--reverse {
+			direction: ltr;
+		}
+
+		.feature-showcase__visual {
+			order: -1;
+		}
+
+		.feature-showcase__content {
+			text-align: center;
+			align-items: center;
+		}
+
+		.feature-showcase__points {
+			text-align: left;
+			max-width: 24rem;
+		}
+
+		.workflow-visual__step {
+			grid-template-columns: 1fr;
+			text-align: center;
+		}
+
+		.workflow-visual__number {
+			margin: 0 auto;
+		}
+
+		.workflow-visual__content {
+			align-items: center;
+		}
+
+		.workflow-visual__connector {
+			transform: rotate(90deg);
+			margin: 2rem 0;
+		}
+	}
+
 	@media (max-width: 640px) {
 		.shell {
 			gap: 2rem;
@@ -1408,6 +1644,30 @@ const commitments = [
 
 		.hero__metrics {
 			grid-template-columns: 1fr;
+		}
+
+		.features-showcase {
+			gap: 3rem;
+		}
+
+		.feature-showcase h3 {
+			font-size: 1.5rem;
+		}
+
+		.feature-showcase p {
+			font-size: 1rem;
+		}
+
+		.feature-showcase__visual--split {
+			grid-template-columns: 1fr;
+		}
+
+		.workflow-visual__content h3 {
+			font-size: 1.3rem;
+		}
+
+		.workflow-visual__content p {
+			font-size: 1rem;
 		}
 
 		.cta {
