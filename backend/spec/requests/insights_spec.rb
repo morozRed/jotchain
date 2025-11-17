@@ -48,6 +48,20 @@ RSpec.describe "Insights", type: :request do
         expect(body["error"]).to include("monthly AI generation limit")
       end
     end
+
+    context "when the trial has expired" do
+      let(:user) { create(:user, subscription_status: "trialing", trial_ends_at: 2.days.ago) }
+
+      it "blocks insight creation" do
+        expect do
+          post insights_path, params: params
+        end.not_to change { user.insight_requests.count }
+
+        expect(response).to have_http_status(:payment_required)
+        body = JSON.parse(response.body)
+        expect(body["error"]).to include("trial has ended")
+      end
+    end
   end
 
   describe "DELETE /insights/:id" do

@@ -38,6 +38,12 @@ class InsightsController < InertiaController
   end
 
   def create
+    unless can_generate_insights?
+      return render json: {
+        error: insight_access_error
+      }, status: :payment_required
+    end
+
     if insight_quota.limit_reached?
       return render json: {
         error: quota_limit_reached_error
@@ -234,6 +240,18 @@ class InsightsController < InertiaController
 
   def quota_limit_reached_error
     "You've reached the monthly AI generation limit of #{insight_quota.monthly_limit} runs. Please wait for next month or upgrade your plan."
+  end
+
+  def can_generate_insights?
+    Current.user&.can_receive_notifications?
+  end
+
+  def insight_access_error
+    if Current.user&.trial_expired?
+      "Your free trial has ended. Subscribe to continue generating insights."
+    else
+      "You need an active subscription to generate insights."
+    end
   end
 
   def visible_insight_requests

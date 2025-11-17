@@ -10,7 +10,6 @@ import {
 } from "lucide-react"
 import { useState } from "react"
 
-import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { insightPath } from "@/routes"
 
@@ -24,11 +23,13 @@ interface InsightTemplateCardsProps {
   hasActiveInsights?: boolean
   generationLimit: number
   remainingGenerations: number
+  canGenerateInsights: boolean
   onQuotaConsumed?: () => void
   onInsightGenerated: (insight: InsightRequest) => void
   onInsightQueued?: (insight: InsightRequest) => void
   onGenerationStarted?: () => void
   onGenerationCompleted?: () => void
+  onAlert?: (message: string | null) => void
 }
 
 const templateIcons = {
@@ -54,14 +55,23 @@ export function InsightTemplateCards({
   hasActiveInsights = false,
   generationLimit,
   remainingGenerations,
+  canGenerateInsights,
   onQuotaConsumed,
   onInsightGenerated,
   onInsightQueued,
   onGenerationStarted,
   onGenerationCompleted,
+  onAlert,
 }: InsightTemplateCardsProps) {
   const [generating, setGenerating] = useState<QueryType | null>(null)
   const limitReached = remainingGenerations <= 0
+  const showAlert = (message: string) => {
+    if (onAlert) {
+      onAlert(message)
+    } else {
+      console.warn(message)
+    }
+  }
 
   const notifyQueuedInsight = async (insightId: string) => {
     if (!onInsightQueued) return
@@ -82,20 +92,27 @@ export function InsightTemplateCards({
   }
 
   const handleGenerate = async (queryType: QueryType) => {
+    onAlert?.(null)
+
+    if (!canGenerateInsights) {
+      showAlert("You need an active subscription to generate new insights.")
+      return
+    }
+
     if (limitReached) {
-      alert(
+      showAlert(
         `You've reached the monthly AI generation limit of ${generationLimit} runs. Please wait for next month or upgrade your plan.`,
       )
       return
     }
 
     if (!dateRangeStart || !dateRangeEnd) {
-      alert("Please select a date range")
+      showAlert("Please select a date range.")
       return
     }
 
     if (hasActiveInsights) {
-      alert("Please wait for the current insight generation to complete before generating a new one.")
+      showAlert("Please wait for the current insight generation to complete before generating a new one.")
       return
     }
 
@@ -125,7 +142,7 @@ export function InsightTemplateCards({
       const data = (await response.json()) as InsightGenerationResponse
 
       if (!response.ok) {
-        alert(data.error ?? "Failed to generate insight")
+        showAlert(data.error ?? "Failed to generate insight.")
         finalizeGeneration()
         return
       }
@@ -139,7 +156,7 @@ export function InsightTemplateCards({
       }
     } catch (error) {
       console.error("Failed to generate insight", error)
-      alert("Failed to generate insight. Please try again.")
+      showAlert("Failed to generate insight. Please try again.")
       finalizeGeneration()
     }
   }
@@ -158,14 +175,14 @@ export function InsightTemplateCards({
         } else if (insight.status === "failed") {
           clearInterval(interval)
           finalizeGeneration()
-          alert(`Failed to generate insight: ${insight.errorMessage}`)
+          showAlert(`Failed to generate insight: ${insight.errorMessage}`)
         }
         // Continue polling if status is pending or generating
       } catch (error) {
         console.error("Failed to poll insight status", error)
         clearInterval(interval)
         finalizeGeneration()
-        alert("We ran into a problem while checking on your insight. Please try again.")
+        showAlert("We ran into a problem while checking on your insight. Please try again.")
       }
     }, 2000)
   }
@@ -180,8 +197,9 @@ export function InsightTemplateCards({
             const isGenerating = generating === template.value
             const isAnotherTemplateGenerating =
               generating !== null && generating !== template.value
+            const generationBlocked = limitReached || !canGenerateInsights
             const buttonDisabled =
-              limitReached || hasActiveInsights || isGenerating || isAnotherTemplateGenerating
+              generationBlocked || hasActiveInsights || isGenerating || isAnotherTemplateGenerating
 
             return (
               <button
@@ -211,6 +229,8 @@ export function InsightTemplateCards({
                   <div className="flex items-center justify-center gap-2 text-xs font-medium">
                     {limitReached ? (
                       <span className="text-destructive">Quota reached</span>
+                    ) : !canGenerateInsights ? (
+                      <span className="text-amber-600">Upgrade required</span>
                     ) : hasActiveInsights && !isGenerating ? (
                       <span className="text-muted-foreground">Please wait...</span>
                     ) : isGenerating ? (

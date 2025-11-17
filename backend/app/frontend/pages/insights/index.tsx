@@ -1,5 +1,5 @@
-import { Head, router, usePage } from "@inertiajs/react"
-import { Lightbulb } from "lucide-react"
+import { Head, Link, router, usePage } from "@inertiajs/react"
+import { AlertCircle, Lightbulb, Sparkles, X } from "lucide-react"
 import { useEffect, useMemo, useState } from "react"
 
 import { InsightForm } from "@/components/insights/insight-form"
@@ -9,10 +9,11 @@ import { InsightPreview } from "@/components/insights/insight-preview"
 import { InsightTemplateCards } from "@/components/insights/insight-template-cards"
 import type { InsightRequest, InsightsMeta, PaginationData } from "@/components/insights/types"
 import { PageBody } from "@/components/page/page-body"
+import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Pagination } from "@/components/ui/pagination"
 import AppLayout from "@/layouts/app-layout"
-import { insightsPath } from "@/routes"
+import { billingPath, insightsPath } from "@/routes"
 import type { BreadcrumbItem, SharedData } from "@/types"
 
 type PageProps = SharedData & {
@@ -20,6 +21,14 @@ type PageProps = SharedData & {
   pagination: PaginationData
   hasActiveInsights: boolean
   meta: InsightsMeta
+}
+
+type SubscriptionInfo = {
+  status?: string
+  daysLeftInTrial?: number | null
+  activeSubscription?: boolean
+  trialActive?: boolean
+  trialExpired?: boolean
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -31,7 +40,13 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 export default function Insights() {
   const page = usePage<PageProps>()
-  const { insights, pagination, hasActiveInsights: initialHasActiveInsights, meta } =
+  const {
+    insights,
+    pagination,
+    hasActiveInsights: initialHasActiveInsights,
+    meta,
+    auth,
+  } =
     page.props as PageProps
 
   const [dateRangeStart, setDateRangeStart] = useState<Date | undefined>()
@@ -41,6 +56,7 @@ export default function Insights() {
   const [hasActiveInsights, setHasActiveInsights] = useState(initialHasActiveInsights)
   const [insightList, setInsightList] = useState<InsightRequest[]>(insights)
   const [paginationData, setPaginationData] = useState<PaginationData>(pagination)
+  const [alertMessage, setAlertMessage] = useState<string | null>(null)
 
   const generationLimit = meta.monthlyGenerationLimit ?? 20
   const initialUsage = meta.monthlyGenerationUsage ?? 0
@@ -50,6 +66,15 @@ export default function Insights() {
   )
   const [remainingGenerations, setRemainingGenerations] = useState(initialRemainingQuota)
   const limitReached = remainingGenerations <= 0
+  const usagePercent =
+    generationLimit > 0
+      ? Math.min(((generationLimit - remainingGenerations) / generationLimit) * 100, 100)
+      : 0
+  const subscription = auth.user?.subscription as SubscriptionInfo | undefined
+  const hasInsightAccess = Boolean(subscription?.activeSubscription || subscription?.trialActive)
+  const subscriptionMessage = subscription?.trialExpired
+    ? "Your free trial has ended. Subscribe to continue generating insights."
+    : "Upgrade to Pro to generate new insights."
 
   useEffect(() => {
     setInsightList(insights)
@@ -160,12 +185,7 @@ export default function Insights() {
                       className={`h-full rounded-full transition-all ${
                         limitReached ? "bg-destructive" : "bg-primary"
                       }`}
-                      style={{
-                        width: `${Math.min(
-                          (generationLimit - remainingGenerations) / generationLimit * 100,
-                          100,
-                        )}%`,
-                      }}
+                      style={{ width: `${usagePercent}%` }}
                     />
                   </div>
                   <p className="text-xs text-muted-foreground">
@@ -212,15 +232,21 @@ export default function Insights() {
                   className={`h-full rounded-full transition-all ${
                     limitReached ? "bg-destructive" : "bg-primary"
                   }`}
-                  style={{
-                    width: `${Math.min(
-                      (generationLimit - remainingGenerations) / generationLimit * 100,
-                      100,
-                    )}%`,
-                  }}
+                style={{ width: `${usagePercent}%` }}
                 />
               </div>
             </div>
+
+          {!hasInsightAccess && (
+            <UpgradeBanner
+              description={subscriptionMessage}
+              href={billingPath()}
+            />
+          )}
+
+          {alertMessage && (
+            <InlineAlert message={alertMessage} onDismiss={() => setAlertMessage(null)} />
+          )}
 
             <InsightTemplateCards
               meta={meta}
@@ -230,6 +256,7 @@ export default function Insights() {
               hasActiveInsights={hasActiveInsights}
               generationLimit={generationLimit}
               remainingGenerations={remainingGenerations}
+            canGenerateInsights={hasInsightAccess}
               onQuotaConsumed={() =>
                 setRemainingGenerations((prev) => Math.max(prev - 1, 0))
               }
@@ -238,6 +265,7 @@ export default function Insights() {
                 upsertInsight(insight)
                 setSelectedInsight(insight)
               }}
+            onAlert={setAlertMessage}
               onGenerationStarted={() => setHasActiveInsights(true)}
               onGenerationCompleted={() => setHasActiveInsights(false)}
             />
@@ -301,5 +329,45 @@ export default function Insights() {
         )}
       </PageBody>
     </AppLayout>
+  )
+}
+
+function UpgradeBanner({ description, href }: { description: string; href: string }) {
+  return (
+    <Card className="border-orange-500/40 bg-orange-500/10 dark:border-orange-500/50 dark:bg-orange-500/5">
+      <CardContent className="flex flex-col gap-4 py-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-start gap-3">
+          <Sparkles className="mt-0.5 h-5 w-5 text-orange-600 dark:text-orange-400" />
+          <div className="space-y-1">
+            <p className="text-sm font-medium text-orange-900 dark:text-orange-100">{description}</p>
+            <p className="text-xs text-orange-800/80 dark:text-orange-200/80">
+              Upgrade now to unlock unlimited AI-generated insights.
+            </p>
+          </div>
+        </div>
+        <Button asChild size="sm" variant="outline" className="sm:shrink-0">
+          <Link href={href}>Upgrade</Link>
+        </Button>
+      </CardContent>
+    </Card>
+  )
+}
+
+function InlineAlert({ message, onDismiss }: { message: string; onDismiss: () => void }) {
+  return (
+    <Card className="border-destructive/40 bg-destructive/10">
+      <CardContent className="flex items-start gap-3 py-4">
+        <AlertCircle className="mt-0.5 h-5 w-5 text-destructive" />
+        <p className="flex-1 text-sm text-destructive">{message}</p>
+        <button
+          type="button"
+          onClick={onDismiss}
+          className="rounded-md p-1 text-destructive transition hover:bg-destructive/10"
+        >
+          <X className="h-4 w-4" />
+          <span className="sr-only">Dismiss alert</span>
+        </button>
+      </CardContent>
+    </Card>
   )
 }

@@ -6,5 +6,7 @@ FactoryBot.define do
     name { "Test User" }
     password { "Secret1*3*5*" }
     verified { true }
+    subscription_status { "trialing" }
+    trial_ends_at { 14.days.from_now }
   end
 end
