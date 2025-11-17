@@ -1,6 +1,7 @@
-import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { ChartContainer, ChartTooltip } from "@/components/ui/chart"
 import type { DowDataPoint } from "@/types"
 
 interface DayOfWeekChartProps {
@@ -47,7 +48,14 @@ export function DayOfWeekChart({ data, onDayClick }: DayOfWeekChartProps) {
         </div>
       </CardHeader>
       <CardContent className="relative z-10">
-        <ResponsiveContainer width="100%" height={320}>
+        <ChartContainer
+          config={{
+            count: {
+              label: "Entries",
+            },
+          }}
+          className="h-[240px] w-full"
+        >
           <BarChart data={chartData} onClick={handleClick}>
             <defs>
               <linearGradient id="colorDow" x1="0" y1="0" x2="0" y2="1">
@@ -67,19 +75,27 @@ export function DayOfWeekChart({ data, onDayClick }: DayOfWeekChartProps) {
               stroke="rgba(148, 163, 184, 0.2)"
               tickLine={false}
             />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: "var(--surface-card)",
-                border: "1px solid rgba(148, 163, 184, 0.2)",
-                borderRadius: "8px",
-                color: "var(--text-primary)",
-                boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-              }}
+            <ChartTooltip
               cursor={{ fill: "rgba(34, 211, 238, 0.1)" }}
-              labelStyle={{ color: "var(--text-primary)", fontWeight: 600 }}
-              formatter={(value: number) => {
-                const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0
-                return [`${value} entries (${percentage}%)`, "Count"]
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              content={({ active, payload }: any) => {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                if (active && payload?.length) {
+                  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+                  const data = payload[0].payload as typeof chartData[0]
+                  const percentage = total > 0 ? ((data.count / total) * 100).toFixed(1) : 0
+                  return (
+                    <div className="rounded-lg border bg-card/95 p-2.5 shadow-xl backdrop-blur-sm">
+                      <div className="space-y-1">
+                        <p className="font-semibold text-primary">{data.day}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {data.count} {data.count === 1 ? "entry" : "entries"} ({percentage}%)
+                        </p>
+                      </div>
+                    </div>
+                  )
+                }
+                return null
               }}
             />
             <Bar
@@ -89,7 +105,7 @@ export function DayOfWeekChart({ data, onDayClick }: DayOfWeekChartProps) {
               className="cursor-pointer transition-opacity hover:opacity-80"
             />
           </BarChart>
-        </ResponsiveContainer>
+        </ChartContainer>
       </CardContent>
     </Card>
   )

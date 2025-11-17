@@ -1,7 +1,8 @@
 import { useState } from "react"
-import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts"
+import { Cell, Legend, Pie, PieChart } from "recharts"
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { ChartContainer, ChartTooltip } from "@/components/ui/chart"
 import type { AnalyticsProjectsData } from "@/types"
 
 interface ProjectDonutProps {
@@ -121,7 +122,14 @@ export function ProjectDonut({ data, onProjectClick }: ProjectDonutProps) {
           </div>
         ) : (
           <div className="relative">
-            <ResponsiveContainer width="100%" height={320}>
+            <ChartContainer
+              config={{
+                value: {
+                  label: "Entries",
+                },
+              }}
+              className="h-[240px] w-full"
+            >
               <PieChart>
                 <defs>
                   {chartData.map((entry, index) => (
@@ -135,8 +143,8 @@ export function ProjectDonut({ data, onProjectClick }: ProjectDonutProps) {
                   data={chartData}
                   cx="50%"
                   cy="50%"
-                  innerRadius={70}
-                  outerRadius={110}
+                  innerRadius={60}
+                  outerRadius={90}
                   paddingAngle={3}
                   stroke="none"
                   dataKey="value"
@@ -163,7 +171,31 @@ export function ProjectDonut({ data, onProjectClick }: ProjectDonutProps) {
                     />
                   ))}
                 </Pie>
-                <Tooltip content={<CustomTooltip />} />
+                <ChartTooltip
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  content={({ active, payload }: any) => {
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                    if (active && payload && payload.length) {
+                      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+                      const data = payload[0].payload
+                      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+                      const percentage = data.share ? (data.share * 100).toFixed(1) : 0
+                      return (
+                        <div className="rounded-lg border bg-card/95 p-2.5 shadow-xl backdrop-blur-sm">
+                          <div className="space-y-1">
+                            {/* eslint-disable-next-line @typescript-eslint/no-unsafe-member-access */}
+                            <p className="font-semibold text-primary">{data.name}</p>
+                            <p className="text-sm text-muted-foreground">
+                              {/* eslint-disable-next-line @typescript-eslint/no-unsafe-member-access */}
+                              {data.value} {data.value === 1 ? "entry" : "entries"} ({percentage}%)
+                            </p>
+                          </div>
+                        </div>
+                      )
+                    }
+                    return null
+                  }}
+                />
                 <Legend
                   verticalAlign="bottom"
                   height={36}
@@ -176,7 +208,7 @@ export function ProjectDonut({ data, onProjectClick }: ProjectDonutProps) {
                   }}
                 />
               </PieChart>
-            </ResponsiveContainer>
+            </ChartContainer>
           </div>
         )}
       </CardContent>

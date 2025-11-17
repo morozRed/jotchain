@@ -1,7 +1,8 @@
 import { useState } from "react"
-import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts"
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { ChartContainer, ChartTooltip } from "@/components/ui/chart"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import type { ActivityDataPoint } from "@/types"
@@ -21,6 +22,7 @@ export function ActivityLineChart({ activity, rolling7, onDateClick }: ActivityL
     return {
       date: new Date(point.date).toLocaleDateString("en-US", { month: "short", day: "numeric" }),
       fullDate: point.date,
+      fullDateObj: new Date(point.date),
       count: point.count,
       rolling: rolling?.count ?? null,
     }
@@ -59,8 +61,18 @@ export function ActivityLineChart({ activity, rolling7, onDateClick }: ActivityL
         </div>
       </CardHeader>
       <CardContent className="relative z-10">
-        <ResponsiveContainer width="100%" height={240}>
-          <AreaChart data={chartData} onClick={handleClick}>
+        <ChartContainer
+          config={{
+            count: {
+              label: "Entries",
+            },
+            rolling: {
+              label: "7-day Avg",
+            },
+          }}
+          className="h-[180px] w-full"
+        >
+          <AreaChart data={chartData} onClick={handleClick} margin={{ top: 5, right: 10, bottom: 5, left: 0 }}>
             <defs>
               <linearGradient id="colorEntries" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#818cf8" stopOpacity={0.3} />
@@ -83,15 +95,41 @@ export function ActivityLineChart({ activity, rolling7, onDateClick }: ActivityL
               stroke="rgba(148, 163, 184, 0.2)"
               tickLine={false}
             />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: "var(--surface-card)",
-                border: "1px solid rgba(148, 163, 184, 0.2)",
-                borderRadius: "8px",
-                color: "var(--text-primary)",
-                boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+            <ChartTooltip
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              content={({ active, payload }: any) => {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                if (active && payload?.length) {
+                  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+                  const data = payload[0].payload as typeof chartData[0]
+                  const hasRolling = showRolling && data.rolling !== null && data.rolling !== undefined
+                  return (
+                    <div className="rounded-lg border bg-card/95 p-2.5 shadow-xl backdrop-blur-sm">
+                      <div className="space-y-1">
+                        <p className="font-semibold text-primary">
+                          {data.fullDateObj.toLocaleDateString("en-US", {
+                            weekday: "long",
+                            month: "long",
+                            day: "numeric",
+                            year: "numeric",
+                          })}
+                        </p>
+                        <div className="space-y-0.5">
+                          <p className="text-sm text-muted-foreground">
+                            {data.count} {data.count === 1 ? "entry" : "entries"}
+                          </p>
+                          {hasRolling && (
+                            <p className="text-sm text-muted-foreground">
+                              7-day avg: {data.rolling} {data.rolling === 1 ? "entry" : "entries"}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  )
+                }
+                return null
               }}
-              labelStyle={{ color: "var(--text-primary)", fontWeight: 600 }}
             />
             <Area
               type="monotone"
@@ -133,7 +171,7 @@ export function ActivityLineChart({ activity, rolling7, onDateClick }: ActivityL
               />
             )}
           </AreaChart>
-        </ResponsiveContainer>
+        </ChartContainer>
       </CardContent>
     </Card>
   )
