@@ -1,5 +1,5 @@
 ---
-title: ""What Did I Do Yesterday?" — Why Standups Feel Harder Than They Should"
+title: '"What Did I Do Yesterday?" — Why Standups Feel Harder Than They Should'
 description: "Struggling with how to remember what I did yesterday for standup? Explore common engineering standup problems and learn practical tips for daily standup preparation."
 publishDate: 2025-11-17
 author: "JotChain Team"
