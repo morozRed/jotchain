@@ -187,7 +187,7 @@ export const MentionList = forwardRef<
               key={item.id}
               type="button"
               className={cn(
-                "flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-sm",
+                "flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-sm text-foreground",
                 "hover:bg-accent hover:text-accent-foreground",
                 index === selectedIndex && "bg-accent text-accent-foreground",
               )}
@@ -195,15 +195,15 @@ export const MentionList = forwardRef<
               onMouseEnter={() => setSelectedIndex(index)}
             >
               {item.type === "project" && (
-                <Folder className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400" />
+                <Folder className="h-4 w-4 shrink-0 text-primary" />
               )}
               {item.type === "person" && (
-                <User className="h-3.5 w-3.5 text-purple-600 dark:text-purple-400" />
+                <User className="h-4 w-4 shrink-0 text-primary" />
               )}
               {(item.type === "create-project" || item.type === "create-person") && (
-                <Plus className="h-3.5 w-3.5 text-muted-foreground" />
+                <Plus className="h-4 w-4 shrink-0 text-muted-foreground" />
               )}
-              <span className="flex-1">{item.label}</span>
+              <span className="flex-1 truncate">{item.label}</span>
             </button>
           ))}
         </div>

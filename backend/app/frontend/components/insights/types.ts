@@ -2,11 +2,14 @@ export type QueryType = 'summary' | 'tweets' | 'review' | 'blog' | 'update' | 'i
 
 export type InsightStatus = 'pending' | 'generating' | 'completed' | 'failed';
 
+export type ReviewPerspective = 'manager' | 'self';
+
 export interface InsightRequest {
   id: string;
   name: string;
   queryType: QueryType;
   customQuery?: string;
+  perspective?: ReviewPerspective;
   dateRangeStart: string;
   dateRangeEnd: string;
   projectIds: string[];

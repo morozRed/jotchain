@@ -1,19 +1,20 @@
-import { FileText, Loader2 } from "lucide-react"
+import { FileText, FolderOpen, Loader2, Users } from "lucide-react"
 import { useEffect, useState } from "react"
 
 import type { PreviewData } from "./types"
-import { Card, CardContent } from "@/components/ui/card"
 
 interface InsightPreviewProps {
   dateRangeStart?: Date
   dateRangeEnd?: Date
   projectIds: string[]
+  personIds: string[]
 }
 
 export function InsightPreview({
   dateRangeStart,
   dateRangeEnd,
   projectIds,
+  personIds,
 }: InsightPreviewProps) {
   const [preview, setPreview] = useState<PreviewData | null>(null)
   const [loading, setLoading] = useState(false)
@@ -36,6 +37,11 @@ export function InsightPreview({
           params.append("project_ids[]", id)
         })
 
+        const filteredPersonIds = personIds.includes("all") ? [] : personIds
+        filteredPersonIds.forEach((id) => {
+          params.append("person_ids[]", id)
+        })
+
         const response = await fetch(`/api/insights/preview?${params}`)
         const data = await response.json()
         setPreview(data)
@@ -48,7 +54,7 @@ export function InsightPreview({
 
     const timeout = setTimeout(fetchPreview, 500) // Debounce
     return () => clearTimeout(timeout)
-  }, [dateRangeStart, dateRangeEnd, projectIds])
+  }, [dateRangeStart, dateRangeEnd, projectIds, personIds])
 
   if (!dateRangeStart || !dateRangeEnd) {
     return null
@@ -56,19 +62,12 @@ export function InsightPreview({
 
   if (loading) {
     return (
-      <Card className="bg-primary/5 border-primary/20">
-        <CardContent className="p-4">
-          <div className="flex items-start gap-3">
-            <Loader2 className="h-5 w-5 text-primary mt-0.5 animate-spin" />
-            <div className="space-y-2 flex-1">
-              <p className="font-medium">Analyzing notes from this selection...</p>
-              <div className="text-sm">
-                <div className="h-4 w-32 bg-muted/50 rounded animate-pulse" />
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="rounded-lg border border-border-subtle bg-subtle/30 p-4">
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <Loader2 className="h-4 w-4 animate-spin" />
+          <span>Analyzing your notes...</span>
+        </div>
+      </div>
     )
   }
 
@@ -78,16 +77,50 @@ export function InsightPreview({
 
   if (preview.totalNotes === 0) {
     return (
-      <Card className="border-dashed">
-        <CardContent className="flex items-start gap-3 p-4">
-          <FileText className="h-5 w-5 text-muted-foreground mt-0.5" />
+      <div className="rounded-lg border border-dashed border-border-subtle p-4">
+        <div className="flex items-start gap-3">
+          <FileText className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0" />
           <p className="text-sm text-muted-foreground">
             No entries found for the selected filters. Try adjusting your date range or project selection.
           </p>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     )
   }
 
-  return null
+  // Build the summary items
+  const projectNames = Object.keys(preview.breakdown || {})
+  const collaboratorNames = (preview.topCollaborators || []).slice(0, 3).map((c) => c.name)
+
+  return (
+    <div className="rounded-lg border border-border-subtle bg-subtle/30 p-4">
+      <p className="text-sm text-muted-foreground mb-3">This draft will be based on:</p>
+      <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
+        <div className="flex items-center gap-2">
+          <FileText className="h-4 w-4 text-muted-foreground" />
+          <span className="text-foreground font-medium">{preview.totalNotes}</span>
+          <span className="text-muted-foreground">{preview.totalNotes === 1 ? "note" : "notes"}</span>
+        </div>
+
+        {projectNames.length > 0 && (
+          <div className="flex items-center gap-2">
+            <FolderOpen className="h-4 w-4 text-muted-foreground" />
+            <span className="text-foreground font-medium">{projectNames.length}</span>
+            <span className="text-muted-foreground">{projectNames.length === 1 ? "project" : "projects"}</span>
+          </div>
+        )}
+
+        {collaboratorNames.length > 0 && (
+          <div className="flex items-center gap-2">
+            <Users className="h-4 w-4 text-muted-foreground" />
+            <span className="text-muted-foreground">Mentions of</span>
+            <span className="text-foreground">{collaboratorNames.join(", ")}</span>
+            {(preview.topCollaborators?.length || 0) > 3 && (
+              <span className="text-muted-foreground">+{(preview.topCollaborators?.length || 0) - 3} more</span>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  )
 }

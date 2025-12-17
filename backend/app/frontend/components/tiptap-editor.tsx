@@ -141,8 +141,8 @@ export function TiptapEditor({
   return (
     <div
       className={cn(
-        "flex flex-1 flex-col rounded-md border border-input bg-transparent",
-        "focus-within:ring-1 focus-within:ring-ring",
+        "flex flex-1 flex-col bg-transparent",
+        "focus-within:outline-none",
       )}
     >
       <EditorContent editor={editor} placeholder={placeholder} className="flex-1" />

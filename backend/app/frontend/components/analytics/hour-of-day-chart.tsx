@@ -1,7 +1,7 @@
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChartContainer, ChartTooltip } from "@/components/ui/chart"
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import type { HourlyDataPoint } from "@/types"
 
 interface HourOfDayChartProps {
@@ -37,75 +37,48 @@ export function HourOfDayChart({ data, onHourClick }: HourOfDayChartProps) {
   }
 
   return (
-    <Card className="group relative overflow-hidden border-border/40 bg-card/50 backdrop-blur-sm transition-all duration-300 hover:border-border/60 hover:shadow-xl dark:bg-card/80">
-      {/* Decorative gradient overlay */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-chart-2/5 via-transparent to-chart-1/5 opacity-50" />
-
-      <CardHeader className="relative z-10">
-        <div className="space-y-1">
-          <CardTitle className="text-lg font-semibold">Hour of Day</CardTitle>
-          <CardDescription className="text-sm text-muted-foreground/80">
-            {peakHour && `Peak: ${formatHour(peakHour.hour)}`}
-            {quietHour && quietHour.hour !== peakHour?.hour && ` • Quiet: ${formatHour(quietHour.hour)}`}
-          </CardDescription>
-        </div>
+    <Card className="border-border-subtle bg-surface">
+      <CardHeader>
+        <CardTitle className="text-base font-semibold">Hour of Day</CardTitle>
+        <CardDescription className="text-sm text-muted-foreground">
+          {peakHour && `Peak: ${formatHour(peakHour.hour)}`}
+          {quietHour && quietHour.hour !== peakHour?.hour && ` · Quiet: ${formatHour(quietHour.hour)}`}
+        </CardDescription>
       </CardHeader>
-      <CardContent className="relative z-10">
+      <CardContent>
         <ChartContainer
           config={{
             count: {
               label: "Entries",
+              color: "var(--chart-1)",
             },
           }}
           className="h-[240px] w-full"
         >
           <BarChart data={chartData} onClick={handleClick}>
-            <defs>
-              <linearGradient id="colorHour" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#818cf8" stopOpacity={0.8} />
-                <stop offset="95%" stopColor="#818cf8" stopOpacity={0.4} />
-              </linearGradient>
-            </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(148, 163, 184, 0.15)" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" vertical={false} />
             <XAxis
               dataKey="hourLabel"
               interval={2}
               tick={{ fill: "var(--text-secondary)", fontSize: 11 }}
-              stroke="rgba(148, 163, 184, 0.2)"
+              stroke="var(--border-subtle)"
               tickLine={false}
             />
             <YAxis
               tick={{ fill: "var(--text-secondary)", fontSize: 11 }}
-              stroke="rgba(148, 163, 184, 0.2)"
+              stroke="var(--border-subtle)"
               tickLine={false}
             />
             <ChartTooltip
-              cursor={{ fill: "rgba(129, 140, 248, 0.1)" }}
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              content={({ active, payload }: any) => {
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                if (active && payload?.length) {
-                  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-                  const data = payload[0].payload as typeof chartData[0]
-                  return (
-                    <div className="rounded-lg border bg-card/95 p-2.5 shadow-xl backdrop-blur-sm">
-                      <div className="space-y-1">
-                        <p className="font-semibold text-primary">{data.hourLabel}</p>
-                        <p className="text-sm text-muted-foreground">
-                          {data.count} {data.count === 1 ? "entry" : "entries"}
-                        </p>
-                      </div>
-                    </div>
-                  )
-                }
-                return null
-              }}
+              cursor={{ fill: "var(--chart-1)", fillOpacity: 0.1 }}
+              content={<ChartTooltipContent />}
             />
             <Bar
               dataKey="count"
-              fill="url(#colorHour)"
-              radius={[6, 6, 0, 0]}
-              className="cursor-pointer transition-opacity hover:opacity-80"
+              fill="var(--chart-1)"
+              fillOpacity={0.8}
+              radius={[4, 4, 0, 0]}
+              className="cursor-pointer transition-opacity hover:opacity-70"
             />
           </BarChart>
         </ChartContainer>

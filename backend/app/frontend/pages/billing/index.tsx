@@ -94,12 +94,12 @@ export default function Billing() {
       <Head title="Billing" />
 
       <div className="mx-auto max-w-4xl space-y-6 p-6">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Billing</h1>
-          <p className="text-muted-foreground mt-2">
-            Manage your subscription and billing information
+        <header>
+          <h1 className="text-2xl font-semibold text-foreground">Billing</h1>
+          <p className="text-muted-foreground mt-1 text-sm">
+            Your subscription
           </p>
-        </div>
+        </header>
 
         {/* Current Subscription Status */}
         <Card>
@@ -118,7 +118,7 @@ export default function Billing() {
 
                 {subscription.cancelAtPeriodEnd ? (
                   <>
-                    <p className="text-sm text-amber-600 dark:text-amber-500 font-medium">
+                    <p className="text-sm text-amber-600 font-medium">
                       Your subscription will be canceled on{" "}
                       {subscription.currentPeriodEnd &&
                         new Date(subscription.currentPeriodEnd).toLocaleDateString()}
@@ -164,7 +164,7 @@ export default function Billing() {
 
                 {subscription.planType && subscription.cancelAtPeriodEnd ? (
                   <>
-                    <p className="text-sm text-amber-600 dark:text-amber-500 font-medium">
+                    <p className="text-sm text-amber-600 font-medium">
                       Your subscription will be canceled when the trial ends on{" "}
                       {subscription.trialEndsAt &&
                         new Date(subscription.trialEndsAt).toLocaleDateString()}

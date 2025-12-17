@@ -2,8 +2,8 @@
 import SEO from '../components/SEO.astro';
 
 const {
-	title = 'JotChain · AI stand-up summaries from your notes',
-	description = 'Log daily progress, schedule AI email digests, and walk into every meeting prepared.',
+	title = 'JotChain · A work log that turns into updates, reviews, and summaries',
+	description = 'Keep track of what you actually worked on — so performance reviews don\'t start from memory.',
 } = Astro.props;
 ---
 
@@ -21,15 +21,13 @@ const {
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link
-			href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+			href="https://fonts.googleapis.com/css2?family=Martian+Mono:wdth,wght@75..112.5,100..800&display=swap"
 			rel="stylesheet"
 		/>
 		<script defer data-website-id="dfid_1iJfYwcKKgUffc4aiHx46" data-domain="jotchain.com" src="https://datafa.st/js/script.js">
 		</script>
 	</head>
 	<body class="page">
-		<div class="page__background" aria-hidden="true"></div>
-		<div class="page__mesh" aria-hidden="true"></div>
 		<main class="page__content">
 			<slot />
 		</main>
@@ -38,18 +36,57 @@ const {
 
 <style is:global>
 	:root {
-		color-scheme: dark;
-		--surface-base: #070a12;
-		--surface-muted: rgba(14, 18, 27, 0.72);
-		--surface-card: rgba(11, 15, 24, 0.88);
-		--stroke-faint: rgba(148, 163, 184, 0.15);
-		--text-primary: #f8fafc;
-		--text-secondary: rgba(203, 213, 225, 0.86);
-		--accent-primary: #818cf8;
-		--accent-secondary: #22d3ee;
-		--accent-hot: #f472b6;
+		color-scheme: light;
+
+		/* Typography */
+		--font-heading: 'Martian Mono', ui-monospace, SFMono-Regular, monospace;
+		--font-body: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+		/* Backgrounds - warm paper tones */
+		--background: #F8F7F4;
+		--surface: #FFFFFF;
+		--surface-alt: #FCFBF8;
+		--subtle: #F3F2EE;
+
+		/* Borders - hairline neutral */
+		--border-subtle: #E7E5E1;
+		--border: #DEDAD3;
+		--border-strong: #CFC8BE;
+
+		/* Text - near black, never pure */
+		--text-primary: #1F2328;
+		--text-secondary: #5B636D;
+		--text-muted: #7A828C;
+		--placeholder: #9AA2AC;
+
+		/* Accent - Warm Coral */
+		--primary: #D35F3E;
+		--primary-hover: #B54E32;
+		--primary-foreground: #FFFFFF;
+		--primary-soft-bg: #FDF4F1;
+		--primary-soft-border: #F5D4CA;
+
+		/* Layout */
 		--max-width: 1120px;
-		--glow-faint: rgba(129, 140, 248, 0.2);
+		--content-width: 760px;
+
+		/* Radius - subtle */
+		--radius: 0.75rem;
+		--radius-sm: 0.5rem;
+
+		/* Shadow - layered system */
+		--shadow-sm: 0 1px 2px rgba(31, 35, 40, 0.04);
+		--shadow-md:
+			0 2px 4px rgba(31, 35, 40, 0.04),
+			0 8px 16px rgba(31, 35, 40, 0.06);
+		--shadow-lg:
+			0 4px 8px rgba(31, 35, 40, 0.04),
+			0 12px 24px rgba(31, 35, 40, 0.08),
+			0 24px 48px rgba(31, 35, 40, 0.06);
+		--shadow-coral: 0 8px 24px rgba(211, 95, 62, 0.18);
+
+		/* Grain texture pattern */
+		--grain-pattern: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
 	}
 
 	*,
@@ -63,8 +100,8 @@ const {
 		margin: 0;
 		padding: 0;
 		min-height: 100%;
-		font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-		background: var(--surface-base);
+		font-family: var(--font-body);
+		background: var(--background);
 		color: var(--text-primary);
 		scroll-behavior: smooth;
 	}
@@ -73,16 +110,17 @@ const {
 		position: relative;
 		overflow-x: hidden;
 		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
 	}
 
 	a {
 		color: inherit;
 		text-decoration: none;
-		transition: opacity 0.2s ease;
+		transition: color 0.15s ease;
 	}
 
 	a:hover {
-		opacity: 0.8;
+		color: var(--primary);
 	}
 
 	h1,
@@ -91,9 +129,11 @@ const {
 	h4,
 	h5,
 	h6 {
+		font-family: var(--font-heading);
 		font-weight: 600;
 		letter-spacing: -0.02em;
 		margin: 0;
+		color: var(--text-primary);
 	}
 
 	p {
@@ -109,45 +149,152 @@ const {
 		isolation: isolate;
 	}
 
-	.page__background {
-		position: fixed;
-		inset: 0;
-		z-index: -2;
-		background:
-			radial-gradient(36% 40% at 18% 18%, rgba(129, 140, 248, 0.32), transparent 70%),
-			radial-gradient(28% 32% at 82% 12%, rgba(45, 212, 191, 0.25), transparent 70%),
-			linear-gradient(180deg, #070a12 0%, #0a0f1c 60%, #05070d 100%);
-		filter: saturate(105%);
-		pointer-events: none;
-	}
-
-	.page__mesh {
-		position: fixed;
-		inset: 0;
-		z-index: -3;
-		opacity: 0.18;
-		background:
-			repeating-linear-gradient(
-				120deg,
-				rgba(148, 163, 184, 0.12) 0 1px,
-				rgba(148, 163, 184, 0.02) 1px 18px
-			);
-		mask-image: radial-gradient(60% 60% at 50% 20%, rgba(0, 0, 0, 0.9), transparent 95%);
-	}
-
 	.page__content {
 		position: relative;
 		z-index: 1;
-		padding: 3rem 1.5rem 5rem;
+		padding: 0 1.5rem;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		width: 100%;
+		min-height: 100vh;
 	}
 
 	@media (min-width: 768px) {
 		.page__content {
-			padding: 3.5rem 2.5rem 6rem;
+			padding: 0 2.5rem;
 		}
+	}
+
+	/* Fade-in animations for page load */
+	@keyframes fadeInUp {
+		from {
+			opacity: 0;
+			transform: translateY(12px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	.fade-in {
+		animation: fadeInUp 0.5s ease forwards;
+		opacity: 0;
+	}
+
+	.fade-in-1 { animation-delay: 0ms; }
+	.fade-in-2 { animation-delay: 100ms; }
+	.fade-in-3 { animation-delay: 200ms; }
+	.fade-in-4 { animation-delay: 300ms; }
+	.fade-in-5 { animation-delay: 400ms; }
+
+	/* Button styles */
+	.button {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.5rem;
+		padding: 0.75rem 1.5rem;
+		border-radius: var(--radius);
+		font-weight: 600;
+		font-size: 0.95rem;
+		border: 1px solid transparent;
+		cursor: pointer;
+		transition: all 0.15s ease;
+	}
+
+	.button--primary {
+		background: var(--primary);
+		color: var(--primary-foreground);
+		border-color: var(--primary);
+		position: relative;
+		overflow: hidden;
+		transition:
+			transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
+			box-shadow 0.2s ease,
+			background 0.15s ease;
+	}
+
+	.button--primary::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background: var(--grain-pattern);
+		opacity: 0.25;
+		pointer-events: none;
+		mix-blend-mode: overlay;
+	}
+
+	.button--primary:hover {
+		background: var(--primary-hover);
+		border-color: var(--primary-hover);
+		color: var(--primary-foreground);
+		transform: translateY(-2px);
+		box-shadow: var(--shadow-coral);
+	}
+
+	.button--primary:active {
+		transform: translateY(0);
+		box-shadow: none;
+	}
+
+	.button--secondary {
+		background: var(--surface);
+		color: var(--text-primary);
+		border-color: var(--border);
+	}
+
+	.button--secondary:hover {
+		background: var(--subtle);
+		border-color: var(--border-strong);
+		color: var(--text-primary);
+	}
+
+	/* Grain texture utility - add to elements that should have texture */
+	.grain {
+		position: relative;
+		overflow: hidden;
+	}
+
+	.grain::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background: var(--grain-pattern);
+		opacity: 0.08;
+		pointer-events: none;
+		border-radius: inherit;
+		mix-blend-mode: overlay;
+	}
+
+	/* Section spacing */
+	.section {
+		width: 100%;
+		max-width: var(--max-width);
+		padding: 5rem 0;
+		border-top: 1px solid var(--border-subtle);
+	}
+
+	.section:first-of-type {
+		border-top: none;
+	}
+
+	.section__header {
+		text-align: center;
+		max-width: 600px;
+		margin: 0 auto 3rem;
+	}
+
+	.section__header h2 {
+		font-size: clamp(1.5rem, 3vw, 1.875rem);
+		line-height: 1.2;
+	}
+
+	.section__header p {
+		color: var(--text-secondary);
+		margin-top: 0.75rem;
+		font-size: 1.05rem;
+		line-height: 1.6;
 	}
 </style>

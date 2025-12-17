@@ -1,7 +1,7 @@
 import { Bar, BarChart, CartesianGrid, Cell, XAxis, YAxis } from "recharts"
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChartContainer, ChartTooltip } from "@/components/ui/chart"
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import type { ActivityDataPoint } from "@/types"
 
 interface HeatmapCalendarProps {
@@ -46,15 +46,14 @@ export function HeatmapCalendar({ data, onDateClick }: HeatmapCalendarProps) {
     currentDate.setDate(currentDate.getDate() + 1)
   }
 
-  // Get color based on count intensity with opacity
-  const getBarColor = (count: number) => {
-    if (count === 0) return "rgb(148 163 184 / 0.3)" // muted color with opacity
+  // Get opacity based on count intensity (using CSS variable for color)
+  const getBarOpacity = (count: number) => {
+    if (count === 0) return 0.15
     const ratio = count / maxCount
-    // Using rgb with opacity for better dark mode support
-    if (ratio >= 0.75) return "rgb(129 140 248)" // full accent-primary
-    if (ratio >= 0.5) return "rgb(129 140 248 / 0.8)" // 80% opacity
-    if (ratio >= 0.25) return "rgb(129 140 248 / 0.5)" // 50% opacity
-    return "rgb(129 140 248 / 0.25)" // 25% opacity
+    if (ratio >= 0.75) return 1
+    if (ratio >= 0.5) return 0.7
+    if (ratio >= 0.25) return 0.45
+    return 0.25
   }
 
   const todayStr = endDate.toISOString().split("T")[0]
@@ -63,21 +62,19 @@ export function HeatmapCalendar({ data, onDateClick }: HeatmapCalendarProps) {
   const chartConfig = {
     count: {
       label: "Entries",
+      color: "var(--chart-1)",
     },
   }
 
   return (
-    <Card className="group relative overflow-hidden border-border/40 bg-card/50 backdrop-blur-sm transition-all duration-300 hover:border-border/60 hover:shadow-xl dark:bg-card/80">
-      {/* Decorative gradient overlay */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-accent-primary/5 via-transparent to-accent-secondary/5 opacity-50" />
-
-      <CardHeader className="relative z-10 space-y-1">
-        <CardTitle className="text-lg font-semibold">Activity Overview</CardTitle>
-        <CardDescription className="text-sm text-muted-foreground/80">
+    <Card className="border-border-subtle bg-surface">
+      <CardHeader>
+        <CardTitle className="text-base font-semibold">Activity Overview</CardTitle>
+        <CardDescription className="text-sm text-muted-foreground">
           Daily activity over the last 60 days
         </CardDescription>
       </CardHeader>
-      <CardContent className="relative z-10">
+      <CardContent>
         <div className="space-y-4">
           {/* Bar chart */}
           <ChartContainer config={chartConfig} className="h-36 w-full">
@@ -98,49 +95,22 @@ export function HeatmapCalendar({ data, onDateClick }: HeatmapCalendarProps) {
             >
               <CartesianGrid
                 strokeDasharray="3 3"
-                stroke="rgb(148 163 184 / 0.1)"
+                stroke="var(--border-subtle)"
                 vertical={false}
               />
               <XAxis
                 dataKey="day"
                 tick={{
                   fontSize: 10,
-                  fill: "rgb(148 163 184 / 0.7)"
+                  fill: "var(--text-secondary)"
                 }}
                 tickLine={false}
-                axisLine={{ stroke: "rgb(148 163 184 / 0.2)" }}
-                interval={7} // Show every 8th day
+                axisLine={{ stroke: "var(--border-subtle)" }}
+                interval={7}
                 height={25}
               />
               <YAxis hide />
-              <ChartTooltip
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                content={({ active, payload }: any) => {
-                  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                  if (active && payload?.length) {
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                    const data = payload[0].payload as typeof chartData[0]
-                    return (
-                      <div className="rounded-lg border bg-card/95 p-2.5 shadow-xl backdrop-blur-sm">
-                        <div className="space-y-1">
-                          <p className="font-semibold text-primary">
-                            {data.fullDate.toLocaleDateString("en-US", {
-                              weekday: "long",
-                              month: "long",
-                              day: "numeric",
-                              year: "numeric",
-                            })}
-                          </p>
-                          <p className="text-sm text-muted-foreground">
-                            {data.count} {data.count === 1 ? "entry" : "entries"}
-                          </p>
-                        </div>
-                      </div>
-                    )
-                  }
-                  return null
-                }}
-              />
+              <ChartTooltip content={<ChartTooltipContent />} />
               <Bar
                 dataKey="count"
                 radius={[2, 2, 0, 0]}
@@ -149,8 +119,9 @@ export function HeatmapCalendar({ data, onDateClick }: HeatmapCalendarProps) {
                 {chartData.map((entry, index) => (
                   <Cell
                     key={`cell-${index}`}
-                    fill={getBarColor(entry.count)}
-                    stroke={entry.date === todayStr ? "rgb(129 140 248)" : "none"}
+                    fill={entry.count === 0 ? "var(--muted-foreground)" : "var(--chart-1)"}
+                    fillOpacity={getBarOpacity(entry.count)}
+                    stroke={entry.date === todayStr ? "var(--chart-1)" : "none"}
                     strokeWidth={entry.date === todayStr ? 2 : 0}
                   />
                 ))}
@@ -160,33 +131,33 @@ export function HeatmapCalendar({ data, onDateClick }: HeatmapCalendarProps) {
 
           {/* Legend and date range */}
           <div className="flex items-center justify-between text-xs">
-            <div className="flex items-center gap-3 text-muted-foreground/70">
+            <div className="flex items-center gap-3 text-muted-foreground">
               <span>Less</span>
               <div className="flex gap-1">
                 <div
-                  className="h-3 w-3 rounded-[2px] border border-border/40"
-                  style={{ backgroundColor: "rgb(148 163 184 / 0.3)" }}
+                  className="h-3 w-3 rounded-[2px] border border-border-subtle"
+                  style={{ backgroundColor: "var(--muted-foreground)", opacity: 0.15 }}
                 />
                 <div
-                  className="h-3 w-3 rounded-[2px] border border-border/20"
-                  style={{ backgroundColor: "rgb(129 140 248 / 0.25)" }}
+                  className="h-3 w-3 rounded-[2px] border border-border-subtle"
+                  style={{ backgroundColor: "var(--chart-1)", opacity: 0.25 }}
                 />
                 <div
-                  className="h-3 w-3 rounded-[2px] border border-border/20"
-                  style={{ backgroundColor: "rgb(129 140 248 / 0.5)" }}
+                  className="h-3 w-3 rounded-[2px] border border-border-subtle"
+                  style={{ backgroundColor: "var(--chart-1)", opacity: 0.45 }}
                 />
                 <div
-                  className="h-3 w-3 rounded-[2px] border border-border/20"
-                  style={{ backgroundColor: "rgb(129 140 248 / 0.8)" }}
+                  className="h-3 w-3 rounded-[2px] border border-border-subtle"
+                  style={{ backgroundColor: "var(--chart-1)", opacity: 0.7 }}
                 />
                 <div
-                  className="h-3 w-3 rounded-[2px] border border-accent-primary/20"
-                  style={{ backgroundColor: "rgb(129 140 248)" }}
+                  className="h-3 w-3 rounded-[2px] border border-border-subtle"
+                  style={{ backgroundColor: "var(--chart-1)", opacity: 1 }}
                 />
               </div>
               <span>More</span>
             </div>
-            <div className="text-muted-foreground/70">
+            <div className="text-muted-foreground">
               {startDate.toLocaleDateString("en-US", { month: "short", day: "numeric" })} -{" "}
               {endDate.toLocaleDateString("en-US", { month: "short", day: "numeric" })}
             </div>

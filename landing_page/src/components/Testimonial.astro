@@ -14,35 +14,69 @@ const { quote, author } = Astro.props;
 
 <style>
 	.testimonial {
-		padding: 2rem;
-		border-radius: 20px;
-		background: rgba(12, 14, 22, 0.55);
-		border: 1px solid rgba(124, 125, 254, 0.14);
+		padding: 1.75rem;
+		border-radius: var(--radius);
+		background: var(--surface);
+		border: 1px solid var(--border-subtle);
 		display: flex;
 		flex-direction: column;
 		gap: 1rem;
 		margin: 0;
-		transition: all 0.3s ease;
+		position: relative;
+		transition: border-color 0.15s ease;
+		overflow: hidden;
+	}
+
+	/* Grain texture */
+	.testimonial::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background: var(--grain-pattern);
+		opacity: 0.05;
+		pointer-events: none;
+	}
+
+	/* Accent bar on left */
+	.testimonial::before {
+		content: '';
+		position: absolute;
+		left: 0;
+		top: 0;
+		bottom: 0;
+		width: 3px;
+		background: var(--primary);
+		border-radius: 3px 0 0 3px;
 	}
 
 	.testimonial:hover {
-		background: rgba(15, 18, 28, 0.75);
-		border-color: rgba(129, 140, 248, 0.28);
-		transform: translateY(-2px);
+		border-color: var(--border-strong);
 	}
 
 	.testimonial__quote {
 		color: var(--text-primary);
 		line-height: 1.6;
-		font-size: 1.05rem;
+		font-size: 1rem;
 		margin: 0;
 		font-style: normal;
 	}
 
 	.testimonial__author {
-		color: var(--text-secondary);
-		font-size: 0.95rem;
+		color: var(--text-muted);
+		font-size: 0.875rem;
 		font-style: normal;
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	.testimonial__author::before {
+		content: '';
+		width: 4px;
+		height: 4px;
+		border-radius: 50%;
+		background: var(--primary);
+		opacity: 0.6;
 	}
 </style>
 

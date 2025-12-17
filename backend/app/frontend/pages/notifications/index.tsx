@@ -2,7 +2,6 @@ import { Head, Link, useForm, usePage } from "@inertiajs/react"
 import { Plus, Sparkles } from "lucide-react"
 import { useCallback, useEffect, useMemo, useState } from "react"
 
-import { EmptyState } from "@/components/empty-state"
 import { NotificationCard } from "@/components/notifications/notification-card"
 import { NotificationFormSections } from "@/components/notifications/notification-form-sections"
 import type {
@@ -17,7 +16,6 @@ import {
 } from "@/components/notifications/utils"
 import { PageBody } from "@/components/page/page-body"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
 import {
   Dialog,
   DialogContent,
@@ -37,7 +35,7 @@ type PageProps = SharedData & {
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
-    title: "Notifications",
+    title: "Email digests",
     href: notificationsPath(),
   },
 ]
@@ -98,80 +96,73 @@ export default function Notifications() {
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title="Notifications" />
+      <Head title="Email digests" />
 
       <PageBody>
+        {/* Page header - calm and clear */}
         <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="space-y-2">
-            <h1 className="text-2xl font-semibold leading-tight text-foreground md:text-3xl">
-              Notifications
+          <div>
+            <h1 className="text-2xl font-semibold text-foreground">
+              Email digests
             </h1>
-            <p className="max-w-2xl text-sm text-muted-foreground md:text-base">
-              Configure automated email summaries with flexible cadences, lookback windows, and lead times.
+            <p className="text-muted-foreground mt-1 text-sm">
+              Summaries of your work, sent when you need them.
             </p>
           </div>
 
-          <Button onClick={openCreateDialog} className="self-start">
+          <Button onClick={openCreateDialog} variant="secondary" className="self-start">
             <Plus className="size-4" />
-            New notification
+            New digest
           </Button>
         </header>
 
-        {auth.user?.subscription?.status !== "active" && (
-          <Card className="border-cyan-500/30 bg-cyan-50 shadow-sm dark:bg-cyan-950/20">
-            <CardContent className="py-4">
-              <div className="flex items-center gap-3">
-                <Sparkles className="h-5 w-5 flex-shrink-0 text-cyan-600 dark:text-cyan-400" />
-                <div className="flex flex-1 items-center justify-between gap-4">
-                  <span className="text-sm text-cyan-900 dark:text-cyan-100">
-                    {auth.user?.subscription?.daysLeftInTrial > 0
-                      ? `You have ${auth.user.subscription.daysLeftInTrial} ${auth.user.subscription.daysLeftInTrial === 1 ? "day" : "days"} left in your trial. Subscribe to continue receiving notifications.`
-                      : "Subscribe to Pro to receive email notifications and AI-powered summaries."}
-                  </span>
-                  <Button asChild size="sm" variant="outline" className="shrink-0">
-                    <Link href={billingPath()}>Upgrade Now</Link>
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+        {/* Digests list */}
+        {notificationSchedules.length > 0 ? (
+          <section className="divide-y divide-border-subtle">
+            {notificationSchedules.map((schedule) => (
+              <NotificationCard
+                key={schedule.id}
+                schedule={schedule}
+                meta={notificationScheduleMeta}
+              />
+            ))}
+          </section>
+        ) : (
+          <section className="py-8 text-center">
+            <p className="text-muted-foreground mb-4">
+              No digests yet. Create one to receive summaries of your work.
+            </p>
+            <Button onClick={openCreateDialog}>
+              <Plus className="size-4" />
+              Create your first digest
+            </Button>
+          </section>
         )}
 
-        <div className="grid w-full gap-6">
-          {notificationSchedules.map((schedule) => (
-            <NotificationCard
-              key={schedule.id}
-              schedule={schedule}
-              meta={notificationScheduleMeta}
-            />
-          ))}
-
-          {notificationSchedules.length === 0 ? (
-            <Card className="border-dashed">
-              <CardContent>
-                <EmptyState
-                  title="No notifications yet"
-                  description="Start by creating a notification. We&apos;ll prefill smart defaults so you can fine-tune every detail."
-                  action={
-                    <Button onClick={openCreateDialog}>
-                      <Plus className="size-4" />
-                      Create your first notification
-                    </Button>
-                  }
-                  className="border-0 bg-transparent p-0"
-                />
-              </CardContent>
-            </Card>
-          ) : null}
-        </div>
+        {/* Trial/subscription banner - moved below list */}
+        {auth.user?.subscription?.status !== "active" && (
+          <div className="flex flex-col gap-4 rounded-lg border border-primary/20 bg-primary-soft-bg p-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-start gap-3">
+              <Sparkles className="h-5 w-5 flex-shrink-0 text-primary mt-0.5" />
+              <span className="text-sm text-foreground">
+                {auth.user?.subscription?.daysLeftInTrial > 0
+                  ? `${auth.user.subscription.daysLeftInTrial} ${auth.user.subscription.daysLeftInTrial === 1 ? "day" : "days"} left in your trial.`
+                  : "Subscribe to continue receiving email digests."}
+              </span>
+            </div>
+            <Button asChild size="sm" variant="secondary" className="shrink-0">
+              <Link href={billingPath()}>Upgrade</Link>
+            </Button>
+          </div>
+        )}
       </PageBody>
 
       <Dialog open={isCreateOpen} onOpenChange={(open) => (open ? setIsCreateOpen(true) : closeCreateDialog())}>
         <DialogContent className="max-w-3xl lg:max-w-5xl">
           <DialogHeader>
-            <DialogTitle>Create notification</DialogTitle>
+            <DialogTitle>Create digest</DialogTitle>
             <DialogDescription>
-              Choose delivery settings, cadence, and summary window. You can always adjust these later.
+              Choose when to receive summaries and what period to cover.
             </DialogDescription>
           </DialogHeader>
 
@@ -187,14 +178,14 @@ export default function Notifications() {
             <DialogFooter>
               <Button
                 type="button"
-                variant="outline"
+                variant="secondary"
                 onClick={closeCreateDialog}
                 disabled={createForm.processing}
               >
                 Cancel
               </Button>
               <Button type="submit" disabled={createForm.processing}>
-                {createForm.processing ? "Creating..." : "Create notification"}
+                {createForm.processing ? "Creating..." : "Create digest"}
               </Button>
             </DialogFooter>
           </form>

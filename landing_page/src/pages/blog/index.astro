@@ -12,189 +12,250 @@ const publishedPosts = allPosts
 		const dateB = b.data.publishDate instanceof Date ? b.data.publishDate : new Date(b.data.publishDate);
 		return dateB.getTime() - dateA.getTime();
 	});
+
+const featuredPost = publishedPosts[0];
+const otherPosts = publishedPosts.slice(1);
 ---
 
-<Layout title="Blog | JotChain" description="Read about work journals, productivity tips, and how teams use JotChain to stay organized and prepared.">
-	<div class="shell">
-		<Header />
+<Layout
+	title="Blog | JotChain"
+	description="Thoughts on work logging, meeting prep, and staying organized."
+>
+	<Header />
 
-		<section class="hero">
-			<h1>Blog</h1>
-			<p class="subtitle">
-				Read about work journals, productivity tips, and how teams use JotChain to stay organized and prepared.
+	<div class="page-wrapper">
+		<section class="blog-header">
+			<h1 class="fade-in fade-in-1">Blog</h1>
+			<p class="fade-in fade-in-2">
+				Thoughts on work logging, meeting prep, and staying organized.
 			</p>
 		</section>
 
 		{publishedPosts.length > 0 ? (
-			<section class="section posts-grid">
-				<div class="posts-list">
-					{publishedPosts.map((post) => (
-						<article class="post-card">
-							<div class="post-card__content">
-								<time class="post-card__date" datetime={post.data.publishDate.toISOString()}>
+			<section class="blog-content">
+				{/* Featured Post */}
+				{featuredPost && (
+					<article class="featured-post fade-in fade-in-3">
+						<div class="featured-post__content">
+							<time datetime={featuredPost.data.publishDate.toISOString()}>
+								{featuredPost.data.publishDate.toLocaleDateString('en-US', {
+									year: 'numeric',
+									month: 'long',
+									day: 'numeric',
+								})}
+							</time>
+							<h2>
+								<a href={`/blog/${featuredPost.slug}`}>{featuredPost.data.title}</a>
+							</h2>
+							<p>{featuredPost.data.description}</p>
+							<a href={`/blog/${featuredPost.slug}`} class="featured-post__link">
+								Read more
+							</a>
+						</div>
+						{featuredPost.data.image && (
+							<div class="featured-post__image">
+								<img src={featuredPost.data.image} alt="" />
+							</div>
+						)}
+					</article>
+				)}
+
+				{/* Posts Grid */}
+				{otherPosts.length > 0 && (
+					<div class="posts-grid">
+						{otherPosts.map((post) => (
+							<article class="post-card">
+								<time datetime={post.data.publishDate.toISOString()}>
 									{post.data.publishDate.toLocaleDateString('en-US', {
 										year: 'numeric',
 										month: 'long',
 										day: 'numeric',
 									})}
 								</time>
-								<h2>
+								<h3>
 									<a href={`/blog/${post.slug}`}>{post.data.title}</a>
-								</h2>
+								</h3>
 								<p>{post.data.description}</p>
-								{post.data.tags && post.data.tags.length > 0 && (
-									<div class="post-card__tags">
-										{post.data.tags.map((tag) => (
-											<span class="tag">{tag}</span>
-										))}
-									</div>
-								)}
-							</div>
-						</article>
-					))}
-				</div>
+							</article>
+						))}
+					</div>
+				)}
 			</section>
 		) : (
-			<section class="section empty-state">
-				<p>No blog posts yet. Check back soon!</p>
+			<section class="empty-state">
+				<p>No blog posts yet. Check back soon.</p>
 			</section>
 		)}
 	</div>
+
 	<Footer />
 </Layout>
 
 <style>
-	.shell {
+	.page-wrapper {
 		width: 100%;
 		max-width: var(--max-width);
 		display: flex;
 		flex-direction: column;
-		gap: 4rem;
+		gap: 3rem;
+		padding: 4rem 0 6rem;
 	}
 
-	.hero {
-		display: flex;
-		flex-direction: column;
-		gap: 1.75rem;
+	.blog-header {
 		text-align: center;
-		align-items: center;
-		padding-top: 2rem;
 	}
 
-	.hero h1 {
-		font-size: clamp(2.5rem, 5vw, 3.6rem);
-		line-height: 1.1;
-		letter-spacing: -0.03em;
-		font-weight: 600;
+	.blog-header h1 {
+		font-size: clamp(2rem, 4vw, 2.5rem);
+		margin-bottom: 0.75rem;
 	}
 
-	.subtitle {
+	.blog-header p {
 		color: var(--text-secondary);
 		font-size: 1.05rem;
-		line-height: 1.65;
-		max-width: 34rem;
 	}
 
-	.section {
+	.blog-content {
 		display: flex;
 		flex-direction: column;
-		gap: 3.5rem;
+		gap: 3rem;
 	}
 
-	.posts-list {
+	/* Featured Post */
+	.featured-post {
 		display: grid;
 		gap: 2rem;
-		grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-		margin-bottom: 2rem;
+		padding: 2rem;
+		background: var(--surface);
+		border: 1px solid var(--border);
+		border-radius: var(--radius);
 	}
 
-	.post-card {
-		border-radius: 20px;
-		background: rgba(10, 14, 24, 0.82);
-		border: 1px solid rgba(148, 163, 184, 0.1);
-		overflow: hidden;
-		transition: all 0.3s ease;
-		display: flex;
-		flex-direction: column;
+	@media (min-width: 768px) {
+		.featured-post {
+			grid-template-columns: 1fr 1fr;
+			gap: 3rem;
+		}
 	}
 
-	.post-card:hover {
-		background: rgba(13, 18, 28, 0.92);
-		border-color: rgba(129, 140, 248, 0.25);
-		transform: translateY(-2px);
-		box-shadow: 0 12px 32px -16px rgba(129, 140, 248, 0.35);
-	}
-
-	.post-card__content {
-		padding: 1.8rem;
+	.featured-post__content {
 		display: flex;
 		flex-direction: column;
 		gap: 0.75rem;
-		flex: 1;
 	}
 
-	.post-card__date {
-		font-size: 0.85rem;
-		color: rgba(203, 213, 225, 0.65);
+	.featured-post time {
+		font-size: 0.875rem;
+		color: var(--text-muted);
 	}
 
-	.post-card h2 {
-		font-size: 1.35rem;
-		margin: 0;
+	.featured-post h2 {
+		font-size: 1.5rem;
 		line-height: 1.3;
 	}
 
-	.post-card h2 a {
+	.featured-post h2 a {
 		color: var(--text-primary);
-		transition: color 0.2s ease;
 	}
 
-	.post-card h2 a:hover {
-		color: rgba(165, 180, 252, 0.9);
+	.featured-post h2 a:hover {
+		color: var(--primary);
+	}
+
+	.featured-post p {
+		color: var(--text-secondary);
+		line-height: 1.6;
+		font-size: 1rem;
+	}
+
+	.featured-post__link {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.25rem;
+		margin-top: 0.5rem;
+		color: var(--primary);
+		font-weight: 500;
+		font-size: 0.95rem;
+	}
+
+	.featured-post__link:hover {
+		text-decoration: underline;
+	}
+
+	.featured-post__image {
+		border-radius: calc(var(--radius) - 4px);
+		overflow: hidden;
+	}
+
+	.featured-post__image img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	/* Posts Grid */
+	.posts-grid {
+		display: grid;
+		gap: 1.5rem;
+	}
+
+	@media (min-width: 640px) {
+		.posts-grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+
+	@media (min-width: 900px) {
+		.posts-grid {
+			grid-template-columns: repeat(3, 1fr);
+		}
+	}
+
+	.post-card {
+		padding: 1.5rem;
+		background: var(--surface);
+		border: 1px solid var(--border-subtle);
+		border-radius: var(--radius);
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		transition: border-color 0.15s ease;
+	}
+
+	.post-card:hover {
+		border-color: var(--border-strong);
+	}
+
+	.post-card time {
+		font-size: 0.8rem;
+		color: var(--text-muted);
+	}
+
+	.post-card h3 {
+		font-family: var(--font-body);
+		font-size: 1.0625rem;
+		font-weight: 600;
+		line-height: 1.35;
+	}
+
+	.post-card h3 a {
+		color: var(--text-primary);
+	}
+
+	.post-card h3 a:hover {
+		color: var(--primary);
 	}
 
 	.post-card p {
+		font-size: 0.9rem;
 		color: var(--text-secondary);
-		line-height: 1.6;
-		margin: 0;
-		font-size: 0.95rem;
-		flex: 1;
+		line-height: 1.5;
 	}
 
-	.post-card__tags {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.5rem;
-		margin-top: auto;
-		padding-top: 1rem;
-	}
-
-	.tag {
-		padding: 0.35rem 0.7rem;
-		border-radius: 999px;
-		background: rgba(148, 163, 184, 0.12);
-		color: rgba(203, 213, 225, 0.8);
-		font-size: 0.78rem;
-	}
-
+	/* Empty State */
 	.empty-state {
 		text-align: center;
 		padding: 4rem 2rem;
 		color: var(--text-secondary);
 	}
-
-	@media (max-width: 640px) {
-		.shell {
-			gap: 3rem;
-		}
-
-		.hero {
-			padding-top: 1rem;
-		}
-
-		.posts-list {
-			grid-template-columns: 1fr;
-		}
-	}
 </style>
-

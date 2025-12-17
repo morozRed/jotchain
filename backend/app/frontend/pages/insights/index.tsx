@@ -1,5 +1,5 @@
 import { Head, Link, router, usePage } from "@inertiajs/react"
-import { AlertCircle, Lightbulb, Sparkles, X } from "lucide-react"
+import { AlertCircle, Sparkles, X } from "lucide-react"
 import { useEffect, useMemo, useState } from "react"
 
 import { InsightForm } from "@/components/insights/insight-form"
@@ -10,7 +10,6 @@ import { InsightTemplateCards } from "@/components/insights/insight-template-car
 import type { InsightRequest, InsightsMeta, PaginationData } from "@/components/insights/types"
 import { PageBody } from "@/components/page/page-body"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Pagination } from "@/components/ui/pagination"
 import AppLayout from "@/layouts/app-layout"
 import { billingPath, insightsPath } from "@/routes"
@@ -52,6 +51,7 @@ export default function Insights() {
   const [dateRangeStart, setDateRangeStart] = useState<Date | undefined>()
   const [dateRangeEnd, setDateRangeEnd] = useState<Date | undefined>()
   const [selectedProjects, setSelectedProjects] = useState<string[]>(["all"])
+  const [selectedPersons, setSelectedPersons] = useState<string[]>(["all"])
   const [selectedInsight, setSelectedInsight] = useState<InsightRequest | null>(null)
   const [hasActiveInsights, setHasActiveInsights] = useState(initialHasActiveInsights)
   const [insightList, setInsightList] = useState<InsightRequest[]>(insights)
@@ -157,141 +157,98 @@ export default function Insights() {
       <Head title="Insights" />
 
       <PageBody>
-        <header className="flex items-start justify-between gap-4">
-          <div className="space-y-2">
-            <h1 className="text-2xl font-semibold leading-tight text-foreground md:text-3xl">
-              Insights
-            </h1>
-            <p className="max-w-2xl text-sm text-muted-foreground md:text-base">
-              Generate AI-powered insights from your entries
-            </p>
-          </div>
-
-          {/* Quota Display - Desktop */}
-          <div className="hidden lg:block">
-            <div className="rounded-lg border bg-card p-4 text-sm min-w-[200px]">
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-                    Monthly Quota
-                  </p>
-                  <p className="text-xs font-semibold text-foreground">
-                    {remainingGenerations} left
-                  </p>
-                </div>
-                <div className="space-y-1.5">
-                  <div className="h-2 w-full rounded-full bg-muted">
-                    <div
-                      className={`h-full rounded-full transition-all ${
-                        limitReached ? "bg-destructive" : "bg-primary"
-                      }`}
-                      style={{ width: `${usagePercent}%` }}
-                    />
-                  </div>
-                  <p className="text-xs text-muted-foreground">
-                    {generationLimit - remainingGenerations} / {generationLimit} used
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
+        {/* Page header - calm and clear */}
+        <header>
+          <h1 className="text-2xl font-semibold text-foreground">
+            Insights
+          </h1>
+          <p className="text-muted-foreground mt-1 text-sm">
+            Turn past notes into something you can send or use.
+          </p>
         </header>
 
         {/* Generation Section */}
-        <Card>
-          <CardHeader>
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-              <div className="space-y-1">
-                <CardTitle>Generate New Insight</CardTitle>
-                <CardDescription>
-                  Choose your date range and projects, then select a template
-                </CardDescription>
-              </div>
-              <InsightForm
-                meta={meta}
-                dateRangeStart={dateRangeStart}
-                dateRangeEnd={dateRangeEnd}
-                selectedProjects={selectedProjects}
-                onDateRangeStartChange={setDateRangeStart}
-                onDateRangeEndChange={setDateRangeEnd}
-                onProjectsChange={setSelectedProjects}
-              />
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {/* Quota Display - Mobile */}
-            <div className="lg:hidden rounded-lg border bg-muted/50 p-3">
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">Monthly quota:</span>
-                <span className="font-semibold">
-                  {remainingGenerations} / {generationLimit} remaining
-                </span>
-              </div>
-              <div className="mt-2 h-2 w-full rounded-full bg-muted">
-                <div
-                  className={`h-full rounded-full transition-all ${
-                    limitReached ? "bg-destructive" : "bg-primary"
-                  }`}
-                style={{ width: `${usagePercent}%` }}
-                />
-              </div>
-            </div>
+        <section className="space-y-5">
+          {/* Filters row */}
+          <div className="space-y-3">
+            <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
+              Sources
+            </h2>
+            <InsightForm
+              meta={meta}
+              dateRangeStart={dateRangeStart}
+              dateRangeEnd={dateRangeEnd}
+              selectedProjects={selectedProjects}
+              selectedPersons={selectedPersons}
+              onDateRangeStartChange={setDateRangeStart}
+              onDateRangeEndChange={setDateRangeEnd}
+              onProjectsChange={setSelectedProjects}
+              onPersonsChange={setSelectedPersons}
+            />
+          </div>
 
+          {alertMessage && (
+            <InlineAlert message={alertMessage} onDismiss={() => setAlertMessage(null)} />
+          )}
+
+          <InsightTemplateCards
+            meta={meta}
+            dateRangeStart={dateRangeStart}
+            dateRangeEnd={dateRangeEnd}
+            projectIds={selectedProjects}
+            personIds={selectedPersons}
+            hasActiveInsights={hasActiveInsights}
+            generationLimit={generationLimit}
+            remainingGenerations={remainingGenerations}
+            canGenerateInsights={hasInsightAccess}
+            onQuotaConsumed={() =>
+              setRemainingGenerations((prev) => Math.max(prev - 1, 0))
+            }
+            onInsightQueued={upsertInsight}
+            onInsightGenerated={(insight) => {
+              upsertInsight(insight)
+              setSelectedInsight(insight)
+            }}
+            onAlert={setAlertMessage}
+            onGenerationStarted={() => setHasActiveInsights(true)}
+            onGenerationCompleted={() => setHasActiveInsights(false)}
+          />
+
+          <InsightPreview
+            dateRangeStart={dateRangeStart}
+            dateRangeEnd={dateRangeEnd}
+            projectIds={selectedProjects}
+            personIds={selectedPersons}
+          />
+
+          {/* Quota info - very subtle */}
+          <p className="text-xs text-muted-foreground/70">
+            {remainingGenerations}/{generationLimit} generations this month
+          </p>
+
+          {/* Upgrade banner - moved below main content to avoid interruption */}
           {!hasInsightAccess && (
             <UpgradeBanner
               description={subscriptionMessage}
               href={billingPath()}
             />
           )}
-
-          {alertMessage && (
-            <InlineAlert message={alertMessage} onDismiss={() => setAlertMessage(null)} />
-          )}
-
-            <InsightTemplateCards
-              meta={meta}
-              dateRangeStart={dateRangeStart}
-              dateRangeEnd={dateRangeEnd}
-              projectIds={selectedProjects}
-              hasActiveInsights={hasActiveInsights}
-              generationLimit={generationLimit}
-              remainingGenerations={remainingGenerations}
-            canGenerateInsights={hasInsightAccess}
-              onQuotaConsumed={() =>
-                setRemainingGenerations((prev) => Math.max(prev - 1, 0))
-              }
-              onInsightQueued={upsertInsight}
-              onInsightGenerated={(insight) => {
-                upsertInsight(insight)
-                setSelectedInsight(insight)
-              }}
-            onAlert={setAlertMessage}
-              onGenerationStarted={() => setHasActiveInsights(true)}
-              onGenerationCompleted={() => setHasActiveInsights(false)}
-            />
-
-            <InsightPreview
-              dateRangeStart={dateRangeStart}
-              dateRangeEnd={dateRangeEnd}
-              projectIds={selectedProjects}
-            />
-          </CardContent>
-        </Card>
+        </section>
 
         {/* All Insights Section */}
         {insightList.length > 0 ? (
-          <>
+          <section className="space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold">Your Insights</h2>
+              <h2 className="text-base font-medium text-foreground">Previous insights</h2>
               {paginationData?.totalCount ? (
-                <p className="text-sm text-muted-foreground">
+                <p className="text-xs text-muted-foreground">
                   {paginationData.totalCount}{" "}
-                  {paginationData.totalCount === 1 ? "insight" : "insights"} total
+                  {paginationData.totalCount === 1 ? "insight" : "insights"}
                 </p>
               ) : null}
             </div>
 
-            <div className="space-y-3">
+            <div className="divide-y divide-border-subtle">
               {insightList.map((insight) => (
                 <InsightItem key={insight.id} {...insight} />
               ))}
@@ -307,17 +264,13 @@ export default function Insights() {
                 itemName="insights"
               />
             )}
-          </>
+          </section>
         ) : (
-          <Card className="border-dashed">
-            <CardContent className="flex flex-col items-center justify-center py-12">
-              <Lightbulb className="h-12 w-12 text-muted-foreground/50 mb-4" />
-              <h3 className="text-lg font-semibold mb-2">No insights yet</h3>
-              <p className="text-sm text-muted-foreground text-center max-w-sm">
-                Generate your first insight by selecting a date range and template above
-              </p>
-            </CardContent>
-          </Card>
+          <section className="py-8 text-center">
+            <p className="text-muted-foreground">
+              Your generated summaries will appear here.
+            </p>
+          </section>
         )}
 
         {selectedInsight && (
@@ -334,40 +287,36 @@ export default function Insights() {
 
 function UpgradeBanner({ description, href }: { description: string; href: string }) {
   return (
-    <Card className="border-orange-500/40 bg-orange-500/10 dark:border-orange-500/50 dark:bg-orange-500/5">
-      <CardContent className="flex flex-col gap-4 py-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-start gap-3">
-          <Sparkles className="mt-0.5 h-5 w-5 text-orange-600 dark:text-orange-400" />
-          <div className="space-y-1">
-            <p className="text-sm font-medium text-orange-900 dark:text-orange-100">{description}</p>
-            <p className="text-xs text-orange-800/80 dark:text-orange-200/80">
-              Upgrade now to unlock unlimited AI-generated insights.
-            </p>
-          </div>
+    <div className="flex flex-col gap-4 rounded-lg border border-amber-200 bg-amber-50 p-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex items-start gap-3">
+        <Sparkles className="mt-0.5 h-5 w-5 text-amber-600" />
+        <div className="space-y-1">
+          <p className="text-sm font-medium text-amber-900">{description}</p>
+          <p className="text-xs text-amber-800/80">
+            Upgrade to continue generating insights.
+          </p>
         </div>
-        <Button asChild size="sm" variant="outline" className="sm:shrink-0">
-          <Link href={href}>Upgrade</Link>
-        </Button>
-      </CardContent>
-    </Card>
+      </div>
+      <Button asChild size="sm" variant="secondary" className="sm:shrink-0">
+        <Link href={href}>Upgrade</Link>
+      </Button>
+    </div>
   )
 }
 
 function InlineAlert({ message, onDismiss }: { message: string; onDismiss: () => void }) {
   return (
-    <Card className="border-destructive/40 bg-destructive/10">
-      <CardContent className="flex items-start gap-3 py-4">
-        <AlertCircle className="mt-0.5 h-5 w-5 text-destructive" />
-        <p className="flex-1 text-sm text-destructive">{message}</p>
-        <button
-          type="button"
-          onClick={onDismiss}
-          className="rounded-md p-1 text-destructive transition hover:bg-destructive/10"
-        >
-          <X className="h-4 w-4" />
-          <span className="sr-only">Dismiss alert</span>
-        </button>
-      </CardContent>
-    </Card>
+    <div className="flex items-start gap-3 rounded-lg border border-destructive/30 bg-destructive/5 p-4">
+      <AlertCircle className="mt-0.5 h-5 w-5 text-destructive" />
+      <p className="flex-1 text-sm text-destructive">{message}</p>
+      <button
+        type="button"
+        onClick={onDismiss}
+        className="rounded-md p-1 text-destructive transition hover:bg-destructive/10"
+      >
+        <X className="h-4 w-4" />
+        <span className="sr-only">Dismiss alert</span>
+      </button>
+    </div>
   )
 }

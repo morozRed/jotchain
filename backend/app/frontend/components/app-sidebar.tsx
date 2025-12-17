@@ -29,7 +29,7 @@ import AppLogo from "./app-logo"
 
 const mainNavItems: NavItem[] = [
   {
-    title: "Dashboard",
+    title: "Log",
     href: dashboardPath(),
     icon: LayoutGrid,
   },
@@ -44,7 +44,7 @@ const mainNavItems: NavItem[] = [
     icon: Lightbulb,
   },
   {
-    title: "Notifications",
+    title: "Digests",
     href: notificationsPath(),
     icon: Bell,
     items: [

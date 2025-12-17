@@ -1,6 +1,6 @@
 import { Head } from "@inertiajs/react"
+import { Sun } from "lucide-react"
 
-import AppearanceTabs from "@/components/appearance-tabs"
 import HeadingSmall from "@/components/heading-small"
 import AppLayout from "@/layouts/app-layout"
 import SettingsLayout from "@/layouts/settings/layout"
@@ -22,10 +22,20 @@ export default function Appearance() {
       <SettingsLayout>
         <div className="space-y-6">
           <HeadingSmall
-            title="Appearance settings"
-            description="Update your account's appearance settings"
+            title="Appearance"
+            description="JotChain uses a light, paper-like theme for optimal readability."
           />
-          <AppearanceTabs />
+          <div className="flex items-center gap-3 rounded-lg border border-border-subtle bg-surface p-4">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-soft-bg">
+              <Sun className="h-5 w-5 text-primary" />
+            </div>
+            <div>
+              <p className="font-medium text-foreground">Light mode</p>
+              <p className="text-sm text-muted-foreground">
+                Designed for comfortable reading and writing
+              </p>
+            </div>
+          </div>
         </div>
       </SettingsLayout>
     </AppLayout>

@@ -82,21 +82,14 @@ export function SubscriptionStatus({ user }: SubscriptionStatusProps) {
     )
   }
 
-  // Trial expired or no active subscription
+  // Trial expired or no active subscription - subtle text link
   return (
     <Link
       href={billingPath()}
-      className="flex items-center gap-3 rounded-lg border border-orange-500/30 bg-orange-500/5 p-3 transition-colors hover:bg-orange-500/10"
+      className="flex items-center gap-2 px-2 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
     >
-      <div className="flex h-8 w-8 items-center justify-center rounded-md bg-orange-500/10">
-        <CreditCard className="h-4 w-4 text-orange-500" />
-      </div>
-      <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-orange-600 dark:text-orange-400">
-          Get full access now
-        </p>
-        <p className="text-muted-foreground text-xs">Subscribe to continue</p>
-      </div>
+      <CreditCard className="h-4 w-4" />
+      <span>Upgrade →</span>
     </Link>
   )
 }

@@ -13,137 +13,201 @@ const popularUseCases = allUseCases.slice(0, 3);
 ---
 
 <footer class="footer">
-	<div class="brand">
-		<span class="brand__glyph"></span>
-		<span class="brand__name">JotChain</span>
+	<div class="footer__inner">
+		<div class="footer__brand">
+			<a href="/" class="brand">
+				<span class="brand__glyph"></span>
+				<span class="brand__name">JotChain</span>
+			</a>
+			<p class="footer__tagline">A work log that turns into updates, reviews, and summaries.</p>
+		</div>
+
+		<div class="footer__links">
+			<div class="footer__section">
+				<h3>Product</h3>
+				<nav>
+					<a href="/#how-it-works">How it works</a>
+					<a href="/#pricing">Pricing</a>
+					<a href={appSignupUrl}>Start trial</a>
+				</nav>
+			</div>
+			<div class="footer__section">
+				<h3>Use Cases</h3>
+				<nav>
+					{popularUseCases.map((useCase) => (
+						<a href={`/use-cases/${useCase.slug}`}>{useCase.data.name}</a>
+					))}
+				</nav>
+			</div>
+			<div class="footer__section">
+				<h3>For</h3>
+				<nav>
+					{popularProfessions.map((profession) => (
+						<a href={`/for/${profession.slug}`}>{profession.data.name}</a>
+					))}
+				</nav>
+			</div>
+			<div class="footer__section">
+				<h3>Company</h3>
+				<nav>
+					<a href="/blog">Blog</a>
+					<a href="mailto:grig@jotchain.com">Contact</a>
+					<a href="/privacy">Privacy</a>
+					<a href="/terms">Terms</a>
+				</nav>
+			</div>
+		</div>
 	</div>
-	<div class="footer__content">
-		<div class="footer__section">
-			<h3 class="footer__heading">Product</h3>
-			<nav class="footer__nav">
-				<a href="/#features">Features</a>
-				<a href="/#workflow">Workflow</a>
-				<a href="/#pricing">Pricing</a>
-			</nav>
-		</div>
-		<div class="footer__section">
-			<h3 class="footer__heading">Use Cases</h3>
-			<nav class="footer__nav">
-				{popularUseCases.map((useCase) => (
-					<a href={`/use-cases/${useCase.slug}`}>{useCase.data.name}</a>
-				))}
-				<a href="/use-cases">All Use Cases</a>
-			</nav>
-		</div>
-		<div class="footer__section">
-			<h3 class="footer__heading">For</h3>
-			<nav class="footer__nav">
-				{popularProfessions.map((profession) => (
-					<a href={`/for/${profession.slug}`}>{profession.data.name}</a>
-				))}
-				<a href="/for">All Professions</a>
-			</nav>
-		</div>
-		<div class="footer__section">
-			<h3 class="footer__heading">Company</h3>
-			<nav class="footer__nav">
-				<a href="/blog">Blog</a>
-				<a href="mailto:grig@jotchain.com">Contact</a>
-				<a href="/privacy">Privacy</a>
-				<a href="/terms">Terms</a>
-			</nav>
-		</div>
-	</div>
-	<div class="footer__meta">
-		<span>© {new Date().getFullYear()} JotChain. Never blank in meetings again.</span>
+
+	<div class="footer__bottom">
+		<span>© {new Date().getFullYear()} JotChain</span>
 	</div>
 </footer>
 
 <style>
 	.footer {
+		width: calc(100% - 2rem);
+		max-width: var(--max-width);
+		margin: 2rem auto 1rem;
+		background: rgba(255, 255, 255, 0.85);
+		backdrop-filter: blur(12px);
+		-webkit-backdrop-filter: blur(12px);
+		border: 1px solid var(--border-subtle);
+		border-radius: var(--radius);
+		box-shadow: 0 4px 12px rgba(31, 35, 40, 0.04);
+	}
+
+	@media (min-width: 768px) {
+		.footer {
+			width: calc(100% - 3rem);
+			margin: 3rem auto 1.25rem;
+		}
+	}
+
+	.footer__inner {
 		display: flex;
 		flex-direction: column;
-		gap: 2rem;
-		padding: 2.5rem 0 1rem;
-		border-top: 1px solid rgba(148, 163, 184, 0.12);
-		color: var(--text-secondary);
-		width: 100%;
+		gap: 2.5rem;
 		max-width: var(--max-width);
+		margin: 0 auto;
+		padding: 3rem 1.5rem 2rem;
+	}
+
+	@media (min-width: 768px) {
+		.footer__inner {
+			flex-direction: row;
+			justify-content: space-between;
+			padding: 3rem 2.5rem 2rem;
+		}
+	}
+
+	.footer__brand {
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
+		max-width: 280px;
 	}
 
 	.brand {
 		display: inline-flex;
 		align-items: center;
-		gap: 0.65rem;
-		font-weight: 600;
-		letter-spacing: -0.01em;
-		opacity: 1;
-		transition: opacity 0.2s ease;
+		gap: 0.5rem;
 	}
 
 	.brand:hover {
-		opacity: 0.85;
+		color: var(--text-primary);
 	}
 
 	.brand__glyph {
-		width: 28px;
-		height: 28px;
-		border-radius: 10px;
+		width: 24px;
+		height: 24px;
+		border-radius: 6px;
 		background: url('/favicon.svg') center/cover;
-		box-shadow: 0 4px 14px rgba(129, 140, 248, 0.25);
 	}
 
 	.brand__name {
-		font-size: 1rem;
-	}
-
-	.footer__content {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-		gap: 2rem;
-	}
-
-	.footer__section {
-		display: flex;
-		flex-direction: column;
-		gap: 0.75rem;
-	}
-
-	.footer__heading {
+		font-family: var(--font-heading);
 		font-size: 0.9rem;
 		font-weight: 600;
 		color: var(--text-primary);
-		margin: 0;
 	}
 
-	.footer__nav {
+	.footer__tagline {
+		font-size: 0.875rem;
+		color: var(--text-muted);
+		line-height: 1.5;
+	}
+
+	.footer__links {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 2rem 1.5rem;
+	}
+
+	@media (min-width: 640px) {
+		.footer__links {
+			grid-template-columns: repeat(4, 1fr);
+			gap: 2rem;
+		}
+	}
+
+	.footer__section h3 {
+		font-family: var(--font-body);
+		font-size: 0.8rem;
+		font-weight: 600;
+		color: var(--text-primary);
+		margin-bottom: 0.75rem;
+		text-transform: uppercase;
+		letter-spacing: 0.03em;
+	}
+
+	.footer__section nav {
 		display: flex;
 		flex-direction: column;
 		gap: 0.5rem;
-		font-size: 0.85rem;
 	}
 
-	.footer__nav a {
+	.footer__section nav a {
+		font-size: 0.875rem;
 		color: var(--text-secondary);
-		opacity: 0.85;
-		transition: opacity 0.2s ease;
+		transition: color 0.15s ease;
+		position: relative;
+		display: inline-block;
+		width: fit-content;
 	}
 
-	.footer__nav a:hover {
-		opacity: 1;
-		color: var(--text-primary);
+	.footer__section nav a::after {
+		content: '';
+		position: absolute;
+		bottom: -1px;
+		left: 0;
+		width: 100%;
+		height: 1px;
+		background: var(--primary);
+		transform: scaleX(0);
+		transform-origin: right;
+		transition: transform 0.25s ease;
 	}
 
-	.footer__meta {
-		font-size: 0.85rem;
-		padding-top: 1.5rem;
-		border-top: 1px solid rgba(148, 163, 184, 0.08);
+	.footer__section nav a:hover {
+		color: var(--primary);
+	}
+
+	.footer__section nav a:hover::after {
+		transform: scaleX(1);
+		transform-origin: left;
+	}
+
+	.footer__bottom {
+		padding: 1.25rem 1.5rem;
+		border-top: 1px solid var(--border-subtle);
+		font-size: 0.8rem;
+		color: var(--text-muted);
 	}
 
 	@media (min-width: 768px) {
-		.footer__content {
-			grid-template-columns: repeat(4, 1fr);
+		.footer__bottom {
+			padding: 1.25rem 2.5rem;
 		}
 	}
 </style>
-

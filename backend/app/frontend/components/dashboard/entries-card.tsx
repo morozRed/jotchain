@@ -109,8 +109,8 @@ export function DashboardEntriesCard({
         {entries.length === 0 ? (
           <EmptyState
             icon={<Sparkles className="size-5 text-primary" />}
-            title="No entries for this day"
-            description="Add a note above to capture what you worked on."
+            title="Nothing logged yet"
+            description="That's okay — add a note above when you're ready."
           />
         ) : (
           entries.map((entry) => (
@@ -134,7 +134,7 @@ export function DashboardEntriesCard({
                     {entry.tag ? (
                       <Badge
                         variant="outline"
-                        className="border-primary/30 bg-primary/10 text-xs dark:border-primary/40 dark:bg-primary/20"
+                        className="border-primary/30 bg-primary-soft-bg text-xs"
                       >
                         #{entry.tag}
                       </Badge>

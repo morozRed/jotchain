@@ -1,25 +1,31 @@
 import {
-  BookOpen,
   FileText,
-  Lightbulb,
   Loader2,
   Mail,
   MessageSquare,
   Star,
-  Twitter,
+  User,
 } from "lucide-react"
 import { useState } from "react"
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { insightPath } from "@/routes"
 
-import type { InsightRequest, InsightsMeta, QueryType } from "./types"
+import type { InsightRequest, InsightsMeta, QueryType, ReviewPerspective } from "./types"
 
 interface InsightTemplateCardsProps {
   meta: InsightsMeta
   dateRangeStart?: Date
   dateRangeEnd?: Date
   projectIds: string[]
+  personIds: string[]
   hasActiveInsights?: boolean
   generationLimit: number
   remainingGenerations: number
@@ -34,13 +40,13 @@ interface InsightTemplateCardsProps {
 
 const templateIcons = {
   summary: FileText,
-  tweets: Twitter,
   review: Star,
-  blog: BookOpen,
   update: Mail,
-  ideas: Lightbulb,
   custom: MessageSquare,
 }
+
+// Only show these templates (subtractive UX)
+const allowedTemplates = ["summary", "update", "review", "custom"]
 
 interface InsightGenerationResponse {
   id?: string
@@ -52,6 +58,7 @@ export function InsightTemplateCards({
   dateRangeStart,
   dateRangeEnd,
   projectIds,
+  personIds,
   hasActiveInsights = false,
   generationLimit,
   remainingGenerations,
@@ -63,8 +70,12 @@ export function InsightTemplateCards({
   onGenerationCompleted,
   onAlert,
 }: InsightTemplateCardsProps) {
+  const [selectedTemplate, setSelectedTemplate] = useState<QueryType | null>(null)
   const [generating, setGenerating] = useState<QueryType | null>(null)
+  const [reviewPerson, setReviewPerson] = useState<string | null>(null)
+  const [perspective, setPerspective] = useState<ReviewPerspective>("manager")
   const limitReached = remainingGenerations <= 0
+  const isReviewSelected = selectedTemplate === "review"
   const showAlert = (message: string) => {
     if (onAlert) {
       onAlert(message)
@@ -72,6 +83,11 @@ export function InsightTemplateCards({
       console.warn(message)
     }
   }
+
+  // Filter to only allowed templates
+  const visibleTemplates = meta.queryTypes.filter(
+    (template) => allowedTemplates.includes(template.value)
+  )
 
   const notifyQueuedInsight = async (insightId: string) => {
     if (!onInsightQueued) return
@@ -89,6 +105,21 @@ export function InsightTemplateCards({
   const finalizeGeneration = () => {
     setGenerating(null)
     onGenerationCompleted?.()
+  }
+
+  // Determine person_ids to send based on insight type
+  const getPersonIdsForRequest = (queryType: QueryType): string[] => {
+    if (queryType === "review") {
+      // For reviews, use the dedicated reviewPerson if set (and not self-review)
+      if (perspective === "self") {
+        return [] // Self-review doesn't filter by person
+      }
+      if (reviewPerson) {
+        return [reviewPerson]
+      }
+    }
+    // For other types or if no review person selected, use the general filter
+    return personIds.includes("all") ? [] : personIds
   }
 
   const handleGenerate = async (queryType: QueryType) => {
@@ -134,7 +165,8 @@ export function InsightTemplateCards({
             date_range_start: dateRangeStart.toISOString(),
             date_range_end: dateRangeEnd.toISOString(),
             project_ids: projectIds,
-            person_ids: [],
+            person_ids: getPersonIdsForRequest(queryType),
+            perspective: queryType === "review" ? perspective : undefined,
           },
         }),
       })
@@ -187,75 +219,138 @@ export function InsightTemplateCards({
     }, 2000)
   }
 
+  const handleGenerateClick = () => {
+    if (selectedTemplate) {
+      void handleGenerate(selectedTemplate)
+    }
+  }
+
+  const generationBlocked = limitReached || !canGenerateInsights
+  const isGenerating = generating !== null
+  const canGenerate = selectedTemplate && !generationBlocked && !hasActiveInsights && !isGenerating
+
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {meta.queryTypes
-          .filter((template) => template.value !== "custom")
-          .map((template) => {
-            const Icon = templateIcons[template.value]
-            const isGenerating = generating === template.value
-            const isAnotherTemplateGenerating =
-              generating !== null && generating !== template.value
-            const generationBlocked = limitReached || !canGenerateInsights
-            const buttonDisabled =
-              generationBlocked || hasActiveInsights || isGenerating || isAnotherTemplateGenerating
+      <fieldset className="space-y-1">
+        <legend className="text-sm font-medium text-muted-foreground uppercase tracking-wide mb-3">
+          Output
+        </legend>
+        {visibleTemplates.map((template) => {
+          const Icon = templateIcons[template.value as keyof typeof templateIcons]
+          const isSelected = selectedTemplate === template.value
+          const isThisGenerating = generating === template.value
 
-            return (
-              <button
-                key={template.value}
-                onClick={() => void handleGenerate(template.value)}
-                disabled={buttonDisabled}
-                className="group relative flex flex-col overflow-hidden rounded-lg border bg-card p-4 text-left transition-all hover:border-primary/50 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:border-border shadow-none"
-              >
-                <div className="flex items-start justify-between gap-3 mb-3">
-                  <div className="flex items-center gap-3 flex-1 min-w-0">
-                    <div className="rounded-lg bg-primary/10 p-2.5 group-hover:bg-primary/20 transition-colors shrink-0">
-                      <Icon className="h-5 w-5 text-primary" />
-                    </div>
-                    <div className="min-w-0">
-                      <h3 className="font-semibold text-sm text-foreground mb-1 truncate">{template.label}</h3>
-                      <p className="text-xs text-muted-foreground line-clamp-2">
-                        {template.description}
-                      </p>
-                    </div>
-                  </div>
-                  {isGenerating && (
-                    <Loader2 className="h-4 w-4 animate-spin text-primary shrink-0" />
-                  )}
-                </div>
+          return (
+            <label
+              key={template.value}
+              className={`flex items-center gap-3 py-2.5 px-3 rounded-md cursor-pointer transition-colors ${
+                isSelected
+                  ? "bg-primary/5 ring-1 ring-primary/20"
+                  : "hover:bg-subtle"
+              } ${isThisGenerating ? "opacity-60" : ""}`}
+            >
+              <input
+                type="radio"
+                name="template"
+                value={template.value}
+                checked={isSelected}
+                onChange={() => setSelectedTemplate(template.value)}
+                disabled={isGenerating}
+                className="accent-primary"
+              />
+              {Icon && <Icon className={`h-4 w-4 shrink-0 ${isSelected ? "text-primary" : "text-muted-foreground"}`} />}
+              <div className="flex-1 min-w-0">
+                <span className={`text-sm ${isSelected ? "font-medium text-foreground" : "text-foreground"}`}>
+                  {template.label}
+                </span>
+                <span className="text-sm text-muted-foreground ml-1.5">
+                  — {template.description}
+                </span>
+              </div>
+              {isThisGenerating && (
+                <Loader2 className="h-4 w-4 animate-spin text-primary shrink-0" />
+              )}
+            </label>
+          )
+        })}
+      </fieldset>
 
-                <div className="mt-auto pt-3 border-t">
-                  <div className="flex items-center justify-center gap-2 text-xs font-medium">
-                    {limitReached ? (
-                      <span className="text-destructive">Quota reached</span>
-                    ) : !canGenerateInsights ? (
-                      <span className="text-amber-600">Upgrade required</span>
-                    ) : hasActiveInsights && !isGenerating ? (
-                      <span className="text-muted-foreground">Please wait...</span>
-                    ) : isGenerating ? (
-                      <span className="text-primary">Generating...</span>
-                    ) : isAnotherTemplateGenerating ? (
-                      <span className="text-muted-foreground">Please wait...</span>
-                    ) : (
-                      <span className="text-primary group-hover:text-primary/80">
-                        Click to generate
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </button>
-            )
-          })}
-      </div>
+      {/* Review-specific context section */}
+      {isReviewSelected && (
+        <div className="ml-7 pl-4 border-l-2 border-primary/20 space-y-4">
+          <div className="space-y-2">
+            <p className="text-sm text-muted-foreground">Perspective</p>
+            <div className="flex gap-4">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="perspective"
+                  value="manager"
+                  checked={perspective === "manager"}
+                  onChange={() => setPerspective("manager")}
+                  className="accent-primary"
+                />
+                <span className="text-sm text-foreground">Writing about someone</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="perspective"
+                  value="self"
+                  checked={perspective === "self"}
+                  onChange={() => setPerspective("self")}
+                  className="accent-primary"
+                />
+                <span className="text-sm text-foreground">Writing about myself</span>
+              </label>
+            </div>
+          </div>
+
+          {perspective === "manager" && meta.persons.length > 0 && (
+            <div className="space-y-2">
+              <p className="text-sm text-muted-foreground flex items-center gap-2">
+                <User className="h-4 w-4" />
+                Who is this review for?
+              </p>
+              <Select value={reviewPerson || ""} onValueChange={(v) => setReviewPerson(v || null)}>
+                <SelectTrigger className="w-full max-w-xs">
+                  <SelectValue placeholder="Select a person (optional)" />
+                </SelectTrigger>
+                <SelectContent>
+                  {meta.persons.map((person) => (
+                    <SelectItem key={person.value} value={person.value}>
+                      {person.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground/70">
+                Focuses the review on entries mentioning this person.
+              </p>
+            </div>
+          )}
+        </div>
+      )}
+
+      <Button
+        onClick={handleGenerateClick}
+        disabled={!canGenerate}
+        className="w-full sm:w-auto"
+      >
+        {isGenerating ? (
+          <>
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            Generating...
+          </>
+        ) : (
+          "Generate draft"
+        )}
+      </Button>
 
       {limitReached && (
-        <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-4">
-          <p className="text-sm text-destructive font-medium">
-            You&apos;ve used all {generationLimit} runs available this month. Contact support if you
-            need additional capacity.
-          </p>
-        </div>
+        <p className="text-sm text-destructive">
+          You&apos;ve used all {generationLimit} runs available this month.
+        </p>
       )}
     </div>
   )

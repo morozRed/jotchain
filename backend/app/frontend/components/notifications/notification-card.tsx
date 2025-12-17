@@ -3,7 +3,6 @@ import { MoreVertical } from "lucide-react"
 import { useCallback, useEffect, useMemo, useState } from "react"
 
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Dialog,
   DialogContent,
@@ -188,26 +187,31 @@ export function NotificationCard({ schedule, meta }: NotificationCardProps) {
   })()
 
   return (
-    <Card className="border shadow-sm gap-1">
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-        <CardTitle className="text-lg font-semibold">
-          {schedule.name || buildSuggestedName(form.data)}
-        </CardTitle>
+    <div className="py-4">
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex-1 min-w-0">
+          <p className="font-medium text-foreground truncate">
+            {schedule.name || buildSuggestedName(form.data)}
+          </p>
+          <p className="text-sm text-muted-foreground mt-1">
+            {cadenceLabel} @ {time_of_day}
+            <span className="mx-2">·</span>
+            {lookbackLabel}
+            {occurrences.length > 0 && (
+              <>
+                <span className="mx-2">·</span>
+                <span>Next: {occurrences[0]}</span>
+              </>
+            )}
+          </p>
+        </div>
 
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2">
-            <Switch
-              id={`notification-toggle-${schedule.id}`}
-              checked={currentEnabled}
-              onCheckedChange={handleToggleEnabled}
-            />
-            <label
-              htmlFor={`notification-toggle-${schedule.id}`}
-              className="text-sm font-medium text-muted-foreground cursor-pointer"
-            >
-              {currentEnabled ? "Enabled" : "Disabled"}
-            </label>
-          </div>
+        <div className="flex items-center gap-4 shrink-0">
+          <Switch
+            id={`notification-toggle-${schedule.id}`}
+            checked={currentEnabled}
+            onCheckedChange={handleToggleEnabled}
+          />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="sm" className="size-8 p-0">
@@ -221,40 +225,21 @@ export function NotificationCard({ schedule, meta }: NotificationCardProps) {
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => setDeleteOpen(true)}
-                className="text-destructive"
+                variant="destructive"
               >
                 Delete
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-      </CardHeader>
-
-      <CardContent className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
-        <div className="flex items-center gap-1.5">
-          <span className="text-muted-foreground">{cadenceLabel}</span>
-          <span className="text-muted-foreground">@</span>
-          <span className="font-medium">{time_of_day}</span>
-        </div>
-        <div className="h-4 w-px bg-border" />
-        <div className="text-muted-foreground">{lookbackLabel}</div>
-        {occurrences.length > 0 && (
-          <>
-            <div className="h-4 w-px bg-border" />
-            <div className="flex items-center gap-1.5">
-              <span className="text-sm text-muted-foreground">Next:</span>
-              <span>{occurrences[0]}</span>
-            </div>
-          </>
-        )}
-      </CardContent>
+      </div>
 
       <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
         <DialogContent className="max-w-2xl lg:max-w-4xl">
           <DialogHeader>
-            <DialogTitle>Edit notification</DialogTitle>
+            <DialogTitle>Edit digest</DialogTitle>
             <DialogDescription>
-              Update delivery settings, cadence, and summary window.
+              Update when you receive summaries and what period to cover.
             </DialogDescription>
           </DialogHeader>
 
@@ -270,7 +255,7 @@ export function NotificationCard({ schedule, meta }: NotificationCardProps) {
             <DialogFooter>
               <Button
                 type="button"
-                variant="outline"
+                variant="secondary"
                 onClick={() => setIsEditOpen(false)}
                 disabled={form.processing}
               >
@@ -287,13 +272,13 @@ export function NotificationCard({ schedule, meta }: NotificationCardProps) {
       <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>Delete notification?</DialogTitle>
+            <DialogTitle>Delete digest?</DialogTitle>
             <DialogDescription>
-              This action cannot be undone. This will permanently delete the notification schedule.
+              This will permanently delete this email digest.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setDeleteOpen(false)}>
+            <Button variant="secondary" onClick={() => setDeleteOpen(false)}>
               Cancel
             </Button>
             <Button variant="destructive" onClick={confirmDelete}>
@@ -302,6 +287,6 @@ export function NotificationCard({ schedule, meta }: NotificationCardProps) {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </Card>
+    </div>
   )
 }

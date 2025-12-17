@@ -19,8 +19,8 @@ export default function AuthSimpleLayout({
 }: PropsWithChildren<AuthLayoutProps>) {
   return (
     <div className="relative min-h-screen overflow-hidden bg-background text-foreground">
-      <div className="pointer-events-none absolute inset-x-0 top-[-40%] z-0 mx-auto h-[480px] w-[720px] rounded-full bg-[radial-gradient(circle_at_center,rgba(129,140,248,0.9),transparent_70%)] opacity-60 blur-3xl dark:opacity-60 opacity-20" />
-      <div className="pointer-events-none absolute bottom-[-30%] right-[-10%] z-0 h-[480px] w-[480px] rounded-full bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.9),transparent_70%)] opacity-30 blur-3xl dark:opacity-30 opacity-15" />
+      <div className="pointer-events-none absolute inset-x-0 top-[-40%] z-0 mx-auto h-[480px] w-[720px] rounded-full bg-[radial-gradient(circle_at_center,rgba(47,93,80,0.3),transparent_70%)] opacity-40 blur-3xl" />
+      <div className="pointer-events-none absolute bottom-[-30%] right-[-10%] z-0 h-[480px] w-[480px] rounded-full bg-[radial-gradient(circle_at_center,rgba(47,93,80,0.2),transparent_70%)] opacity-30 blur-3xl" />
 
       <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-12 px-6 py-12 md:flex-row md:items-center md:justify-between md:gap-16 md:px-10 lg:px-12">
         <div className="flex max-w-xl flex-col gap-8">

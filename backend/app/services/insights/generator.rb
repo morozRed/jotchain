@@ -135,17 +135,7 @@ module Insights
           Keep it engaging, conversational, and authentic.
         PROMPT
       when "review"
-        <<~PROMPT
-          Generate a formal performance review summary with these sections:
-          1. Executive Summary - Brief overview of the period
-          2. Major Projects & Outcomes - Key work completed with impact (3-5 bullets)
-          3. Collaboration & Teamwork - How they worked with others (2-3 bullets)
-          4. Skills Developed - Technical or professional growth (2-3 bullets)
-          5. Future Goals - Mentioned aspirations or upcoming focus areas (2-3 bullets if applicable)
-
-          OUTPUT FORMAT: JSON with 'sections' array, each with 'title' and 'bullets'.
-          Length: 400-600 words total. Use professional tone, action verbs, quantify when possible.
-        PROMPT
+        review_prompt_for_perspective
       when "blog"
         <<~PROMPT
           Generate a blog post draft based on the user's work and learnings.
@@ -297,6 +287,48 @@ module Insights
 
     def format_date(datetime)
       datetime.strftime("%Y-%m-%d")
+    end
+
+    def review_prompt_for_perspective
+      perspective = insight_request.perspective || "manager"
+      person_name = fetch_person_name
+
+      if perspective == "self"
+        <<~PROMPT
+          Generate a self-review/self-assessment in FIRST PERSON with these sections:
+          1. Executive Summary - Brief overview of my accomplishments this period
+          2. Major Projects & Outcomes - Key work I completed with impact (3-5 bullets)
+          3. Collaboration & Teamwork - How I worked with others (2-3 bullets)
+          4. Skills Developed - Technical or professional growth I achieved (2-3 bullets)
+          5. Future Goals - My aspirations and upcoming focus areas (2-3 bullets if applicable)
+
+          IMPORTANT: Write entirely in first person ("I accomplished...", "I led...", "I developed...").
+          OUTPUT FORMAT: JSON with 'sections' array, each with 'title' and 'bullets'.
+          Length: 400-600 words total. Use professional tone, action verbs, quantify when possible.
+        PROMPT
+      else
+        # Manager perspective - about someone else
+        subject = person_name.present? ? person_name : "this team member"
+        <<~PROMPT
+          Generate a formal performance review about #{subject} with these sections:
+          1. Executive Summary - Brief overview of #{subject}'s performance this period
+          2. Major Projects & Outcomes - Key work completed with impact (3-5 bullets)
+          3. Collaboration & Teamwork - How #{subject} worked with others (2-3 bullets)
+          4. Skills Developed - Technical or professional growth demonstrated (2-3 bullets)
+          5. Future Goals - Recommended focus areas and development opportunities (2-3 bullets if applicable)
+
+          IMPORTANT: Write in third person about #{subject}.
+          OUTPUT FORMAT: JSON with 'sections' array, each with 'title' and 'bullets'.
+          Length: 400-600 words total. Use professional tone, action verbs, quantify when possible.
+        PROMPT
+      end
+    end
+
+    def fetch_person_name
+      return nil if insight_request.person_ids.blank?
+
+      person_id = insight_request.person_ids.first
+      user.persons.find_by(id: person_id)&.name
     end
 
     def empty_result

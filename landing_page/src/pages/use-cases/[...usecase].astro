@@ -215,18 +215,17 @@ const hasBody = bodyText.length > 100;
 
 	.hero__eyebrow {
 		font-size: 0.75rem;
-		letter-spacing: 0.18em;
+		letter-spacing: 0.12em;
 		text-transform: uppercase;
-		color: rgba(165, 180, 252, 0.85);
+		color: var(--primary);
 		display: inline-flex;
 		align-items: center;
-		justify-content: center;
 		gap: 0.5rem;
 		padding: 0.4rem 0.9rem;
 		border-radius: 999px;
-		border: 1px solid rgba(129, 140, 248, 0.35);
-		background: rgba(21, 24, 40, 0.7);
-		text-align: center;
+		border: 1px solid var(--primary-soft-border);
+		background: var(--primary-soft-bg);
+		width: fit-content;
 	}
 
 	.hero__content {
@@ -244,7 +243,7 @@ const hasBody = bodyText.length > 100;
 	.hero__highlights {
 		display: flex;
 		flex-direction: column;
-		gap: 0.85rem;
+		gap: 0.75rem;
 		padding: 0;
 		margin: 0;
 		list-style: none;
@@ -254,11 +253,10 @@ const hasBody = bodyText.length > 100;
 		display: flex;
 		gap: 0.75rem;
 		align-items: flex-start;
-		padding: 0.95rem 1.15rem;
-		border-radius: 14px;
-		background: rgba(14, 18, 30, 0.72);
-		border: 1px solid rgba(148, 163, 184, 0.12);
-		box-shadow: inset 0 1px 0 rgba(148, 163, 184, 0.08);
+		padding: 0.85rem 1rem;
+		border-radius: var(--radius);
+		background: var(--surface);
+		border: 1px solid var(--border-subtle);
 	}
 
 	.hero__icon {
@@ -268,8 +266,8 @@ const hasBody = bodyText.length > 100;
 		width: 24px;
 		height: 24px;
 		border-radius: 999px;
-		background: rgba(129, 140, 248, 0.18);
-		color: rgba(195, 203, 255, 0.95);
+		background: var(--primary-soft-bg);
+		color: var(--primary);
 		font-size: 0.85rem;
 	}
 
@@ -278,35 +276,37 @@ const hasBody = bodyText.length > 100;
 		flex-wrap: wrap;
 		gap: 0.9rem;
 		align-items: center;
-		justify-content: center;
 	}
 
 	.hero__link {
-		color: rgba(195, 203, 255, 0.95);
+		color: var(--primary);
 		font-weight: 500;
 	}
 
 	.hero__link:hover {
-		color: var(--text-primary);
+		color: var(--primary-hover);
 	}
 
 	.hero__meta {
 		font-size: 0.85rem;
-		color: rgba(203, 213, 225, 0.65);
+		color: var(--text-muted);
 	}
 
 	.hero__card {
 		position: relative;
-		padding: 2.4rem 2.2rem;
-		border-radius: 26px;
-		background: radial-gradient(circle at top left, rgba(129, 140, 248, 0.32), rgba(15, 23, 42, 0.92));
-		border: 1px solid rgba(129, 140, 248, 0.28);
-		box-shadow:
-			0 25px 60px -35px rgba(12, 17, 33, 0.9),
-			inset 0 1px 0 rgba(255, 255, 255, 0.05);
+		padding: 2rem;
+		border-radius: var(--radius);
+		background:
+			radial-gradient(
+				100% 60% at 50% 50%,
+				var(--primary-soft-bg) 0%,
+				transparent 100%
+			),
+			var(--surface);
+		border: 1px solid var(--primary-soft-border);
 		display: flex;
 		flex-direction: column;
-		gap: 1.8rem;
+		gap: 1.5rem;
 	}
 
 	.hero__card-headline {
@@ -317,13 +317,13 @@ const hasBody = bodyText.length > 100;
 
 	.hero__card-label {
 		font-size: 0.75rem;
-		letter-spacing: 0.16em;
+		letter-spacing: 0.12em;
 		text-transform: uppercase;
-		color: rgba(226, 232, 240, 0.75);
+		color: var(--text-muted);
 	}
 
 	.hero__card-body {
-		color: rgba(226, 232, 255, 0.88);
+		color: var(--text-secondary);
 		line-height: 1.65;
 		margin: 0;
 	}
@@ -331,7 +331,7 @@ const hasBody = bodyText.length > 100;
 	.hero__card-steps {
 		display: flex;
 		flex-direction: column;
-		gap: 1.1rem;
+		gap: 1rem;
 		padding: 0;
 		margin: 0;
 		list-style: none;
@@ -341,6 +341,7 @@ const hasBody = bodyText.length > 100;
 		display: flex;
 		gap: 0.85rem;
 		align-items: center;
+		color: var(--text-secondary);
 	}
 
 	.hero__card-step-icon {
@@ -351,10 +352,8 @@ const hasBody = bodyText.length > 100;
 		height: 40px;
 		padding: 0.5rem;
 		border-radius: 999px;
-		background: rgba(15, 23, 42, 0.55);
-		border: 1px solid rgba(129, 140, 248, 0.4);
-		color: rgba(226, 232, 255, 0.92);
-		box-shadow: 0 10px 18px -12px rgba(129, 140, 248, 0.55);
+		background: var(--primary);
+		color: var(--primary-foreground);
 		flex-shrink: 0;
 	}
 
@@ -375,17 +374,17 @@ const hasBody = bodyText.length > 100;
 		margin: 0 auto;
 		display: flex;
 		flex-direction: column;
-		gap: 1rem;
+		gap: 0.75rem;
 	}
 
 	.impact__header p {
 		color: var(--text-secondary);
-		line-height: 1.7;
+		line-height: 1.6;
 	}
 
 	.impact__grid {
 		display: grid;
-		gap: 1.6rem;
+		gap: 1.5rem;
 		grid-template-columns: repeat(2, 1fr);
 	}
 
@@ -396,32 +395,33 @@ const hasBody = bodyText.length > 100;
 	}
 
 	.impact__card {
-		padding: 1.8rem;
-		border-radius: 20px;
-		background: rgba(18, 22, 35, 0.6);
-		border: 1px solid rgba(129, 140, 248, 0.18);
+		padding: 1.5rem;
+		border-radius: var(--radius);
+		background: var(--surface);
+		border: 1px solid var(--border-subtle);
 		display: flex;
 		flex-direction: column;
-		gap: 0.8rem;
-		transition: transform 0.25s ease, border-color 0.25s ease;
+		gap: 0.5rem;
+		transition: border-color 0.15s ease, transform 0.2s ease;
 	}
 
 	.impact__card:hover {
-		transform: translateY(-3px);
-		border-color: rgba(129, 140, 248, 0.45);
+		transform: translateY(-2px);
+		border-color: var(--border-strong);
 	}
 
 	.impact__badge {
-		font-size: 0.68rem;
-		letter-spacing: 0.2em;
+		font-size: 0.7rem;
+		letter-spacing: 0.12em;
 		text-transform: uppercase;
-		color: rgba(195, 203, 255, 0.8);
+		color: var(--primary);
+		font-weight: 600;
 	}
 
 	.impact__card p {
 		margin: 0;
 		color: var(--text-secondary);
-		line-height: 1.6;
+		line-height: 1.5;
 	}
 
 	.workflow {
@@ -436,17 +436,17 @@ const hasBody = bodyText.length > 100;
 		margin: 0 auto;
 		display: flex;
 		flex-direction: column;
-		gap: 1rem;
+		gap: 0.75rem;
 	}
 
 	.workflow__header p {
 		color: var(--text-secondary);
-		line-height: 1.65;
+		line-height: 1.6;
 	}
 
 	.workflow__timeline {
 		display: grid;
-		gap: 1.6rem;
+		gap: 1.5rem;
 		grid-template-columns: repeat(2, 1fr);
 	}
 
@@ -458,19 +458,19 @@ const hasBody = bodyText.length > 100;
 
 	.workflow__step {
 		position: relative;
-		padding: 1.8rem;
-		border-radius: 20px;
-		background: rgba(14, 18, 30, 0.78);
-		border: 1px solid rgba(129, 140, 248, 0.18);
+		padding: 1.5rem;
+		border-radius: var(--radius);
+		background: var(--surface);
+		border: 1px solid var(--border-subtle);
 		display: flex;
 		gap: 1rem;
 		align-items: center;
-		transition: transform 0.25s ease, border-color 0.25s ease;
+		transition: border-color 0.15s ease, transform 0.2s ease;
 	}
 
 	.workflow__step:hover {
 		transform: translateY(-2px);
-		border-color: rgba(129, 140, 248, 0.4);
+		border-color: var(--border-strong);
 	}
 
 	.workflow__icon {
@@ -479,28 +479,31 @@ const hasBody = bodyText.length > 100;
 		justify-content: center;
 		min-width: 40px;
 		height: 40px;
-		border-radius: 14px;
-		background: rgba(21, 30, 52, 0.88);
-		border: 1px solid rgba(129, 140, 248, 0.35);
-		color: rgba(195, 203, 255, 0.95);
+		border-radius: var(--radius-sm);
+		background: var(--primary-soft-bg);
+		border: 1px solid var(--primary-soft-border);
+		color: var(--primary);
 	}
 
 	.workflow__content {
 		display: flex;
 		flex-direction: column;
-		gap: 0.55rem;
+		gap: 0.35rem;
 	}
 
 	.workflow__content h3 {
 		margin: 0;
-		font-size: 1.1rem;
-		color: rgba(226, 232, 255, 0.92);
+		font-family: var(--font-body);
+		font-size: 1rem;
+		font-weight: 600;
+		color: var(--text-primary);
 	}
 
 	.workflow__content p {
 		margin: 0;
 		color: var(--text-secondary);
-		line-height: 1.6;
+		line-height: 1.5;
+		font-size: 0.95rem;
 	}
 
 	.deep-dive {
@@ -517,18 +520,17 @@ const hasBody = bodyText.length > 100;
 	}
 
 	.deep-dive__header h2 {
-		font-size: clamp(1.75rem, 3vw, 2.25rem);
+		font-size: clamp(1.5rem, 3vw, 1.875rem);
 		margin: 0;
 	}
 
 	.deep-dive__card {
 		max-width: 760px;
 		width: 100%;
-		padding: 2.4rem;
-		border-radius: 24px;
-		background: rgba(10, 14, 24, 0.75);
-		border: 1px solid rgba(148, 163, 184, 0.15);
-		box-shadow: inset 0 1px 0 rgba(148, 163, 184, 0.08);
+		padding: 2rem;
+		border-radius: var(--radius);
+		background: var(--surface);
+		border: 1px solid var(--border-subtle);
 		display: flex;
 		flex-direction: column;
 		gap: 1.5rem;
@@ -544,25 +546,43 @@ const hasBody = bodyText.length > 100;
 	.cta-block {
 		display: flex;
 		justify-content: center;
+		padding: 3rem 1.5rem;
+		background:
+			radial-gradient(
+				100% 50% at 50% 50%,
+				var(--primary-soft-bg) 0%,
+				transparent 100%
+			),
+			var(--background);
+		width: 100vw;
+		margin-left: 50%;
+		transform: translateX(-50%);
+		position: relative;
+	}
+
+	.cta-block::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background: var(--grain-pattern);
+		opacity: 0.04;
+		pointer-events: none;
 	}
 
 	.cta-block__content {
 		max-width: 620px;
 		width: 100%;
-		padding: 3rem;
-		border-radius: 28px;
-		background: rgba(15, 20, 34, 0.92);
-		border: 1px solid rgba(129, 140, 248, 0.35);
 		display: flex;
 		flex-direction: column;
-		gap: 1.4rem;
+		gap: 1.25rem;
 		text-align: center;
-		box-shadow: 0 28px 60px -38px rgba(8, 11, 20, 0.85);
+		position: relative;
+		z-index: 1;
 	}
 
 	.cta-block__content p {
 		color: var(--text-secondary);
-		line-height: 1.65;
+		line-height: 1.6;
 		margin: 0;
 	}
 
@@ -575,22 +595,22 @@ const hasBody = bodyText.length > 100;
 	}
 
 	.cta-block__link {
-		color: rgba(195, 203, 255, 0.95);
+		color: var(--primary);
 		font-weight: 500;
 	}
 
 	.cta-block__link:hover {
-		color: var(--text-primary);
+		color: var(--primary-hover);
 	}
 
 	.cta-block__meta {
 		font-size: 0.85rem;
-		color: rgba(203, 213, 225, 0.65);
+		color: var(--text-muted);
 	}
 
 	@media (max-width: 640px) {
 		.hero__card {
-			padding: 2rem 1.8rem;
+			padding: 1.5rem;
 		}
 	}
 </style>

@@ -73,8 +73,10 @@ class InsightsController < InertiaController
   end
 
   def show
-    # Used for polling status during generation
-    render json: insight_payload(@insight)
+    respond_to do |format|
+      format.json { render json: insight_payload(@insight) }
+      format.html { render inertia: "insights/show", props: { insight: insight_payload(@insight) } }
+    end
   end
 
   def update
@@ -129,6 +131,7 @@ class InsightsController < InertiaController
       :custom_query,
       :date_range_start,
       :date_range_end,
+      :perspective,
       project_ids: [],
       person_ids: []
     )
@@ -139,6 +142,9 @@ class InsightsController < InertiaController
     # Ensure arrays are properly formatted
     permitted[:project_ids] = Array(permitted[:project_ids]).reject(&:blank?)
     permitted[:person_ids] = Array(permitted[:person_ids]).reject(&:blank?)
+
+    # Validate perspective
+    permitted[:perspective] = permitted[:perspective].presence_in(%w[manager self])
 
     permitted.to_h
   end
@@ -170,6 +176,7 @@ class InsightsController < InertiaController
       name: insight.name,
       queryType: insight.query_type,
       customQuery: insight.custom_query,
+      perspective: insight.perspective,
       dateRangeStart: insight.date_range_start&.iso8601,
       dateRangeEnd: insight.date_range_end&.iso8601,
       projectIds: insight.project_ids || [],

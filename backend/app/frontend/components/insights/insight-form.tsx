@@ -1,7 +1,7 @@
-import { Calendar, ChevronDown, FolderOpen } from "lucide-react"
+import { Calendar, ChevronDown, FolderOpen, Users } from "lucide-react"
 import { useEffect, useState } from "react"
 
-import type { DatePresetOption, InsightsMeta, ProjectOption } from "./types"
+import type { InsightsMeta } from "./types"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -11,7 +11,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Label } from "@/components/ui/label"
 import {
   Select,
   SelectContent,
@@ -25,9 +24,11 @@ interface InsightFormProps {
   dateRangeStart?: Date
   dateRangeEnd?: Date
   selectedProjects: string[]
+  selectedPersons: string[]
   onDateRangeStartChange: (date: Date | undefined) => void
   onDateRangeEndChange: (date: Date | undefined) => void
   onProjectsChange: (projects: string[]) => void
+  onPersonsChange: (persons: string[]) => void
 }
 
 export function InsightForm({
@@ -35,9 +36,11 @@ export function InsightForm({
   dateRangeStart,
   dateRangeEnd,
   selectedProjects,
+  selectedPersons,
   onDateRangeStartChange,
   onDateRangeEndChange,
   onProjectsChange,
+  onPersonsChange,
 }: InsightFormProps) {
   const [datePreset, setDatePreset] = useState("last_7_days")
 
@@ -122,64 +125,118 @@ export function InsightForm({
     return `${selectedProjects.length} projects selected`
   }
 
-  return (
-    <div className="flex flex-col gap-2 sm:flex-row sm:items-end">
-      <div className="space-y-2">
-        <Label htmlFor="date-preset" className="flex items-center gap-2">
-          <Calendar className="h-4 w-4" />
-          Date Range
-        </Label>
-        <Select value={datePreset} onValueChange={handleDatePresetChange}>
-          <SelectTrigger id="date-preset" className="w-[180px]">
-            <SelectValue placeholder="Select date range" />
-          </SelectTrigger>
-          <SelectContent>
-            {meta.datePresets.map((preset) => (
-              <SelectItem key={preset.value} value={preset.value}>
-                {preset.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+  const handlePersonToggle = (personId: string, checked: boolean) => {
+    if (personId === "all") {
+      if (checked) {
+        onPersonsChange(["all"])
+      } else {
+        onPersonsChange(meta.persons.map((p) => p.value))
+      }
+    } else {
+      const filtered = selectedPersons.filter((p) => p !== "all")
+      if (checked) {
+        onPersonsChange([...filtered, personId])
+      } else {
+        const remaining = filtered.filter((p) => p !== personId)
+        onPersonsChange(remaining.length > 0 ? remaining : ["all"])
+      }
+    }
+  }
 
-      <div className="space-y-2">
-        <Label className="flex items-center gap-2">
-          <FolderOpen className="h-4 w-4" />
-          Projects
-        </Label>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="w-[180px] justify-between">
-              <span>{getProjectsDisplayText()}</span>
-              <ChevronDown className="h-4 w-4 opacity-50" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56" align="end" onCloseAutoFocus={(e) => e.preventDefault()}>
-            <DropdownMenuLabel>Select Projects</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuCheckboxItem
-              checked={selectedProjects.includes("all")}
-              onCheckedChange={(checked) => handleProjectToggle("all", checked)}
-              onSelect={(e) => e.preventDefault()}
+  const getPersonsDisplayText = () => {
+    if (selectedPersons.includes("all") || selectedPersons.length === 0) {
+      return "All People"
+    }
+    if (selectedPersons.length === 1) {
+      const person = meta.persons.find((p) => p.value === selectedPersons[0])
+      return person?.label || "All People"
+    }
+    return `${selectedPersons.length} people selected`
+  }
+
+  return (
+    <div className="flex flex-wrap gap-3">
+      <Select value={datePreset} onValueChange={handleDatePresetChange}>
+        <SelectTrigger className="w-[160px]">
+          <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
+          <SelectValue placeholder="Date range" />
+        </SelectTrigger>
+        <SelectContent>
+          {meta.datePresets.map((preset) => (
+            <SelectItem key={preset.value} value={preset.value}>
+              {preset.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline" className="w-[160px] justify-between">
+            <FolderOpen className="h-4 w-4 mr-2 text-muted-foreground shrink-0" />
+            <span className="truncate flex-1 text-left">{getProjectsDisplayText()}</span>
+            <ChevronDown className="h-4 w-4 opacity-50 shrink-0" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-56" align="start" onCloseAutoFocus={(e) => e.preventDefault()}>
+          <DropdownMenuLabel>Select Projects</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuCheckboxItem
+            checked={selectedProjects.includes("all")}
+            onCheckedChange={(checked) => handleProjectToggle("all", checked)}
+            onSelect={(e) => e.preventDefault()}
           >
             All Projects
-            </DropdownMenuCheckboxItem>
-            <DropdownMenuSeparator />
+          </DropdownMenuCheckboxItem>
+          <DropdownMenuSeparator />
           {meta.projects.map((project) => (
-              <DropdownMenuCheckboxItem
+            <DropdownMenuCheckboxItem
               key={project.value}
-                checked={selectedProjects.includes(project.value)}
-                onCheckedChange={(checked) => handleProjectToggle(project.value, checked)}
-                onSelect={(e) => e.preventDefault()}
+              checked={selectedProjects.includes(project.value)}
+              onCheckedChange={(checked) => handleProjectToggle(project.value, checked)}
+              onSelect={(e) => e.preventDefault()}
               disabled={selectedProjects.includes("all")}
             >
               {project.label}
-              </DropdownMenuCheckboxItem>
+            </DropdownMenuCheckboxItem>
           ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      {meta.persons.length > 0 && (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="w-[160px] justify-between">
+              <Users className="h-4 w-4 mr-2 text-muted-foreground shrink-0" />
+              <span className="truncate flex-1 text-left">{getPersonsDisplayText()}</span>
+              <ChevronDown className="h-4 w-4 opacity-50 shrink-0" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-56" align="start" onCloseAutoFocus={(e) => e.preventDefault()}>
+            <DropdownMenuLabel>Select People</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuCheckboxItem
+              checked={selectedPersons.includes("all") || selectedPersons.length === 0}
+              onCheckedChange={(checked) => handlePersonToggle("all", checked)}
+              onSelect={(e) => e.preventDefault()}
+            >
+              All People
+            </DropdownMenuCheckboxItem>
+            <DropdownMenuSeparator />
+            {meta.persons.map((person) => (
+              <DropdownMenuCheckboxItem
+                key={person.value}
+                checked={selectedPersons.includes(person.value)}
+                onCheckedChange={(checked) => handlePersonToggle(person.value, checked)}
+                onSelect={(e) => e.preventDefault()}
+                disabled={selectedPersons.includes("all") || selectedPersons.length === 0}
+              >
+                {person.label}
+              </DropdownMenuCheckboxItem>
+            ))}
           </DropdownMenuContent>
         </DropdownMenu>
-      </div>
+      )}
     </div>
   )
 }
