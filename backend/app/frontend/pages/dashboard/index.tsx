@@ -149,25 +149,6 @@ export default function Dashboard() {
 
           {/* Right rail - calm context */}
           <aside className="flex flex-col gap-6">
-            {/* Where this shows up */}
-            <div className="rounded-xl border border-border-subtle bg-surface p-4">
-              <p className="text-sm font-medium text-foreground mb-3">This will show up in</p>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li className="flex items-center gap-2">
-                  <span className="size-1.5 rounded-full bg-primary" />
-                  Weekly update
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="size-1.5 rounded-full bg-primary" />
-                  Next 1:1
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="size-1.5 rounded-full bg-primary" />
-                  Review
-                </li>
-              </ul>
-            </div>
-
             {/* Previous entries */}
             <DashboardEntriesCard
               entries={entries}

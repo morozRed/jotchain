@@ -1,7 +1,7 @@
 ---
 title: "How to Log Your Day in 2 Minutes"
 description: "A dead-simple routine for capturing meaningful progress without slowing down your work."
-publishDate: 2024-11-10
+publishDate: 2025-11-10
 author: "JotChain Team"
 tags:
   - workflow

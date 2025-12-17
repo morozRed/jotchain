@@ -1,7 +1,7 @@
 ---
 title: "Meeting Prep in Minutes with AI Summaries"
 description: "Stop scrambling before meetings. Turn simple daily notes into a focused brief you can skim and share."
-publishDate: 2024-11-09
+publishDate: 2025-11-09
 author: "JotChain Team"
 tags:
   - meetings

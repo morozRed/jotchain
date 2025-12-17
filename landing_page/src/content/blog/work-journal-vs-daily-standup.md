@@ -1,7 +1,7 @@
 ---
 title: "Work Journals vs. Daily Standups: What Actually Works?"
 description: "Daily standups eat time and attention. Work journals keep momentum without the meeting. Here’s when to use each."
-publishDate: 2024-11-11
+publishDate: 2025-11-11
 author: "JotChain Team"
 tags:
   - async

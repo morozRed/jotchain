@@ -1,0 +1,235 @@
+{
+  "blog_posts": [
+    {
+      "id": 1,
+      "stage": "Unaware",
+      "title": "How Great Engineers Keep Track of Their Work (Without Extra Process)",
+      "keywords": [
+        "how to be a better software engineer",
+        "engineering work habits",
+        "tracking work as a software engineer",
+        "software engineer productivity habits",
+        "how senior engineers work"
+      ]
+    },
+    {
+      "id": 2,
+      "stage": "Unaware",
+      "title": "Daily Habits That Actually Help Product Managers Grow",
+      "keywords": [
+        "daily habits of product managers",
+        "product manager productivity",
+        "how to grow as a product manager",
+        "pm career growth habits",
+        "effective product management habits"
+      ]
+    },
+    {
+      "id": 3,
+      "stage": "Unaware",
+      "title": "Why Being Busy Isn’t the Same as Making Progress at Work",
+      "keywords": [
+        "busy vs productive at work",
+        "how to measure progress at work",
+        "knowledge worker productivity",
+        "why being busy is misleading",
+        "work effectiveness vs busyness"
+      ]
+    },
+    {
+      "id": 4,
+      "stage": "Unaware",
+      "title": "How Senior Engineers Think About Their Work (That Juniors Often Miss)",
+      "keywords": [
+        "senior software engineer mindset",
+        "how to think like a senior engineer",
+        "career progression for software engineers",
+        "engineering career advice",
+        "software engineer growth"
+      ]
+    },
+    {
+      "id": 5,
+      "stage": "Unaware",
+      "title": "Clear Communication Is a Career Skill — Here’s How Engineers Build It",
+      "keywords": [
+        "communication skills for engineers",
+        "how engineers improve communication",
+        "technical communication skills",
+        "engineering career communication",
+        "writing updates as an engineer"
+      ]
+    },
+    {
+      "id": 6,
+      "stage": "Problem-Aware",
+      "title": "“What Did I Do Yesterday?” — Why Standups Feel Harder Than They Should",
+      "keywords": [
+        "how to remember what I did yesterday for standup",
+        "daily standup preparation",
+        "writing daily standup updates",
+        "standup meeting preparation",
+        "engineering standup problems"
+      ]
+    },
+    {
+      "id": 7,
+      "stage": "Problem-Aware",
+      "title": "Why Performance Reviews Are So Stressful (And Why It’s Not Your Fault)",
+      "keywords": [
+        "performance review stress",
+        "why performance reviews are hard",
+        "forgetting accomplishments for reviews",
+        "performance review anxiety",
+        "writing performance reviews"
+      ]
+    },
+    {
+      "id": 8,
+      "stage": "Problem-Aware",
+      "title": "If You Forget Your Accomplishments, Your Career Suffers",
+      "keywords": [
+        "forgetting work accomplishments",
+        "tracking accomplishments at work",
+        "how to document achievements",
+        "career growth and self documentation",
+        "performance review preparation"
+      ]
+    },
+    {
+      "id": 9,
+      "stage": "Problem-Aware",
+      "title": "Why Writing Weekly Updates Always Takes Longer Than It Should",
+      "keywords": [
+        "writing weekly status updates",
+        "weekly work updates for engineers",
+        "status report writing",
+        "how to write work updates",
+        "engineering status reports"
+      ]
+    },
+    {
+      "id": 10,
+      "stage": "Problem-Aware",
+      "title": "Feeling Unprepared for 1:1s Is Usually a Memory Problem",
+      "keywords": [
+        "how to prepare for 1:1 meetings",
+        "feeling unprepared for one on ones",
+        "1:1 meeting preparation",
+        "manager one on one meetings",
+        "tracking discussion points for meetings"
+      ]
+    },
+    {
+      "id": 11,
+      "stage": "Solution-Aware",
+      "title": "The Case for Keeping a Simple Work Log (And What Most People Get Wrong)",
+      "keywords": [
+        "how to keep a work log",
+        "daily work log for engineers",
+        "tracking work history",
+        "work log best practices",
+        "documenting work at your job"
+      ]
+    },
+    {
+      "id": 12,
+      "stage": "Solution-Aware",
+      "title": "Notes, Docs, or Logs? Choosing the Right Way to Track Your Work",
+      "keywords": [
+        "notes vs work logs",
+        "how to track work effectively",
+        "notion vs work log",
+        "best way to track daily work",
+        "documentation methods for engineers"
+      ]
+    },
+    {
+      "id": 13,
+      "stage": "Solution-Aware",
+      "title": "Using AI to Turn Work Notes Into Summaries (What Works and What Doesn’t)",
+      "keywords": [
+        "using AI for work summaries",
+        "AI for performance reviews",
+        "AI meeting summaries",
+        "turning notes into summaries",
+        "AI productivity tools for engineers"
+      ]
+    },
+    {
+      "id": 14,
+      "stage": "Solution-Aware",
+      "title": "Why Most Standup and Status Tools Fail Engineers",
+      "keywords": [
+        "standup tools for engineers",
+        "status reporting tools",
+        "engineering productivity tools",
+        "why standup tools fail",
+        "alternatives to standup tools"
+      ]
+    },
+    {
+      "id": 15,
+      "stage": "Product-Aware",
+      "title": "How JotChain Works: From Daily Notes to Reviews and Updates",
+      "keywords": [
+        "how does jotchain work",
+        "jotchain features",
+        "work log app for engineers",
+        "daily work tracking app",
+        "performance review notes tool"
+      ]
+    },
+    {
+      "id": 16,
+      "stage": "Product-Aware",
+      "title": "Is It Safe to Store Work Notes in JotChain?",
+      "keywords": [
+        "is jotchain safe",
+        "work notes security",
+        "storing work notes safely",
+        "privacy of work logs",
+        "secure productivity tools"
+      ]
+    },
+    {
+      "id": 17,
+      "stage": "Solution-Aware",
+      "title": "A Practical Performance Review Template (That Doesn’t Feel Generic)",
+      "keywords": [
+        "performance review template",
+        "performance review examples",
+        "how to write a performance review",
+        "employee performance review template",
+        "engineering performance review template"
+      ],
+      "intent_notes": "Searchers want a usable structure, not HR jargon. The post should explain the sections of a good review, why they matter, and how concrete work notes make templates actually useful."
+    },
+    {
+      "id": 18,
+      "stage": "Solution-Aware",
+      "title": "How to Write a Self Review Without Overselling or Underselling Yourself",
+      "keywords": [
+        "self performance review",
+        "self review examples",
+        "how to write a self review",
+        "employee self evaluation",
+        "self assessment for performance review"
+      ],
+      "intent_notes": "High emotional load. Readers want reassurance and guidance. Focus on grounding self-reviews in facts and examples rather than confidence tricks."
+    },
+    {
+      "id": 19,
+      "stage": "Problem-Aware",
+      "title": "How to Prepare for a Performance Review (Without Scrambling at the Last Minute)",
+      "keywords": [
+        "how to prepare for a performance review",
+        "performance review preparation",
+        "getting ready for performance reviews",
+        "what to prepare for performance review",
+        "performance review checklist"
+      ],
+      "intent_notes": "This post should reframe preparation as something that happens over time, not the week before. Strong bridge into the idea of keeping a running work log."
+    }
+  ]
+}

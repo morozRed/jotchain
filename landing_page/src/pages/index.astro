@@ -59,36 +59,52 @@ const pricing = [
 				</div>
 			</div>
 			<div class="hero__visual fade-in fade-in-4">
-				<img src="/screenshots/entries-list.png" alt="JotChain work log showing daily entries with @-mentions" loading="eager" />
+				<img src="/screenshots/hero_screenshot.png" alt="JotChain work log showing daily entries with @-mentions" loading="eager" />
 			</div>
 		</section>
 
-		<!-- How It Works Section -->
-		<section class="section workflow" id="how-it-works">
-			<header class="section__header">
-				<h2>Three steps to never blank in a meeting again</h2>
-				<p>Takes 2 minutes a day. Saves hours during reviews.</p>
-			</header>
+		<!-- Horizon Separator -->
+		<div class="horizon">
+			<div class="horizon__edge"></div>
+		</div>
 
-			<div class="workflow__steps">
-				<article class="workflow__step">
-					<span class="workflow__number">1</span>
-					<h3>Log what you worked on</h3>
-					<p>Quick notes with @mentions for people and projects. No formatting required.</p>
-				</article>
+		<!-- Features Section -->
+		<section class="features" id="features">
+			<article class="feature">
+				<div class="feature__media">
+					<video class="feature__video" autoplay loop muted playsinline>
+						<source src="/videos/entry_log.webm" type="video/webm" />
+					</video>
+				</div>
+				<div class="feature__content">
+					<h3>Log work as you go</h3>
+					<p>Write short notes. Mention people and projects naturally.</p>
+				</div>
+			</article>
 
-				<article class="workflow__step">
-					<span class="workflow__number">2</span>
-					<h3>Generate summaries when needed</h3>
-					<p>Pick a time range, choose a format, let AI do the rest.</p>
-				</article>
+			<article class="feature feature--reversed">
+				<div class="feature__media">
+					<video class="feature__video" autoplay loop muted playsinline>
+						<source src="/videos/perf_rev.webm" type="video/webm" />
+					</video>
+				</div>
+				<div class="feature__content">
+					<h3>Performance reviews from real work</h3>
+					<p>Draft reviews grounded in what actually happened.</p>
+				</div>
+			</article>
 
-				<article class="workflow__step">
-					<span class="workflow__number">3</span>
-					<h3>Share or schedule delivery</h3>
-					<p>Copy to clipboard, email yourself, or set up automatic digests.</p>
-				</article>
-			</div>
+			<article class="feature">
+				<div class="feature__media">
+					<video class="feature__video" autoplay loop muted playsinline>
+						<source src="/videos/notification.webm" type="video/webm" />
+					</video>
+				</div>
+				<div class="feature__content">
+					<h3>Gentle reminders, sent to you</h3>
+					<p>Get email digests when you need them.</p>
+				</div>
+			</article>
 		</section>
 
 		<!-- Testimonials Section -->
@@ -160,45 +176,47 @@ const pricing = [
 		flex-direction: column;
 	}
 
-	/* Hero Section */
+	/* Hero Section - Centered */
 	.hero {
-		display: grid;
-		gap: 3rem;
+		display: flex;
+		flex-direction: column;
 		align-items: center;
-		padding: 4rem 0 5rem;
+		text-align: center;
+		gap: 3rem;
+		padding: 4rem 0 0;
 	}
 
 	@media (min-width: 768px) {
 		.hero {
-			grid-template-columns: 1.2fr 0.8fr;
-			gap: 4rem;
-			padding: 5rem 0 6rem;
+			padding: 5rem 0 0;
 		}
 	}
 
 	.hero__content {
 		display: flex;
 		flex-direction: column;
+		align-items: center;
 		gap: 1.25rem;
 	}
 
 	.hero h1 {
 		font-size: clamp(1.75rem, 4vw, 2.75rem);
 		line-height: 1.15;
-		max-width: 540px;
+		max-width: 700px;
 	}
 
 	.hero__subtitle {
 		font-size: 1.125rem;
 		line-height: 1.6;
 		color: var(--text-secondary);
-		max-width: 480px;
+		max-width: 540px;
 	}
 
 	.hero__actions {
 		display: flex;
 		flex-wrap: wrap;
 		align-items: center;
+		justify-content: center;
 		gap: 1rem;
 		margin-top: 0.5rem;
 	}
@@ -210,6 +228,9 @@ const pricing = [
 
 	.hero__visual {
 		position: relative;
+		width: 100%;
+		max-width: 1100px;
+		z-index: 10;
 	}
 
 	.hero__visual::before {
@@ -218,61 +239,212 @@ const pricing = [
 		inset: 0;
 		background: var(--grain-pattern);
 		opacity: 0.03;
-		border-radius: var(--radius);
+		border-radius: var(--radius) var(--radius) 0 0;
 		pointer-events: none;
 		z-index: 1;
+	}
+
+	/* Gradient fade at bottom */
+	.hero__visual::after {
+		content: '';
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		height: 180px;
+		background: linear-gradient(to bottom, transparent 0%, var(--background) 100%);
+		pointer-events: none;
+		z-index: 2;
 	}
 
 	.hero__visual img {
 		width: 100%;
 		height: auto;
-		border-radius: var(--radius);
+		border-radius: var(--radius) var(--radius) 0 0;
 		border: 1px solid var(--border);
+		border-bottom: none;
+		/* Shadow only on top and sides using inset positioning */
 		box-shadow:
-			0 2px 4px rgba(31, 35, 40, 0.04),
-			0 8px 24px rgba(31, 35, 40, 0.08),
-			0 24px 48px rgba(31, 35, 40, 0.06);
+			0 -4px 8px rgba(31, 35, 40, 0.02),
+			-8px 0 16px rgba(31, 35, 40, 0.04),
+			8px 0 16px rgba(31, 35, 40, 0.04),
+			0 -8px 24px rgba(31, 35, 40, 0.06);
 	}
 
-	/* Workflow Section */
-	.workflow__steps {
-		display: grid;
-		gap: 1.5rem;
+	/* Horizon Separator - the "shelf" the screenshot emerges from */
+	.horizon {
 		position: relative;
+		width: 100vw;
+		margin-left: 50%;
+		transform: translateX(-50%);
+		margin-top: -100px;
+		padding-top: 100px;
+		background: linear-gradient(
+			to bottom,
+			var(--background) 0%,
+			var(--subtle) 100%
+		);
 	}
 
 	@media (min-width: 768px) {
-		.workflow__steps {
-			grid-template-columns: repeat(3, 1fr);
-			gap: 2rem;
-		}
-
-		/* Connecting dotted line between steps */
-		.workflow__steps::before {
-			content: '';
-			position: absolute;
-			top: 44px;
-			left: calc(16.67% + 20px);
-			right: calc(16.67% + 20px);
-			height: 2px;
-			border-top: 2px dashed var(--border);
-			z-index: 0;
+		.horizon {
+			margin-top: -140px;
+			padding-top: 140px;
 		}
 	}
 
-	.workflow__step {
+	.horizon__edge {
+		height: 1px;
+		background: linear-gradient(
+			90deg,
+			transparent 0%,
+			var(--border) 20%,
+			var(--border) 80%,
+			transparent 100%
+		);
+		position: relative;
+	}
+
+	/* Soft glow beneath the edge */
+	.horizon__edge::after {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 10%;
+		right: 10%;
+		height: 40px;
+		background: radial-gradient(
+			ellipse 60% 100% at 50% 0%,
+			rgba(211, 95, 62, 0.06) 0%,
+			transparent 70%
+		);
+		pointer-events: none;
+	}
+
+	/* Features Section */
+	.features {
+		display: flex;
+		flex-direction: column;
+		gap: 4rem;
+		background: var(--subtle);
+		width: 100vw;
+		margin-left: 50%;
+		transform: translateX(-50%);
+		padding: 4rem 1.5rem 5rem;
+		border-top: none;
+		position: relative;
+	}
+
+	/* Grain texture on features background */
+	.features::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background: var(--grain-pattern);
+		opacity: 0.03;
+		pointer-events: none;
+	}
+
+	@media (min-width: 768px) {
+		.features {
+			gap: 5rem;
+			padding: 4rem 2.5rem 5rem;
+		}
+	}
+
+	.features .feature {
+		max-width: var(--max-width);
+		margin: 0 auto;
+		width: 100%;
+		position: relative;
+		z-index: 1;
+	}
+
+	.feature {
+		display: grid;
+		gap: 2rem;
+		align-items: center;
+	}
+
+	@media (min-width: 768px) {
+		.feature {
+			grid-template-columns: 1.3fr 0.7fr;
+			gap: 3rem;
+		}
+
+		.feature--reversed {
+			grid-template-columns: 0.7fr 1.3fr;
+		}
+
+		.feature--reversed .feature__media {
+			order: 2;
+		}
+
+		.feature--reversed .feature__content {
+			order: 1;
+		}
+	}
+
+	.feature__media {
+		position: relative;
 		padding: 1.5rem;
+	}
+
+	/* Ambient glow behind video */
+	.feature__media::before {
+		content: '';
+		position: absolute;
+		inset: 2rem;
+		background: linear-gradient(135deg,
+			rgba(100, 180, 220, 0.25) 0%,
+			rgba(180, 140, 200, 0.2) 50%,
+			rgba(100, 200, 160, 0.15) 100%
+		);
+		filter: blur(40px);
+		border-radius: 2rem;
+		z-index: 0;
+		opacity: 0.8;
+	}
+
+	.feature__video,
+	.feature__video-placeholder {
+		position: relative;
+		z-index: 1;
+		width: 100%;
+		aspect-ratio: 16 / 10;
 		background: var(--surface);
 		border: 1px solid var(--border-subtle);
 		border-radius: var(--radius);
-		transition: border-color 0.15s ease, transform 0.2s ease;
+		object-fit: cover;
+		box-shadow:
+			0 4px 8px rgba(31, 35, 40, 0.06),
+			0 12px 24px rgba(31, 35, 40, 0.1),
+			0 24px 48px rgba(31, 35, 40, 0.08);
+		transform: rotate(-1deg);
+		transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+		            box-shadow 0.3s ease;
+	}
+
+	.feature--reversed .feature__video,
+	.feature--reversed .feature__video-placeholder {
+		transform: rotate(1deg);
+	}
+
+	.feature__media:hover .feature__video,
+	.feature__media:hover .feature__video-placeholder {
+		transform: rotate(0deg) translateY(-4px);
+		box-shadow:
+			0 8px 16px rgba(31, 35, 40, 0.08),
+			0 20px 40px rgba(31, 35, 40, 0.12),
+			0 32px 64px rgba(31, 35, 40, 0.1);
+	}
+
+	.feature__video-placeholder {
 		position: relative;
-		z-index: 1;
 		overflow: hidden;
 	}
 
-	/* Grain texture */
-	.workflow__step::after {
+	.feature__video-placeholder::after {
 		content: '';
 		position: absolute;
 		inset: 0;
@@ -281,58 +453,22 @@ const pricing = [
 		pointer-events: none;
 	}
 
-	.workflow__step:hover {
-		border-color: var(--border-strong);
+	.feature__content {
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
 	}
 
-	/* Stagger middle card for visual rhythm */
-	@media (min-width: 768px) {
-		.workflow__step:nth-child(2) {
-			transform: translateY(-8px);
-		}
-
-		.workflow__step:nth-child(2):hover {
-			transform: translateY(-10px);
-		}
+	.feature__content h3 {
+		font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+		line-height: 1.2;
 	}
 
-	.workflow__number {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		width: 40px;
-		height: 40px;
-		border-radius: 50%;
-		background: var(--primary);
-		color: var(--primary-foreground);
-		font-family: var(--font-heading);
-		font-size: 1rem;
-		font-weight: 600;
-		margin-bottom: 1rem;
-		position: relative;
-		overflow: hidden;
-	}
-
-	.workflow__number::before {
-		content: '';
-		position: absolute;
-		inset: 0;
-		background: var(--grain-pattern);
-		opacity: 0.25;
-		mix-blend-mode: overlay;
-	}
-
-	.workflow__step h3 {
-		font-family: var(--font-body);
-		font-size: 1.0625rem;
-		font-weight: 600;
-		margin-bottom: 0.5rem;
-	}
-
-	.workflow__step p {
+	.feature__content p {
+		font-size: 1.05rem;
+		line-height: 1.6;
 		color: var(--text-secondary);
-		font-size: 0.95rem;
-		line-height: 1.5;
+		max-width: 400px;
 	}
 
 	/* Testimonials Section */
