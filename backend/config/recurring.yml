@@ -1,15 +1,15 @@
 development:
-  notifications_scan:
-    class: NotificationSchedules::ScanJob
-    schedule: every 5 minutes
   trial_emails:
     class: Subscriptions::SendTrialEndedEmailsJob
     schedule: every day at 10:00am
+  signals_scan:
+    class: Signals::ScanAllJob
+    schedule: every day at 6:00am
 
 production:
-  notifications_scan:
-    class: NotificationSchedules::ScanJob
-    schedule: every 5 minutes
   trial_emails:
     class: Subscriptions::SendTrialEndedEmailsJob
     schedule: every day at 10:00am
+  signals_scan:
+    class: Signals::ScanAllJob
+    schedule: every day at 6:00am

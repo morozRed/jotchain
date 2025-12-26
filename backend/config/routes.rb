@@ -25,18 +25,7 @@ Rails.application.routes.draw do
     end
 
     get :dashboard, to: "dashboard#index"
-
-    resources :notifications, only: [:index, :create, :update, :destroy] do
-      collection do
-        get :history
-      end
-    end
-
-    resources :insights, only: [:index, :create, :show, :update, :destroy] do
-      collection do
-        get :history
-      end
-    end
+    get :log, to: "log#index"
 
     get "billing", to: "subscriptions#index", as: :billing
     post "billing/checkout", to: "subscriptions#create_checkout_session", as: :billing_checkout
@@ -61,18 +50,15 @@ Rails.application.routes.draw do
     resources :entries, only: [:create, :update, :destroy]
     resources :feedback, only: [:create]
 
-    get :analytics, to: "analytics#index"
-
     namespace :api do
       resources :projects, only: [:index, :show, :create, :update, :destroy] do
         resources :persons, only: [:create, :destroy], controller: "project_persons"
       end
       resources :persons, only: [:index, :show, :create, :update, :destroy]
       resources :mentions, only: [:index]
-      resource :analytics, only: [:show]
-      resources :insights, only: [] do
-        collection do
-          get :preview
+      resources :signals, only: [:index, :show, :update] do
+        member do
+          post :add_entry
         end
       end
     end

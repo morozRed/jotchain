@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_17_141057) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_25_125401) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -146,6 +146,54 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_17_141057) do
     t.index ["user_id"], name: "index_sessions_on_user_id"
   end
 
+  create_table "signal_entities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "signal_id", null: false
+    t.string "entity_type", null: false
+    t.string "name", null: false
+    t.string "mentionable_type"
+    t.uuid "mentionable_id"
+    t.integer "count", default: 1
+    t.datetime "last_seen_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["mentionable_type", "mentionable_id"], name: "index_signal_entities_on_mentionable_type_and_mentionable_id"
+    t.index ["signal_id"], name: "index_signal_entities_on_signal_id"
+  end
+
+  create_table "signal_entries", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "signal_id", null: false
+    t.uuid "entry_id", null: false
+    t.string "role", default: "evidence", null: false
+    t.text "excerpt"
+    t.float "score", default: 0.0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["entry_id"], name: "index_signal_entries_on_entry_id"
+    t.index ["signal_id", "entry_id"], name: "index_signal_entries_on_signal_id_and_entry_id", unique: true
+    t.index ["signal_id", "role"], name: "index_signal_entries_on_signal_id_and_role"
+  end
+
+  create_table "signals", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.string "signal_type", null: false
+    t.string "entity_name", null: false
+    t.string "status", default: "active", null: false
+    t.string "title", null: false
+    t.integer "confidence", default: 0, null: false
+    t.datetime "first_detected_at", null: false
+    t.datetime "last_detected_at", null: false
+    t.datetime "seen_at"
+    t.string "source", default: "ai", null: false
+    t.jsonb "metadata", default: {}
+    t.jsonb "context_payload", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["last_detected_at"], name: "index_signals_on_last_detected_at"
+    t.index ["user_id", "entity_name", "signal_type"], name: "index_signals_unique_pattern", unique: true
+    t.index ["user_id", "signal_type", "status"], name: "index_signals_on_user_id_and_signal_type_and_status"
+    t.index ["user_id", "status"], name: "index_signals_on_user_id_and_status"
+  end
+
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", null: false
     t.string "email", null: false
@@ -180,4 +228,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_17_141057) do
   add_foreign_key "project_persons", "projects"
   add_foreign_key "projects", "users"
   add_foreign_key "sessions", "users"
+  add_foreign_key "signal_entities", "signals", on_delete: :cascade
+  add_foreign_key "signal_entries", "entries", on_delete: :cascade
+  add_foreign_key "signal_entries", "signals", on_delete: :cascade
+  add_foreign_key "signals", "users"
 end

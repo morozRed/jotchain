@@ -88,10 +88,9 @@ export function TiptapContent({ content, className }: TiptapContentProps) {
 
   // Fallback to plain text if invalid JSON
   if (!isValid) {
-    const plainText = tiptapToPlainText(content);
     return (
       <div className={cn("whitespace-pre-line text-sm leading-relaxed", className)}>
-        {plainText || content}
+        {content}
       </div>
     );
   }

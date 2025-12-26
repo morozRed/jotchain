@@ -1,175 +1,177 @@
 import { Link, usePage } from "@inertiajs/react"
-import { LayoutGrid, Menu, Search } from "lucide-react"
+import { Command, CreditCard, LayoutGrid, LogOut, Settings, Sparkles } from "lucide-react"
 
-import { Breadcrumbs } from "@/components/breadcrumbs"
-import { Icon } from "@/components/icon"
+import AppLogoIcon from "@/components/app-logo-icon"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuList,
-  navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu"
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet"
-import { UserMenuContent } from "@/components/user-menu-content"
-import { useInitials } from "@/hooks/use-initials"
 import { cn } from "@/lib/utils"
-import { dashboardPath } from "@/routes"
-import type { BreadcrumbItem, NavItem, SharedData } from "@/types"
+import { billingPath } from "@/routes"
+import type { SharedData } from "@/types"
 
-import AppLogo from "./app-logo"
-import AppLogoIcon from "./app-logo-icon"
-
-const mainNavItems: NavItem[] = [
-  {
-    title: "Dashboard",
-    href: dashboardPath(),
-    icon: LayoutGrid,
-  },
+const navItems = [
+  { title: "Log", href: "/log", icon: LayoutGrid },
+  { title: "Billing", href: billingPath(), icon: CreditCard },
 ]
 
-const activeItemStyles = "text-foreground"
-
 interface AppHeaderProps {
-  breadcrumbs?: BreadcrumbItem[]
+  onCommandOpen?: () => void
 }
 
-export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
+// Get plan display info
+function getPlanInfo(user: SharedData["auth"]["user"]) {
+  const subscription = (user as { subscription?: {
+    status: string
+    daysLeftInTrial?: number
+    planType?: string | null
+  } }).subscription
+
+  if (!subscription) {
+    return { label: "Free", variant: "default" as const }
+  }
+
+  // Active paid subscription
+  if (subscription.status === "active" && subscription.planType) {
+    return { label: "Pro", variant: "pro" as const }
+  }
+
+  // Trial active
+  if (
+    subscription.status === "trialing" &&
+    subscription.daysLeftInTrial != null &&
+    subscription.daysLeftInTrial > 0
+  ) {
+    if (subscription.planType) {
+      return {
+        label: `Pro trial`,
+        sublabel: `${subscription.daysLeftInTrial}d`,
+        variant: "trial" as const
+      }
+    }
+    return {
+      label: "Trial",
+      sublabel: `${subscription.daysLeftInTrial}d`,
+      variant: "trial" as const
+    }
+  }
+
+  return { label: "Free", variant: "default" as const }
+}
+
+export function AppHeader({ onCommandOpen }: AppHeaderProps) {
   const page = usePage<SharedData>()
   const { auth } = page.props
-  const getInitials = useInitials()
+  const user = auth.user
+  const planInfo = getPlanInfo(user)
+
+  // Check if current path matches nav item
+  const isActive = (href: string) => {
+    const currentPath = page.url.split("?")[0]
+    if (href === "/log") {
+      return currentPath === "/log"
+    }
+    return currentPath.startsWith(href)
+  }
+
   return (
-    <>
-      <div className="border-sidebar-border/80 border-b">
-        <div className="mx-auto flex h-16 items-center px-4 md:max-w-7xl">
-          {/* Mobile Menu */}
-          <div className="lg:hidden">
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="mr-2 h-[34px] w-[34px]"
-                >
-                  <Menu className="h-5 w-5" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent
-                side="left"
-                className="bg-sidebar flex h-full w-64 flex-col items-stretch justify-between"
-              >
-                <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
-                <SheetHeader className="flex justify-start text-left">
-                  <AppLogoIcon className="h-6 w-6 fill-current text-foreground" />
-                </SheetHeader>
-                <div className="flex h-full flex-1 flex-col space-y-4 p-4">
-                  <div className="flex h-full flex-col justify-between text-sm">
-                    <div className="flex flex-col space-y-4">
-                      {mainNavItems.map((item) => (
-                        <Link
-                          key={item.title}
-                          href={item.href}
-                          className="flex items-center space-x-2 font-medium"
-                        >
-                          {item.icon && (
-                            <Icon iconNode={item.icon} className="h-5 w-5" />
-                          )}
-                          <span>{item.title}</span>
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </SheetContent>
-            </Sheet>
-          </div>
+    <header className="sticky top-0 z-40 flex h-12 shrink-0 items-center justify-between border-b border-border bg-background/95 px-4 backdrop-blur-sm">
+      {/* Left: Logo + Nav */}
+      <div className="flex items-center gap-6">
+        <Link href="/" className="flex items-center gap-2">
+          <AppLogoIcon className="size-6" />
+          <span className="text-[13px] font-semibold tracking-tight text-foreground">
+            jotchain
+          </span>
+        </Link>
 
-          <Link
-            href={dashboardPath()}
-            prefetch
-            className="flex items-center space-x-2"
-          >
-            <AppLogo />
-          </Link>
-
-          {/* Desktop Navigation */}
-          <div className="ml-6 hidden h-full items-center space-x-6 lg:flex">
-            <NavigationMenu className="flex h-full items-stretch">
-              <NavigationMenuList className="flex h-full items-stretch space-x-2">
-                {mainNavItems.map((item, index) => (
-                  <NavigationMenuItem
-                    key={index}
-                    className="relative flex h-full items-center"
-                  >
-                    <Link
-                      href={item.href}
-                      className={cn(
-                        navigationMenuTriggerStyle(),
-                        page.url === item.href && activeItemStyles,
-                        "h-9 cursor-pointer px-3",
-                      )}
-                    >
-                      {item.icon && (
-                        <Icon iconNode={item.icon} className="mr-2 h-4 w-4" />
-                      )}
-                      {item.title}
-                    </Link>
-                    {page.url === item.href && (
-                      <div className="absolute bottom-0 left-0 h-0.5 w-full translate-y-px bg-primary"></div>
-                    )}
-                  </NavigationMenuItem>
-                ))}
-              </NavigationMenuList>
-            </NavigationMenu>
-          </div>
-
-          <div className="ml-auto flex items-center space-x-2">
-            <div className="relative flex items-center space-x-1">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="group h-9 w-9 cursor-pointer"
-              >
-                <Search className="!size-5 opacity-80 group-hover:opacity-100" />
-              </Button>
-            </div>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="size-10 rounded-full p-1">
-                  <Avatar className="size-8 overflow-hidden rounded-full">
-                    <AvatarImage src={auth.user.avatar} alt={auth.user.name} />
-                    <AvatarFallback className="rounded-lg bg-subtle text-foreground">
-                      {getInitials(auth.user.name)}
-                    </AvatarFallback>
-                  </Avatar>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56" align="end">
-                <UserMenuContent auth={auth} />
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        </div>
+        {/* Navigation */}
+        <nav className="hidden items-center gap-1 md:flex">
+          {navItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={cn(
+                "rounded-md px-3 py-1.5 text-[13px] transition-colors",
+                isActive(item.href)
+                  ? "bg-subtle font-medium text-foreground"
+                  : "text-muted-foreground hover:bg-subtle hover:text-foreground"
+              )}
+            >
+              {item.title}
+            </Link>
+          ))}
+        </nav>
       </div>
-      {breadcrumbs.length > 1 && (
-        <div className="border-sidebar-border/70 flex w-full border-b">
-          <div className="mx-auto flex h-12 w-full items-center justify-start px-4 text-neutral-500 md:max-w-7xl">
-            <Breadcrumbs breadcrumbs={breadcrumbs} />
-          </div>
-        </div>
-      )}
-    </>
+
+      {/* Right: Plan Badge + Command + Avatar */}
+      <div className="flex items-center gap-3">
+        {/* Plan badge */}
+        <Link
+          href={billingPath()}
+          className={cn(
+            "hidden items-center gap-1.5 rounded-md px-2 py-1 text-[11px] font-medium transition-colors sm:flex",
+            planInfo.variant === "pro" && "bg-gradient-to-r from-violet-500/10 to-indigo-500/10 text-violet-600 hover:from-violet-500/20 hover:to-indigo-500/20",
+            planInfo.variant === "trial" && "bg-amber-500/10 text-amber-600 hover:bg-amber-500/15",
+            planInfo.variant === "default" && "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
+          )}
+        >
+          {planInfo.variant === "pro" && <Sparkles className="size-3" />}
+          <span>{planInfo.label}</span>
+          {planInfo.sublabel && (
+            <span className="opacity-60">{planInfo.sublabel}</span>
+          )}
+        </Link>
+
+        {/* Command palette trigger */}
+        {onCommandOpen && (
+          <button
+            className="hidden items-center gap-1.5 rounded-md border border-border bg-subtle/50 px-2 py-1 text-[11px] text-muted-foreground transition-colors hover:bg-subtle hover:text-foreground sm:flex"
+            onClick={onCommandOpen}
+          >
+            <Command className="size-3" />
+            <span>K</span>
+          </button>
+        )}
+
+        {/* User dropdown */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button className="flex items-center rounded-full transition-opacity hover:opacity-80">
+              <Avatar className="size-7">
+                <AvatarImage src={user.avatar} alt={user.name} />
+                <AvatarFallback className="bg-primary/10 text-[11px] font-medium text-primary">
+                  {user.name?.charAt(0).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-48">
+            <div className="px-2 py-1.5">
+              <p className="text-sm font-medium">{user.name}</p>
+              <p className="text-xs text-muted-foreground">{user.email}</p>
+            </div>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              <Link href="/settings/profile">
+                <Settings className="mr-2 size-4" />
+                Settings
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              <Link href="/sessions" method="delete" as="button" className="w-full">
+                <LogOut className="mr-2 size-4" />
+                Sign out
+              </Link>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    </header>
   )
 }

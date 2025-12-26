@@ -1,19 +1,11 @@
 import { Head, Link, usePage } from "@inertiajs/react"
 
-import HeadingSmall from "@/components/heading-small"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import AppLayout from "@/layouts/app-layout"
 import SettingsLayout from "@/layouts/settings/layout"
-import { sessionPath, settingsSessionsPath } from "@/routes"
-import type { BreadcrumbItem, Session, SharedData } from "@/types"
-
-const breadcrumbs: BreadcrumbItem[] = [
-  {
-    title: "Sessions",
-    href: settingsSessionsPath(),
-  },
-]
+import { sessionPath } from "@/routes"
+import type { Session, SharedData } from "@/types"
 
 interface SessionsProps {
   sessions: Session[]
@@ -23,56 +15,57 @@ export default function Sessions({ sessions }: SessionsProps) {
   const { auth } = usePage<SharedData>().props
 
   return (
-    <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title={breadcrumbs[breadcrumbs.length - 1].title} />
+    <AppLayout>
+      <Head title="Sessions" />
 
       <SettingsLayout>
-        <div className="space-y-6">
-          <HeadingSmall
-            title="Sessions"
-            description="Manage your active sessions across devices"
-          />
+        <section>
+          <h2 className="text-[15px] font-medium text-foreground">
+            Sessions
+          </h2>
+          <p className="mt-1 text-[13px] text-muted-foreground">
+            Manage your active sessions across devices
+          </p>
 
-          <div className="space-y-4">
+          <div className="mt-6 space-y-3">
             {sessions.map((session) => (
               <div
                 key={session.id}
-                className="flex flex-col space-y-2 rounded-lg border p-4"
+                className="flex items-start justify-between rounded-lg border border-border bg-background p-4"
               >
-                <div className="flex items-center justify-between">
-                  <div className="space-y-1">
-                    <p className="font-medium">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[13px] font-medium text-foreground">
                       {session.user_agent}
-                      {session.id === auth.session.id && (
-                        <Badge variant="secondary" className="ml-2">
-                          Current
-                        </Badge>
-                      )}
-                    </p>
-                    <p className="text-muted-foreground text-sm">
-                      IP: {session.ip_address}
-                    </p>
-                    <p className="text-muted-foreground text-sm">
-                      Active since:{" "}
-                      {new Date(session.created_at).toLocaleString()}
-                    </p>
+                    </span>
+                    {session.id === auth.session.id && (
+                      <Badge variant="secondary" className="text-[11px]">
+                        Current
+                      </Badge>
+                    )}
                   </div>
-                  {session.id !== auth.session.id && (
-                    <Button variant="destructive" asChild>
-                      <Link
-                        method="delete"
-                        href={sessionPath({ id: session.id })}
-                        as="button"
-                      >
-                        Log out
-                      </Link>
-                    </Button>
-                  )}
+                  <p className="text-[12px] text-muted-foreground">
+                    IP: {session.ip_address}
+                  </p>
+                  <p className="text-[12px] text-muted-foreground">
+                    Active since: {new Date(session.created_at).toLocaleString()}
+                  </p>
                 </div>
+                {session.id !== auth.session.id && (
+                  <Button variant="ghost" size="sm" asChild className="text-destructive hover:text-destructive">
+                    <Link
+                      method="delete"
+                      href={sessionPath({ id: session.id })}
+                      as="button"
+                    >
+                      Log out
+                    </Link>
+                  </Button>
+                )}
               </div>
             ))}
           </div>
-        </div>
+        </section>
       </SettingsLayout>
     </AppLayout>
   )
