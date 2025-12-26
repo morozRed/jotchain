@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils"
 import {
   settingsAppearancePath,
   settingsEmailPath,
+  settingsEntitiesPath,
   settingsPasswordPath,
   settingsProfilePath,
   settingsSessionsPath,
@@ -15,6 +16,7 @@ const sidebarNavItems = [
   { title: "Email", href: settingsEmailPath() },
   { title: "Password", href: settingsPasswordPath() },
   { title: "Sessions", href: settingsSessionsPath() },
+  { title: "Projects & People", href: settingsEntitiesPath() },
   { title: "Appearance", href: settingsAppearancePath() },
 ]
 

@@ -51,7 +51,7 @@ class LogController < InertiaController
     entries_scope.limit(50).offset(offset).map do |entry|
       {
         id: entry.id,
-        body: entry.body,
+        body: entry.body_with_deleted_mentions_marked,
         bodyFormat: entry.body_format,
         tag: entry.tag,
         loggedAt: entry.logged_at&.iso8601,

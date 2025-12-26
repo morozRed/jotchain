@@ -44,6 +44,20 @@ class Entry < ApplicationRecord
     end
   end
 
+  # Returns the body with deleted mentions marked for display
+  # This checks if mentioned entities still exist and marks them as deleted
+  def body_with_deleted_mentions_marked
+    return body unless body_format == "tiptap"
+
+    begin
+      doc = JSON.parse(body)
+      mark_deleted_mentions!(doc)
+      JSON.generate(doc)
+    rescue JSON::ParserError
+      body
+    end
+  end
+
   # Extract mentions from TipTap JSON body
   def extract_mentions_from_body
     return [] unless body_format == "tiptap"
@@ -127,6 +141,43 @@ class Entry < ApplicationRecord
 
     if node.is_a?(Hash) && node["content"].is_a?(Array)
       node["content"].each { |child| traverse_tiptap_nodes(child, &block) }
+    end
+  end
+
+  def mark_deleted_mentions!(doc)
+    # Collect all mention IDs from the document
+    mention_ids = {project: [], person: []}
+
+    traverse_tiptap_nodes(doc) do |node|
+      if node["type"] == "mention" && node["attrs"]
+        type = node["attrs"]["type"]
+        id = node["attrs"]["id"]
+        if type == "project" && id.present?
+          mention_ids[:project] << id
+        elsif type == "person" && id.present?
+          mention_ids[:person] << id
+        end
+      end
+    end
+
+    # Check which IDs still exist
+    existing_project_ids = mention_ids[:project].present? ? user.projects.where(id: mention_ids[:project]).pluck(:id).to_set : Set.new
+    existing_person_ids = mention_ids[:person].present? ? user.persons.where(id: mention_ids[:person]).pluck(:id).to_set : Set.new
+
+    # Mark deleted mentions
+    traverse_tiptap_nodes(doc) do |node|
+      if node["type"] == "mention" && node["attrs"]
+        type = node["attrs"]["type"]
+        id = node["attrs"]["id"]
+
+        is_deleted = case type
+        when "project" then !existing_project_ids.include?(id)
+        when "person" then !existing_person_ids.include?(id)
+        else false
+        end
+
+        node["attrs"]["deleted"] = true if is_deleted
+      end
     end
   end
 
