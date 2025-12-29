@@ -2,8 +2,8 @@
 import SEO from '../components/SEO.astro';
 
 const {
-	title = 'JotChain · A work log that turns into updates, reviews, and summaries',
-	description = 'Keep track of what you actually worked on — so performance reviews don\'t start from memory.',
+	title = 'JotChain · Your work leaves patterns',
+	description = 'Jotchain observes short work notes over time and surfaces quiet signals about interruptions, unplanned work, and invisible impact — without metrics or pressure.',
 } = Astro.props;
 ---
 
@@ -84,9 +84,6 @@ const {
 			0 12px 24px rgba(31, 35, 40, 0.08),
 			0 24px 48px rgba(31, 35, 40, 0.06);
 		--shadow-coral: 0 8px 24px rgba(211, 95, 62, 0.18);
-
-		/* Grain texture pattern */
-		--grain-pattern: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
 	}
 
 	*,
@@ -170,7 +167,7 @@ const {
 	@keyframes fadeInUp {
 		from {
 			opacity: 0;
-			transform: translateY(12px);
+			transform: translateY(16px);
 		}
 		to {
 			opacity: 1;
@@ -179,15 +176,15 @@ const {
 	}
 
 	.fade-in {
-		animation: fadeInUp 0.5s ease forwards;
+		animation: fadeInUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 		opacity: 0;
 	}
 
 	.fade-in-1 { animation-delay: 0ms; }
-	.fade-in-2 { animation-delay: 100ms; }
-	.fade-in-3 { animation-delay: 200ms; }
-	.fade-in-4 { animation-delay: 300ms; }
-	.fade-in-5 { animation-delay: 400ms; }
+	.fade-in-2 { animation-delay: 80ms; }
+	.fade-in-3 { animation-delay: 160ms; }
+	.fade-in-4 { animation-delay: 240ms; }
+	.fade-in-5 { animation-delay: 320ms; }
 
 	/* Button styles */
 	.button {
@@ -201,29 +198,17 @@ const {
 		font-size: 0.95rem;
 		border: 1px solid transparent;
 		cursor: pointer;
-		transition: all 0.15s ease;
+		transition:
+			transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
+			box-shadow 0.2s ease,
+			background 0.15s ease,
+			border-color 0.15s ease;
 	}
 
 	.button--primary {
 		background: var(--primary);
 		color: var(--primary-foreground);
 		border-color: var(--primary);
-		position: relative;
-		overflow: hidden;
-		transition:
-			transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
-			box-shadow 0.2s ease,
-			background 0.15s ease;
-	}
-
-	.button--primary::before {
-		content: '';
-		position: absolute;
-		inset: 0;
-		background: var(--grain-pattern);
-		opacity: 0.25;
-		pointer-events: none;
-		mix-blend-mode: overlay;
 	}
 
 	.button--primary:hover {
@@ -249,23 +234,11 @@ const {
 		background: var(--subtle);
 		border-color: var(--border-strong);
 		color: var(--text-primary);
+		transform: translateY(-1px);
 	}
 
-	/* Grain texture utility - add to elements that should have texture */
-	.grain {
-		position: relative;
-		overflow: hidden;
-	}
-
-	.grain::after {
-		content: '';
-		position: absolute;
-		inset: 0;
-		background: var(--grain-pattern);
-		opacity: 0.08;
-		pointer-events: none;
-		border-radius: inherit;
-		mix-blend-mode: overlay;
+	.button--secondary:active {
+		transform: translateY(0);
 	}
 
 	/* Section spacing */
@@ -273,11 +246,6 @@ const {
 		width: 100%;
 		max-width: var(--max-width);
 		padding: 5rem 0;
-		border-top: 1px solid var(--border-subtle);
-	}
-
-	.section:first-of-type {
-		border-top: none;
 	}
 
 	.section__header {
@@ -296,5 +264,16 @@ const {
 		margin-top: 0.75rem;
 		font-size: 1.05rem;
 		line-height: 1.6;
+	}
+
+	/* Smooth scroll offset for fixed header */
+	html {
+		scroll-padding-top: 6rem;
+	}
+
+	/* Selection color */
+	::selection {
+		background: var(--primary-soft-bg);
+		color: var(--text-primary);
 	}
 </style>
