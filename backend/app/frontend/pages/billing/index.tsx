@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/dialog"
 import AppLayout from "@/layouts/app-layout"
 import { billingCancelPath, billingCheckoutPath, billingPortalPath, billingReactivatePath, billingSwitchPath } from "@/routes"
-import type { BreadcrumbItem, SharedData } from "@/types"
+import type { SharedData } from "@/types"
 
 interface SubscriptionPayload {
   status: string
@@ -43,13 +43,6 @@ type PageProps = SharedData & {
   checkout_url?: string
   portal_url?: string
 }
-
-const breadcrumbs: BreadcrumbItem[] = [
-  {
-    title: "Billing",
-    href: "/billing",
-  },
-]
 
 export default function Billing() {
   const { subscription, plans, checkout_url, portal_url } = usePage<PageProps>().props
@@ -90,7 +83,7 @@ export default function Billing() {
   }
 
   return (
-    <AppLayout breadcrumbs={breadcrumbs}>
+    <AppLayout>
       <Head title="Billing" />
 
       <div className="mx-auto max-w-4xl space-y-6 p-6">

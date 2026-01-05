@@ -5,6 +5,7 @@ class DashboardController < InertiaController
     render inertia: "dashboard/index", props: {
       entries: entry_payloads,
       entryStats: entry_stats,
+      signals: signals_data,
       selectedDate: selected_date.to_s,
       previousDate: (selected_date - 1.day).to_s,
       nextDate: (selected_date + 1.day).to_s,
@@ -36,7 +37,7 @@ class DashboardController < InertiaController
     entries.map do |entry|
       {
         id: entry.id,
-        body: entry.body,
+        body: entry.body_with_deleted_mentions_marked,
         bodyFormat: entry.body_format,
         tag: entry.tag,
         loggedAt: entry.logged_at&.iso8601,
@@ -53,5 +54,11 @@ class DashboardController < InertiaController
       lastLoggedAt: Current.user.entries.recent_first.first&.logged_at&.iso8601,
       currentStreak: Current.user.current_streak
     }
+  end
+
+  def signals_data
+    return {summary: {total_active: 0}, signals: [], history: [], counts: {}} unless Current.user.can_receive_notifications?
+
+    Signals::Presenter.new(user: Current.user).call
   end
 end

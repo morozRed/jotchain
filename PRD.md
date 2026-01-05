@@ -1,124 +1,276 @@
-## JotChain PRD — App Alignment (Rails + Inertia)
+## JotChain PRD — Journaling with Signals (Rails + Inertia)
 
 ### Problem
-Engineers and managers waste time before stand‑ups, syncs, and reviews trying to recall what they did. Manual prep is tedious and often skipped.
+
+Engineers and tech leads *lose visibility into their real work*.
+
+Interruptions, blockers, helping others, and context switching rarely make it into task tools — so weeks feel exhausting, reviews feel fuzzy, and teams repeat the same problems without understanding why.
+
+Most tools optimize **planning** or **reporting**.
+Very few help people **notice patterns in what actually happened**.
+
+---
 
 ### Solution
-Log entries as you work, tag projects/people inline, generate on‑demand insights, and schedule AI email digests ahead of meetings. Billing gates advanced features.
+
+A lightweight work journal that turns short notes into **ambient signals** about blockers, time sinks, and impact.
+
+Users write freely.
+JotChain observes quietly.
+Insights appear only when patterns emerge.
+
+No planning. No task management. No dashboards by default.
 
 ---
 
-## What Exists Today
+## Product Principles (New)
 
-- Entries
-  - TipTap editor with inline @‑mentions for projects and people
-  - Create new projects/people on the fly from the mention menu
-  - Daily entries list with basic stats (count, current streak)
-
-- Insights (on‑demand AI)
-  - Templates: summary, tweets, review, blog, update, ideas, custom
-  - Filter by date range and projects; live preview of matching data (total notes, project breakdown, top collaborators)
-  - Generate, poll status, view/edit content; show project breakdown when present
-
-- Notifications (scheduled digests)
-  - Flexible schedules: timezone, time of day, recurrence (daily/weekly/monthly/custom), lookback window, lead time
-  - Upcoming occurrences preview and delivery history
-  - Email digests generated via AI with sections and source entries
-
-- Analytics
-  - KPIs + trends, heatmap, hour/day distributions, project donut, top people
-  - Filter by project and range (week/month/year); deep link to dashboard
-
-- Auth & Billing
-  - Email/password auth + Google OAuth
-  - Stripe subscriptions with trial, cancel/reactivate, plan switch
-  - Feature gating: notifications and insights require active subscription or trial
-
-- Settings & PWA
-  - Profile, password, email, active sessions
-  - Manifest served; Inertia + Vite‑powered React frontend
+* **Notes are the source of truth**
+* **Insights are earned, not demanded**
+* **Reflection is optional, never required**
+* **Text first, visuals second**
+* **No shame, no streak pressure**
+* **Never compete with Linear / Jira**
 
 ---
 
-## MVP Scope (Aligned)
+## MVP Scope (Re-aligned)
 
-1) Log entries with @‑mentions
-   - Inline creation of projects/people; mentions are persisted and used in analytics/insights
+### 1) Work Notes (Core)
 
-2) On‑demand Insights
-   - Date/project filters, live preview, template selection, status polling, editable content
+* Single writing surface: *“What happened today?”*
+* Free-text journaling (TipTap stays)
+* Inline `@mentions` for people and projects (optional)
+* Notes auto-saved on submit
+* Recent notes visible for memory anchoring
 
-3) Scheduled Notifications
-   - Create schedules with cadence, lookback, lead time; email delivery with AI summary
-
-4) Analytics Overview
-   - Trends and breakdowns; project/people insights and “needs attention” lists
-
-5) Auth + Billing
-   - Email + Google auth; Stripe subscription management; feature gates
+> Writing must take <30 seconds.
 
 ---
 
-## Tech Stack
+### 2) Signals (NEW CORE CONCEPT)
 
-- Backend: Ruby on Rails 7, Postgres (primary), Active Job (SQLite queue in dev/test)
-- Frontend: Inertia + React + TypeScript (Vite), shadcn/ui
-- AI: OpenAI‑compatible Chat Completions via `Ai::Client` with fallback model support
-- Email: Action Mailer for digest delivery
-- Scheduling: `NotificationSchedules::ScanJob` creates `NotificationDelivery` jobs with summary windows + lead times
-- Payments: Stripe (checkout, portal, plan switch, webhooks)
-- Deployment: Kamal; PWA manifest served from Rails
-- Marketing: Astro landing site in `landing_page/`
+Signals are **derived patterns**, not user input.
 
----
+#### Initial signal types
 
-## Core Data Model (High‑level)
+* **Blockers**
+* **Time sinks**
+* **Impact / Invisible work** (helping, unblocking, mentoring)
 
-- User has many: `entries`, `notification_schedules`, `notification_deliveries`, `insight_requests`, `projects`, `persons`
-- Entry: encrypted body (TipTap JSON), `logged_at`, mentions via polymorphic `EntryMention` to `Project`/`Person`
-- InsightRequest: `query_type`, date range, selected `project_ids`/`person_ids`, `status` with `result_payload` and editable `content`
-- NotificationSchedule: cadence settings, timezone, lookback, lead time; generates `NotificationDelivery` with window and trigger time
+#### Behavior
 
----
+* Signals appear in a **thin top bar**
+* Collapsed by default
+* Expand via click (slider / toggle)
+* Only appear once enough data exists
 
-## User Flows
+Example:
 
-- Log an entry
-  - Type in TipTap, use `@` to mention projects/people; create entities inline if needed; Save
+```
+▸ Blockers (3)
+▸ Time sinks
+▸ Impact
+```
 
-- Generate an insight
-  - Pick date range/projects → preview appears → select template → generate → poll → open result → copy or edit content
+Expanded:
 
-- Configure emails
-  - Create a schedule (timezone, recurrence, lookback, lead time) → preview next occurrences → emails deliver around lead time
+```
+▾ Blockers (3)
+CI pipeline — mentioned 2×
+Waiting on review — 1×
 
-- Explore analytics
-  - Switch range/project → review KPIs, charts, project/people breakdowns; click areas to jump to dashboard filters
-
-- Manage subscription
-  - Upgrade (monthly/yearly), switch, cancel/reactivate; trial gating applied to notifications/insights
+[ Reflect ]   [ Ignore ]
+```
 
 ---
 
-## Success Metrics (Near‑term)
+### 3) Reflection (Optional, Contextual)
 
-- Entries per active user (weekly)
-- % of entries with at least one @‑mention
-- Insights generated per subscriber; completion vs. failure
-- Notification deliveries (delivered vs. skipped/failed)
-- Trial conversion, plan changes (monthly ↔ yearly)
+Reflection is **user-initiated**, never forced.
+
+Ways to reflect:
+
+* From a signal slider (“Reflect”)
+* From a specific note (“Reflect on this”)
+
+Reflection is just… another note:
+
+* Linked to the signal
+* No special UI
+* No required outcome
 
 ---
 
-## Future (Out of Scope for Current App)
+### 4) Insights (Reframed)
 
-- Smart Writing Coach (real‑time scoring and suggestions)
-- GitHub integration and performance review generator
-- Slack/calendar integrations, exports, team workspaces, Jira/Linear
+❌ Remove “on-demand insight generation” as primary UX
+✅ Replace with **passive insight surfacing**
+
+#### Insight rules
+
+* Appear only after patterns emerge
+* Text-first
+* No charts on load
+* No templates to choose from
+
+Example insight copy:
+
+> “This week felt fragmented — interruptions appeared in 4 notes.”
+
+Advanced AI summaries remain **secondary** (see below).
 
 ---
 
-## Notes
+### 5) Notifications (Reframed)
 
-- PRD aligned to the Rails app under `backend/` with Inertia React frontend in `backend/app/frontend/` and Astro landing in `landing_page/`.
-- Notifications and Insights are subscription‑gated per current controllers and jobs.
+Notifications are **nudges**, not reports.
+
+#### MVP notifications
+
+* End-of-day gentle reminder (optional)
+
+  > “Want to capture today while it’s fresh?”
+* Weekly reflection nudge
+
+  > “A few patterns stood out this week.”
+
+❌ Remove complex schedules from MVP UI
+❌ Remove “digest as core value”
+
+Emails become:
+
+* Optional
+* Summary-oriented
+* Secondary to in-app insight
+
+---
+
+### 6) Analytics (Demoted)
+
+Analytics are **not the aha moment**.
+
+For MVP:
+
+* No dashboards on first run
+* No heatmaps by default
+* No KPI screens in primary nav
+
+Analytics can live under:
+
+> Settings → “Your data”
+
+Later used for:
+
+* Power users
+* Retros
+* Teams
+
+---
+
+### 7) Auth & Billing (Unchanged, but reframed)
+
+Billing gates:
+
+* Advanced AI insights (summaries, exports)
+* Email digests
+* Team workspaces (future)
+
+Core journaling + basic signals must remain:
+
+> **usable without payment**
+
+This builds trust.
+
+---
+
+## Revised User Journey (Aligned)
+
+1. User writes notes for a few days
+2. Nothing happens immediately
+3. A signal appears quietly
+4. User clicks out of curiosity
+5. Insight explains *how the week felt*
+6. User reflects
+7. Habit forms
+
+That’s the loop.
+
+---
+
+## Core Data Model (Adjusted)
+
+### Keep
+
+* `entries`
+* `projects`
+* `persons`
+* `entry_mentions`
+
+### Add
+
+* `signals`
+
+  * `signal_type` (blocker, time_sink, impact)
+  * `confidence`
+  * `evidence`
+  * `entry_id`
+* `signal_entities` (cause/target like CI, person, system)
+
+### Reframe
+
+* `InsightRequest` → background system process, not user-triggered UI
+* `NotificationSchedule` → simplified (daily / weekly only for MVP)
+
+---
+
+## Success Metrics (Re-aligned)
+
+### Primary
+
+* Entries per user per week
+* % of users who see at least one signal
+* Signal expansion rate (clicks)
+* Reflection notes created
+
+### Secondary
+
+* Email digests opened
+* AI summaries generated
+* Conversion to paid
+
+If users don’t **see themselves** in the signals, nothing else matters.
+
+---
+
+# 3️⃣ What This Changes in Practice
+
+### You are no longer selling:
+
+> “Prepare for standups and reviews”
+
+You are selling:
+
+> **“Understand where your time and energy actually go.”**
+
+Standups, reviews, and emails become **side effects**, not the product.
+
+---
+
+## Final thought (important)
+
+This revised PRD:
+
+* Keeps your current tech viable
+* Explains *why* JotChain exists alongside Linear
+* Creates a defensible UX moat
+* Aligns perfectly with the “Amy food journal” model
+
+If you want next, I can:
+
+* Map **old features → new mental buckets**
+* Propose a **migration plan** (no big bang)
+* Rewrite homepage copy to match this PRD
+* Help you decide **what to delete** (hard but necessary)
+
+This is the right direction.

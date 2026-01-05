@@ -1,5 +1,6 @@
 ---
 const appSignupUrl = 'https://app.jotchain.com/sign_up';
+const appLoginUrl = 'https://app.jotchain.com/sign_in';
 ---
 
 <header class="header">
@@ -9,12 +10,13 @@ const appSignupUrl = 'https://app.jotchain.com/sign_up';
 			<span class="brand__name">JotChain</span>
 		</a>
 		<nav class="header__nav">
-			<a href="/#features">Features</a>
-			<a href="/#pricing">Pricing</a>
+			<a href="#how-it-works">How it works</a>
+			<a href="#pricing">Pricing</a>
 			<a href="/blog">Blog</a>
 		</nav>
 		<div class="header__actions">
-			<a class="button button--primary" href={appSignupUrl}>Start free trial</a>
+			<a class="header__login" href={appLoginUrl}>Log in</a>
+			<a class="button button--primary" href={appSignupUrl}>Start free</a>
 		</div>
 	</div>
 </header>
@@ -27,7 +29,9 @@ const appSignupUrl = 'https://app.jotchain.com/sign_up';
 		width: calc(100% - 2rem);
 		max-width: var(--max-width);
 		margin: 1rem auto 0;
-		background: var(--surface);
+		background: rgba(255, 255, 255, 0.92);
+		backdrop-filter: blur(12px);
+		-webkit-backdrop-filter: blur(12px);
 		border: 1px solid var(--border-subtle);
 		border-radius: var(--radius);
 		box-shadow: 0 4px 12px rgba(31, 35, 40, 0.04);
@@ -93,16 +97,53 @@ const appSignupUrl = 'https://app.jotchain.com/sign_up';
 
 	.header__nav a {
 		transition: color 0.15s ease;
+		position: relative;
+	}
+
+	.header__nav a::after {
+		content: '';
+		position: absolute;
+		bottom: -2px;
+		left: 0;
+		width: 100%;
+		height: 1px;
+		background: var(--primary);
+		transform: scaleX(0);
+		transform-origin: right;
+		transition: transform 0.25s ease;
 	}
 
 	.header__nav a:hover {
 		color: var(--text-primary);
 	}
 
+	.header__nav a:hover::after {
+		transform: scaleX(1);
+		transform-origin: left;
+	}
+
 	.header__actions {
 		display: inline-flex;
 		gap: 0.75rem;
 		align-items: center;
+	}
+
+	.header__login {
+		display: none;
+		font-size: 0.875rem;
+		font-weight: 500;
+		color: var(--text-secondary);
+		transition: color 0.15s ease;
+	}
+
+	.header__login:hover {
+		color: var(--text-primary);
+	}
+
+	@media (min-width: 640px) {
+		.header__login {
+			display: block;
+		}
 	}
 
 	.header__actions .button {
@@ -116,7 +157,6 @@ const appSignupUrl = 'https://app.jotchain.com/sign_up';
 		}
 	}
 
-	/* Mobile menu - simplified for now */
 	@media (max-width: 767px) {
 		.header__actions .button {
 			padding: 0.5rem 0.875rem;

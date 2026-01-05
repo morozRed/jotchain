@@ -1,84 +1,58 @@
 import { Link, usePage } from "@inertiajs/react"
 import type { PropsWithChildren } from "react"
 
-import Heading from "@/components/heading"
-import { Button } from "@/components/ui/button"
-import { Separator } from "@/components/ui/separator"
 import { cn } from "@/lib/utils"
 import {
   settingsAppearancePath,
   settingsEmailPath,
+  settingsEntitiesPath,
   settingsPasswordPath,
   settingsProfilePath,
   settingsSessionsPath,
 } from "@/routes"
-import type { NavItem } from "@/types"
 
-const sidebarNavItems: NavItem[] = [
-  {
-    title: "Profile",
-    href: settingsProfilePath(),
-    icon: null,
-  },
-  {
-    title: "Email",
-    href: settingsEmailPath(),
-    icon: null,
-  },
-  {
-    title: "Password",
-    href: settingsPasswordPath(),
-    icon: null,
-  },
-  {
-    title: "Sessions",
-    href: settingsSessionsPath(),
-    icon: null,
-  },
-  {
-    title: "Appearance",
-    href: settingsAppearancePath(),
-    icon: null,
-  },
+const sidebarNavItems = [
+  { title: "Profile", href: settingsProfilePath() },
+  { title: "Email", href: settingsEmailPath() },
+  { title: "Password", href: settingsPasswordPath() },
+  { title: "Sessions", href: settingsSessionsPath() },
+  { title: "Projects & People", href: settingsEntitiesPath() },
+  { title: "Appearance", href: settingsAppearancePath() },
 ]
 
 export default function SettingsLayout({ children }: PropsWithChildren) {
   const { url } = usePage()
 
   return (
-    <div className="px-4 py-6">
-      <Heading
-        title="Settings"
-        description="Manage your profile and account settings"
-      />
+    <div className="mx-auto flex w-full max-w-4xl gap-0 px-6 py-8 lg:px-12">
+      {/* Left sidebar navigation */}
+      <aside className="w-40 shrink-0 pr-8 lg:pr-12">
+        <h1 className="mb-6 text-[13px] font-semibold tracking-tight text-foreground">
+          Settings
+        </h1>
+        <nav className="flex flex-col gap-0.5">
+          {sidebarNavItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              prefetch
+              className={cn(
+                "rounded-md px-2.5 py-1.5 text-[13px] transition-colors",
+                url === item.href
+                  ? "bg-subtle font-medium text-foreground"
+                  : "text-muted-foreground hover:bg-subtle hover:text-foreground"
+              )}
+            >
+              {item.title}
+            </Link>
+          ))}
+        </nav>
+      </aside>
 
-      <div className="flex flex-col space-y-8 lg:flex-row lg:space-y-0 lg:space-x-12">
-        <aside className="w-full max-w-xl lg:w-48">
-          <nav className="flex flex-col space-y-1 space-x-0">
-            {sidebarNavItems.map((item) => (
-              <Button
-                key={item.href}
-                size="sm"
-                variant="ghost"
-                asChild
-                className={cn("w-full justify-start", {
-                  "bg-muted": url === item.href,
-                })}
-              >
-                <Link href={item.href} prefetch>
-                  {item.title}
-                </Link>
-              </Button>
-            ))}
-          </nav>
-        </aside>
-
-        <Separator className="my-6 md:hidden" />
-
-        <div className="flex-1 md:max-w-2xl">
-          <section className="max-w-xl space-y-12">{children}</section>
-        </div>
-      </div>
+      {/* Main content area */}
+      <main className="flex-1 min-w-0">
+        <div className="max-w-lg">{children}</div>
+      </main>
     </div>
   )
 }

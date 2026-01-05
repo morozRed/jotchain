@@ -12,7 +12,7 @@ interface TiptapContentProps {
   className?: string;
 }
 
-// Extend Mention to add custom 'type' attribute
+// Extend Mention to add custom 'type' and 'deleted' attributes
 const CustomMention = Mention.extend({
   addAttributes() {
     return {
@@ -26,6 +26,18 @@ const CustomMention = Mention.extend({
           }
           return {
             "data-type": attributes.type,
+          };
+        },
+      },
+      deleted: {
+        default: false,
+        parseHTML: (element) => element.getAttribute("data-deleted") === "true",
+        renderHTML: (attributes) => {
+          if (!attributes.deleted) {
+            return {};
+          }
+          return {
+            "data-deleted": "true",
           };
         },
       },
@@ -88,10 +100,9 @@ export function TiptapContent({ content, className }: TiptapContentProps) {
 
   // Fallback to plain text if invalid JSON
   if (!isValid) {
-    const plainText = tiptapToPlainText(content);
     return (
       <div className={cn("whitespace-pre-line text-sm leading-relaxed", className)}>
-        {plainText || content}
+        {content}
       </div>
     );
   }

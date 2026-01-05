@@ -17,38 +17,49 @@ export default function ForgotPassword() {
     >
       <Head title="Forgot password" />
 
-      <div className="space-y-6">
+      <div className="flex flex-col gap-5">
         <Form method="post" action={identityPasswordResetPath()}>
           {({ processing, errors }) => (
-            <>
-              <div className="grid gap-2">
-                <Label htmlFor="email">Email address</Label>
+            <div className="grid gap-4">
+              <div className="grid gap-1.5">
+                <Label htmlFor="email" className="text-[13px] font-medium">
+                  Email address
+                </Label>
                 <Input
                   id="email"
                   type="email"
                   name="email"
                   autoComplete="off"
                   autoFocus
-                  placeholder="email@example.com"
+                  placeholder="you@company.com"
+                  className="h-10"
                 />
                 <InputError message={errors.email} />
               </div>
 
-              <div className="my-6 flex items-center justify-start">
-                <Button className="w-full" disabled={processing}>
-                  {processing && (
-                    <LoaderCircle className="h-4 w-4 animate-spin" />
-                  )}
-                  Email password reset link
-                </Button>
-              </div>
-            </>
+              <Button
+                type="submit"
+                className="mt-1 h-10 w-full"
+                disabled={processing}
+              >
+                {processing && (
+                  <LoaderCircle className="mr-2 size-4 animate-spin" />
+                )}
+                Send reset link
+              </Button>
+            </div>
           )}
         </Form>
-        <div className="text-muted-foreground space-x-1 text-center text-sm">
-          <span>Or, return to</span>
-          <TextLink href={signInPath()}>log in</TextLink>
-        </div>
+
+        <p className="text-center text-[13px] text-muted-foreground">
+          Remember your password?{" "}
+          <TextLink
+            href={signInPath()}
+            className="font-medium text-primary hover:text-primary-hover"
+          >
+            Back to log in
+          </TextLink>
+        </p>
       </div>
     </AuthLayout>
   )

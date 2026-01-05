@@ -9,6 +9,8 @@ class Entry < ApplicationRecord
   has_many :person_entry_mentions, -> { where(mentionable_type: "Person") }, class_name: "EntryMention"
   has_many :mentioned_projects, through: :project_entry_mentions, source: :mentionable, source_type: "Project"
   has_many :mentioned_persons, through: :person_entry_mentions, source: :mentionable, source_type: "Person"
+  has_many :signal_entries, dependent: :destroy
+  has_many :work_signals, through: :signal_entries, source: :signal
 
   encrypts :body
 
@@ -28,6 +30,7 @@ class Entry < ApplicationRecord
 
   before_validation :default_logged_at
   after_save :sync_mentions
+  after_commit :schedule_signal_detection, on: [:create, :update], if: :signal_detection_eligible?
 
   # Parse body and return plain text for display/AI processing
   def body_text
@@ -37,6 +40,20 @@ class Entry < ApplicationRecord
     when "tiptap"
       extract_text_from_tiptap
     else
+      body
+    end
+  end
+
+  # Returns the body with deleted mentions marked for display
+  # This checks if mentioned entities still exist and marks them as deleted
+  def body_with_deleted_mentions_marked
+    return body unless body_format == "tiptap"
+
+    begin
+      doc = JSON.parse(body)
+      mark_deleted_mentions!(doc)
+      JSON.generate(doc)
+    rescue JSON::ParserError
       body
     end
   end
@@ -125,5 +142,57 @@ class Entry < ApplicationRecord
     if node.is_a?(Hash) && node["content"].is_a?(Array)
       node["content"].each { |child| traverse_tiptap_nodes(child, &block) }
     end
+  end
+
+  def mark_deleted_mentions!(doc)
+    # Collect all mention IDs from the document
+    mention_ids = {project: [], person: []}
+
+    traverse_tiptap_nodes(doc) do |node|
+      if node["type"] == "mention" && node["attrs"]
+        type = node["attrs"]["type"]
+        id = node["attrs"]["id"]
+        if type == "project" && id.present?
+          mention_ids[:project] << id
+        elsif type == "person" && id.present?
+          mention_ids[:person] << id
+        end
+      end
+    end
+
+    # Check which IDs still exist
+    existing_project_ids = mention_ids[:project].present? ? user.projects.where(id: mention_ids[:project]).pluck(:id).to_set : Set.new
+    existing_person_ids = mention_ids[:person].present? ? user.persons.where(id: mention_ids[:person]).pluck(:id).to_set : Set.new
+
+    # Mark deleted mentions
+    traverse_tiptap_nodes(doc) do |node|
+      if node["type"] == "mention" && node["attrs"]
+        type = node["attrs"]["type"]
+        id = node["attrs"]["id"]
+
+        is_deleted = case type
+        when "project" then !existing_project_ids.include?(id)
+        when "person" then !existing_person_ids.include?(id)
+        else false
+        end
+
+        node["attrs"]["deleted"] = true if is_deleted
+      end
+    end
+  end
+
+  def signal_detection_eligible?
+    # Only trigger if user has enough entries and hasn't had recent detection
+    user.entries.count >= WorkSignal::SURFACE_THRESHOLD && !recent_signal_detection?
+  end
+
+  def recent_signal_detection?
+    # Debounce: don't trigger if detection ran in last hour
+    Rails.cache.exist?("signal_detection_#{user_id}")
+  end
+
+  def schedule_signal_detection
+    Rails.cache.write("signal_detection_#{user_id}", true, expires_in: 1.hour)
+    Signals::DetectJob.perform_later(user_id)
   end
 end

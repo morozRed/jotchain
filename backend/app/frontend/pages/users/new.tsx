@@ -1,5 +1,5 @@
 import { Form, Head } from "@inertiajs/react"
-import { ArrowRight, LoaderCircle, Sparkles } from "lucide-react"
+import { LoaderCircle } from "lucide-react"
 
 import GoogleSignInButton from "@/components/google-sign-in-button"
 import InputError from "@/components/input-error"
@@ -7,45 +7,40 @@ import TextLink from "@/components/text-link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Separator } from "@/components/ui/separator"
 import AuthLayout from "@/layouts/auth-layout"
 import { signInPath, signUpPath } from "@/routes"
-
-const trialHighlights = [
-  "14-day free trial, no credit card",
-  "Unlimited meeting summaries",
-  "Invite teammates when you’re ready",
-]
 
 export default function Register() {
   return (
     <AuthLayout
-      title="Create your JotChain workspace"
-      description="Capture today’s wins and let AI craft tomorrow’s stand-up brief."
+      title="Start capturing"
+      description="Begin with a few notes. Patterns will emerge over time."
     >
-      <Head title="Sign up • JotChain" />
-      <div className="flex flex-col gap-6">
-        <div className="flex justify-center">
-          <GoogleSignInButton />
-        </div>
+      <Head title="Sign up" />
+      <div className="flex flex-col gap-5">
+        <GoogleSignInButton />
 
-        <div className="relative">
-          <Separator className="my-4" />
-          <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-background px-2 text-xs text-muted-foreground">
-            or
-          </span>
+        <div className="relative py-3">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-border-subtle" />
+          </div>
+          <div className="relative flex justify-center">
+            <span className="bg-surface px-3 text-[12px] text-muted-foreground">
+              or sign up with email
+            </span>
+          </div>
         </div>
 
         <Form
           method="post"
           action={signUpPath()}
           resetOnSuccess={["password", "password_confirmation"]}
-          className="flex flex-col gap-6"
+          className="flex flex-col gap-4"
         >
           {({ processing, errors }) => (
-            <div className="grid gap-5">
-              <div className="grid gap-2">
-                <Label htmlFor="name" className="text-sm">
+            <div className="grid gap-4">
+              <div className="grid gap-1.5">
+                <Label htmlFor="name" className="text-[13px] font-medium">
                   Your name
                 </Label>
                 <Input
@@ -58,13 +53,14 @@ export default function Register() {
                   autoComplete="name"
                   disabled={processing}
                   placeholder="Jordan Lee"
+                  className="h-10"
                   aria-invalid={Boolean(errors.name)}
                 />
-                <InputError message={errors.name} className="mt-1" />
+                <InputError message={errors.name} />
               </div>
 
-              <div className="grid gap-2">
-                <Label htmlFor="email" className="text-sm">
+              <div className="grid gap-1.5">
+                <Label htmlFor="email" className="text-[13px] font-medium">
                   Work email
                 </Label>
                 <Input
@@ -75,13 +71,14 @@ export default function Register() {
                   tabIndex={2}
                   autoComplete="email"
                   placeholder="you@company.com"
+                  className="h-10"
                   aria-invalid={Boolean(errors.email)}
                 />
                 <InputError message={errors.email} />
               </div>
 
-              <div className="grid gap-2">
-                <Label htmlFor="password" className="text-sm">
+              <div className="grid gap-1.5">
+                <Label htmlFor="password" className="text-[13px] font-medium">
                   Password
                 </Label>
                 <Input
@@ -92,16 +89,14 @@ export default function Register() {
                   tabIndex={3}
                   autoComplete="new-password"
                   placeholder="At least 12 characters"
+                  className="h-10"
                   aria-invalid={Boolean(errors.password)}
                 />
                 <InputError message={errors.password} />
               </div>
 
-              <div className="grid gap-2">
-                <Label
-                  htmlFor="password_confirmation"
-                  className="text-sm"
-                >
+              <div className="grid gap-1.5">
+                <Label htmlFor="password_confirmation" className="text-[13px] font-medium">
                   Confirm password
                 </Label>
                 <Input
@@ -112,6 +107,7 @@ export default function Register() {
                   tabIndex={4}
                   autoComplete="new-password"
                   placeholder="Re-enter password"
+                  className="h-10"
                   aria-invalid={Boolean(errors.password_confirmation)}
                 />
                 <InputError message={errors.password_confirmation} />
@@ -119,29 +115,33 @@ export default function Register() {
 
               <Button
                 type="submit"
-                className="mt-2 w-full bg-primary text-primary-foreground hover:bg-primary/80"
+                className="mt-1 h-10 w-full"
                 tabIndex={5}
                 disabled={processing}
               >
                 {processing && (
-                  <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
+                  <LoaderCircle className="mr-2 size-4 animate-spin" />
                 )}
                 Start free trial
               </Button>
+
+              <p className="text-center text-[11px] leading-relaxed text-muted-foreground">
+                14-day free trial, no credit card required
+              </p>
             </div>
           )}
         </Form>
 
-        <div className="text-center text-sm text-muted-foreground">
+        <p className="text-center text-[13px] text-muted-foreground">
           Already part of JotChain?{" "}
           <TextLink
             href={signInPath()}
-            className="text-accent-hot hover:text-foreground"
+            className="font-medium text-primary hover:text-primary-hover"
             tabIndex={6}
           >
             Log in
           </TextLink>
-        </div>
+        </p>
       </div>
     </AuthLayout>
   )

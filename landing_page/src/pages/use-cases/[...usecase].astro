@@ -1,11 +1,8 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
-import CTA from '../../components/CTA.astro';
 import Footer from '../../components/Footer.astro';
 import Header from '../../components/Header.astro';
-import Testimonial from '../../components/Testimonial.astro';
-import lucideIcons from 'lucide-static';
 
 export async function getStaticPaths() {
 	const useCases = await getCollection('use-cases');
@@ -20,47 +17,6 @@ const { data, body } = useCase;
 const appSignupUrl = 'https://app.jotchain.com/sign_up';
 
 const steps = data.howItWorks.map((step) => step);
-
-const icons = (lucideIcons as Record<string, string>) ?? {};
-
-const heroHighlights = data.benefits.slice(0, 3);
-const heroSteps = steps.slice(0, 3);
-const heroStepIcons = [
-	icons['NotebookPen'],
-	icons['MessageSquare'],
-	icons['Sparkles'],
-];
-const defaultWorkflowHeadings = [
-	'Capture wins quickly',
-	'Add rich context',
-	'Generate the update',
-	'Share asynchronously',
-	'Keep everyone aligned',
-];
-const workflowIconSet = [
-	icons['Clock'],
-	icons['MessageSquare'],
-	icons['Sparkles'],
-	icons['Share2'],
-	icons['Users'],
-];
-
-const workflowSections = steps.map((text, index) => {
-	let heading = defaultWorkflowHeadings[index % defaultWorkflowHeadings.length];
-	let description = text;
-	if (text.includes(':')) {
-		const [, rest] = text.split(/:(.+)/);
-		const [rawHeading, rawDescription] = text.split(/:(.+)/);
-		if (rawHeading) heading = rawHeading.trim();
-		if (rawDescription) description = rawDescription.trim();
-	}
-	const icon = workflowIconSet[index % workflowIconSet.length] ?? icons['Check'];
-	return {
-		heading,
-		description,
-		icon,
-	};
-});
 const { Content } = await useCase.render();
 const bodyText = typeof body === 'string' ? body.trim() : '';
 const hasBody = bodyText.length > 100;
@@ -77,214 +33,236 @@ const hasBody = bodyText.length > 100;
 			"name": "JotChain"
 		}
 	})} />
-	<div class="shell">
-		<Header />
+
+	<Header />
+
+	<div class="page-wrapper">
+		<!-- Breadcrumb -->
+		<nav class="breadcrumb fade-in fade-in-1">
+			<a href="/use-cases">Use Cases</a>
+			<span class="breadcrumb__separator">/</span>
+			<span>{data.name}</span>
+		</nav>
+
+		<!-- Hero Section -->
 		<section class="hero">
-			<div class="hero__layout">
-				<div class="hero__content">
-					<span class="hero__eyebrow">{data.name} • Use Case</span>
-					<h1>{data.h1}</h1>
-					<p class="hero__lead">{data.problem}</p>
-
-					{heroHighlights.length > 0 && (
-						<ul class="hero__highlights">
-							{heroHighlights.map((highlight) => (
-								<li>
-									<span class="hero__icon">✓</span>
-									<p>{highlight}</p>
-								</li>
-							))}
-						</ul>
-					)}
-
-					<div class="hero__actions">
-						<CTA text="Start free trial" href={appSignupUrl} variant="primary" />
-						<a class="hero__link" href="mailto:grig@jotchain.com">Talk with us</a>
-					</div>
-
-					<p class="hero__meta">14-day free trial · No credit card required · Cancel anytime</p>
-				</div>
-
-				<div class="hero__card">
-					<div class="hero__card-headline">
-						<span class="hero__card-label">How JotChain helps</span>
-						<h2>{data.name}</h2>
-					</div>
-					<p class="hero__card-body">{data.solution}</p>
-
-					{heroSteps.length > 0 && (
-						<ol class="hero__card-steps">
-							{heroSteps.map((step, index) => (
-								<li>
-									<div class="hero__card-step-icon" set:html={heroStepIcons[index % heroStepIcons.length] ?? icons.Sparkles} />
-									<p>{step}</p>
-								</li>
-							))}
-						</ol>
-					)}
+			<div class="hero__content">
+				<span class="hero__label fade-in fade-in-1">{data.name}</span>
+				<h1 class="fade-in fade-in-2">{data.h1}</h1>
+				<p class="hero__problem fade-in fade-in-3">{data.problem}</p>
+				<div class="hero__actions fade-in fade-in-4">
+					<a class="button button--primary" href={appSignupUrl}>Start free trial</a>
+					<span class="hero__meta">14-day free trial. No credit card.</span>
 				</div>
 			</div>
 		</section>
 
-		<section class="impact">
-			<header class="impact__header">
-				<h2>Why teams trust JotChain for {data.name.toLowerCase()}</h2>
-				<p>
-					Capture work the moment it happens, surface it when it matters, and let AI assemble the update for you.
-				</p>
+		<!-- Solution Section -->
+		<section class="solution">
+			<div class="solution__card">
+				<span class="section__label">How Jotchain helps</span>
+				<p class="solution__text">{data.solution}</p>
+			</div>
+		</section>
+
+		<!-- Benefits Section -->
+		<section class="benefits">
+			<header class="section__header">
+				<span class="section__label">What you get</span>
+				<h2>Why teams trust Jotchain for {data.name.toLowerCase()}</h2>
 			</header>
-			<div class="impact__grid">
+
+			<div class="benefits__grid">
 				{data.benefits.slice(0, 4).map((benefit, index) => (
-					<div class="impact__card">
-						<span class="impact__badge">Outcome {index + 1}</span>
+					<div class="benefit-card">
+						<span class="benefit-card__number">{index + 1}</span>
 						<p>{benefit}</p>
 					</div>
 				))}
 			</div>
 		</section>
 
+		<!-- How It Works Section -->
 		<section class="workflow">
-			<header class="workflow__header">
-				<h2>What the workflow looks like</h2>
-				<p>
-					It takes a few intentional minutes per day. JotChain turns those notes into the updates you need later.
-				</p>
+			<header class="section__header">
+				<span class="section__label">The workflow</span>
+				<h2>How it works</h2>
+				<p>A few intentional minutes per day. Jotchain turns those notes into the updates you need.</p>
 			</header>
-			<div class="workflow__timeline">
-				{workflowSections.slice(0, 4).map((section) => (
+
+			<div class="workflow__steps">
+				{steps.slice(0, 4).map((step, index) => (
 					<div class="workflow__step">
-						<div class="workflow__icon" set:html={section.icon} />
-						<div class="workflow__content">
-							<h3>{section.heading}</h3>
-							<p>{section.description}</p>
+						<div class="workflow__step-header">
+							<span class="workflow__number">{index + 1}</span>
+							{index < steps.length - 1 && <div class="workflow__line"></div>}
 						</div>
+						<p class="workflow__text">{step}</p>
 					</div>
 				))}
 			</div>
 		</section>
 
-		<Testimonial
-			quote={`JotChain keeps our ${data.name.toLowerCase()} updates sharp. By the time review time hits, the story writes itself.`}
-			author={`${data.name} lead, fast-growing product team`}
-		/>
+		<!-- Testimonial -->
+		<section class="testimonial">
+			<blockquote>
+				<p>"Jotchain keeps our {data.name.toLowerCase()} updates sharp. By the time review time hits, the story writes itself."</p>
+				<footer>
+					<span class="testimonial__author">{data.name} lead</span>
+					<span class="testimonial__role">Fast-growing product team</span>
+				</footer>
+			</blockquote>
+		</section>
 
+		<!-- Deep Dive Content -->
 		{hasBody && (
 			<section class="deep-dive">
-				<header class="deep-dive__header">
-					<h2>Learn more about {data.name.toLowerCase()}</h2>
+				<header class="section__header">
+					<span class="section__label">Learn more</span>
+					<h2>About {data.name.toLowerCase()}</h2>
 				</header>
-				<div class="deep-dive__card">
+				<div class="deep-dive__content">
 					<Content />
 				</div>
 			</section>
 		)}
 
-		<section class="cta-block">
-			<div class="cta-block__content">
-				<h2>{data.cta}</h2>
-				<p>
-					Spin up JotChain, capture a week of notes, and watch the summaries write themselves. You’ll never scramble for updates again.
-				</p>
-				<div class="cta-block__actions">
-					<CTA text="Start free trial" href={appSignupUrl} variant="primary" />
-					<a class="cta-block__link" href="mailto:grig@jotchain.com">Need a team plan?</a>
-				</div>
-				<span class="cta-block__meta">14-day free trial · No credit card required</span>
+		<!-- Final CTA -->
+		<section class="final-cta">
+			<h2>{data.cta}</h2>
+			<p>Capture a week of notes and watch the summaries write themselves.</p>
+			<div class="final-cta__actions">
+				<a class="button button--primary" href={appSignupUrl}>Start free trial</a>
 			</div>
+			<span class="final-cta__meta">14-day free trial. No credit card required.</span>
 		</section>
-
-		<Footer />
 	</div>
+
+	<Footer />
 </Layout>
 
 <style>
-	.shell {
+	.page-wrapper {
 		width: 100%;
 		max-width: var(--max-width);
 		display: flex;
 		flex-direction: column;
-		gap: 4rem;
 	}
 
-	.hero__layout {
-		display: grid;
-		gap: 2.5rem;
-		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-		align-items: start;
-	}
-
-	.hero__eyebrow {
-		font-size: 0.75rem;
-		letter-spacing: 0.12em;
-		text-transform: uppercase;
-		color: var(--primary);
-		display: inline-flex;
+	/* Breadcrumb */
+	.breadcrumb {
+		padding: 2rem 0 0;
+		font-size: 0.85rem;
+		color: var(--text-muted);
+		display: flex;
 		align-items: center;
 		gap: 0.5rem;
-		padding: 0.4rem 0.9rem;
-		border-radius: 999px;
-		border: 1px solid var(--primary-soft-border);
-		background: var(--primary-soft-bg);
-		width: fit-content;
+	}
+
+	.breadcrumb a {
+		color: var(--text-secondary);
+		transition: color 0.15s ease;
+	}
+
+	.breadcrumb a:hover {
+		color: var(--primary);
+	}
+
+	.breadcrumb__separator {
+		color: var(--border);
+	}
+
+	/* Section Label */
+	.section__label {
+		display: inline-block;
+		font-family: var(--font-heading);
+		font-size: 0.7rem;
+		font-weight: 500;
+		text-transform: uppercase;
+		letter-spacing: 0.12em;
+		color: var(--primary);
+		margin-bottom: 0.75rem;
+		position: relative;
+		padding-left: 1.5rem;
+	}
+
+	.section__label::before {
+		content: '';
+		position: absolute;
+		left: 0;
+		top: 50%;
+		transform: translateY(-50%);
+		width: 1rem;
+		height: 1px;
+		background: var(--primary);
+		opacity: 0.5;
+	}
+
+	.section__header {
+		text-align: center;
+		max-width: 560px;
+		margin: 0 auto 3rem;
+	}
+
+	.section__header h2 {
+		font-size: clamp(1.5rem, 3vw, 2rem);
+		margin-bottom: 0.75rem;
+	}
+
+	.section__header p {
+		color: var(--text-secondary);
+		font-size: 1.05rem;
+		line-height: 1.6;
+	}
+
+	/* Hero Section */
+	.hero {
+		padding: 3rem 0 5rem;
+		text-align: center;
 	}
 
 	.hero__content {
+		max-width: 680px;
+		margin: 0 auto;
 		display: flex;
 		flex-direction: column;
-		gap: 1.5rem;
-	}
-
-	.hero__lead {
-		color: var(--text-secondary);
-		font-size: 1.05rem;
-		line-height: 1.65;
-	}
-
-	.hero__highlights {
-		display: flex;
-		flex-direction: column;
-		gap: 0.75rem;
-		padding: 0;
-		margin: 0;
-		list-style: none;
-	}
-
-	.hero__highlights li {
-		display: flex;
-		gap: 0.75rem;
-		align-items: flex-start;
-		padding: 0.85rem 1rem;
-		border-radius: var(--radius);
-		background: var(--surface);
-		border: 1px solid var(--border-subtle);
-	}
-
-	.hero__icon {
-		display: inline-flex;
 		align-items: center;
-		justify-content: center;
-		width: 24px;
-		height: 24px;
-		border-radius: 999px;
-		background: var(--primary-soft-bg);
+		gap: 1.25rem;
+	}
+
+	.hero__label {
+		display: inline-block;
+		font-family: var(--font-heading);
+		font-size: 0.7rem;
+		font-weight: 500;
+		text-transform: uppercase;
+		letter-spacing: 0.12em;
 		color: var(--primary);
-		font-size: 0.85rem;
+		padding: 0.5rem 1rem;
+		background: var(--primary-soft-bg);
+		border: 1px solid var(--primary-soft-border);
+		border-radius: 2rem;
+	}
+
+	.hero h1 {
+		font-size: clamp(1.75rem, 4vw, 2.5rem);
+		line-height: 1.2;
+		letter-spacing: -0.02em;
+	}
+
+	.hero__problem {
+		font-size: 1.1rem;
+		line-height: 1.7;
+		color: var(--text-secondary);
+		max-width: 560px;
 	}
 
 	.hero__actions {
 		display: flex;
-		flex-wrap: wrap;
-		gap: 0.9rem;
+		flex-direction: column;
 		align-items: center;
-	}
-
-	.hero__link {
-		color: var(--primary);
-		font-weight: 500;
-	}
-
-	.hero__link:hover {
-		color: var(--primary-hover);
+		gap: 0.75rem;
+		margin-top: 0.5rem;
 	}
 
 	.hero__meta {
@@ -292,326 +270,265 @@ const hasBody = bodyText.length > 100;
 		color: var(--text-muted);
 	}
 
-	.hero__card {
-		position: relative;
+	/* Solution Section */
+	.solution {
+		padding: 0 0 5rem;
+	}
+
+	.solution__card {
+		max-width: 640px;
+		margin: 0 auto;
 		padding: 2rem;
-		border-radius: var(--radius);
-		background:
-			radial-gradient(
-				100% 60% at 50% 50%,
-				var(--primary-soft-bg) 0%,
-				transparent 100%
-			),
-			var(--surface);
-		border: 1px solid var(--primary-soft-border);
-		display: flex;
-		flex-direction: column;
-		gap: 1.5rem;
-	}
-
-	.hero__card-headline {
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
-	}
-
-	.hero__card-label {
-		font-size: 0.75rem;
-		letter-spacing: 0.12em;
-		text-transform: uppercase;
-		color: var(--text-muted);
-	}
-
-	.hero__card-body {
-		color: var(--text-secondary);
-		line-height: 1.65;
-		margin: 0;
-	}
-
-	.hero__card-steps {
-		display: flex;
-		flex-direction: column;
-		gap: 1rem;
-		padding: 0;
-		margin: 0;
-		list-style: none;
-	}
-
-	.hero__card-steps li {
-		display: flex;
-		gap: 0.85rem;
-		align-items: center;
-		color: var(--text-secondary);
-	}
-
-	.hero__card-step-icon {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		width: 40px;
-		height: 40px;
-		padding: 0.5rem;
-		border-radius: 999px;
-		background: var(--primary);
-		color: var(--primary-foreground);
-		flex-shrink: 0;
-	}
-
-	.hero__card-step-icon svg {
-		width: 20px;
-		height: 20px;
-	}
-
-	.impact {
-		display: flex;
-		flex-direction: column;
-		gap: 2rem;
-	}
-
-	.impact__header {
-		text-align: center;
-		max-width: 48rem;
-		margin: 0 auto;
-		display: flex;
-		flex-direction: column;
-		gap: 0.75rem;
-	}
-
-	.impact__header p {
-		color: var(--text-secondary);
-		line-height: 1.6;
-	}
-
-	.impact__grid {
-		display: grid;
-		gap: 1.5rem;
-		grid-template-columns: repeat(2, 1fr);
-	}
-
-	@media (max-width: 640px) {
-		.impact__grid {
-			grid-template-columns: 1fr;
-		}
-	}
-
-	.impact__card {
-		padding: 1.5rem;
-		border-radius: var(--radius);
-		background: var(--surface);
+		background: var(--subtle);
 		border: 1px solid var(--border-subtle);
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
-		transition: border-color 0.15s ease, transform 0.2s ease;
-	}
-
-	.impact__card:hover {
-		transform: translateY(-2px);
-		border-color: var(--border-strong);
-	}
-
-	.impact__badge {
-		font-size: 0.7rem;
-		letter-spacing: 0.12em;
-		text-transform: uppercase;
-		color: var(--primary);
-		font-weight: 600;
-	}
-
-	.impact__card p {
-		margin: 0;
-		color: var(--text-secondary);
-		line-height: 1.5;
-	}
-
-	.workflow {
-		display: flex;
-		flex-direction: column;
-		gap: 2rem;
-	}
-
-	.workflow__header {
-		text-align: center;
-		max-width: 40rem;
-		margin: 0 auto;
-		display: flex;
-		flex-direction: column;
-		gap: 0.75rem;
-	}
-
-	.workflow__header p {
-		color: var(--text-secondary);
-		line-height: 1.6;
-	}
-
-	.workflow__timeline {
-		display: grid;
-		gap: 1.5rem;
-		grid-template-columns: repeat(2, 1fr);
-	}
-
-	@media (max-width: 640px) {
-		.workflow__timeline {
-			grid-template-columns: 1fr;
-		}
-	}
-
-	.workflow__step {
-		position: relative;
-		padding: 1.5rem;
 		border-radius: var(--radius);
-		background: var(--surface);
-		border: 1px solid var(--border-subtle);
-		display: flex;
-		gap: 1rem;
-		align-items: center;
-		transition: border-color 0.15s ease, transform 0.2s ease;
-	}
-
-	.workflow__step:hover {
-		transform: translateY(-2px);
-		border-color: var(--border-strong);
-	}
-
-	.workflow__icon {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		min-width: 40px;
-		height: 40px;
-		border-radius: var(--radius-sm);
-		background: var(--primary-soft-bg);
-		border: 1px solid var(--primary-soft-border);
-		color: var(--primary);
-	}
-
-	.workflow__content {
-		display: flex;
-		flex-direction: column;
-		gap: 0.35rem;
-	}
-
-	.workflow__content h3 {
-		margin: 0;
-		font-family: var(--font-body);
-		font-size: 1rem;
-		font-weight: 600;
-		color: var(--text-primary);
-	}
-
-	.workflow__content p {
-		margin: 0;
-		color: var(--text-secondary);
-		line-height: 1.5;
-		font-size: 0.95rem;
-	}
-
-	.deep-dive {
-		display: flex;
-		flex-direction: column;
-		gap: 2rem;
-		align-items: center;
-	}
-
-	.deep-dive__header {
 		text-align: center;
-		max-width: 48rem;
-		margin: 0 auto;
 	}
 
-	.deep-dive__header h2 {
-		font-size: clamp(1.5rem, 3vw, 1.875rem);
+	.solution__card .section__label {
+		padding-left: 0;
+	}
+
+	.solution__card .section__label::before {
+		display: none;
+	}
+
+	.solution__text {
+		font-size: 1.1rem;
+		line-height: 1.7;
+		color: var(--text-secondary);
 		margin: 0;
 	}
 
-	.deep-dive__card {
-		max-width: 760px;
-		width: 100%;
-		padding: 2rem;
-		border-radius: var(--radius);
-		background: var(--surface);
-		border: 1px solid var(--border-subtle);
-		display: flex;
-		flex-direction: column;
-		gap: 1.5rem;
-		color: var(--text-secondary);
-		line-height: 1.65;
-	}
-
-	.deep-dive__card :global(h2),
-	.deep-dive__card :global(h3) {
-		color: var(--text-primary);
-	}
-
-	.cta-block {
-		display: flex;
-		justify-content: center;
-		padding: 3rem 1.5rem;
-		background:
-			radial-gradient(
-				100% 50% at 50% 50%,
-				var(--primary-soft-bg) 0%,
-				transparent 100%
-			),
-			var(--background);
+	/* Benefits Section */
+	.benefits {
+		padding: 5rem 0;
+		background: var(--subtle);
 		width: 100vw;
 		margin-left: 50%;
 		transform: translateX(-50%);
-		position: relative;
+		border-top: 1px solid var(--border-subtle);
 	}
 
-	.cta-block::before {
-		content: '';
-		position: absolute;
-		inset: 0;
-		background: var(--grain-pattern);
-		opacity: 0.04;
-		pointer-events: none;
-	}
-
-	.cta-block__content {
-		max-width: 620px;
-		width: 100%;
-		display: flex;
-		flex-direction: column;
+	.benefits__grid {
+		display: grid;
 		gap: 1.25rem;
-		text-align: center;
-		position: relative;
-		z-index: 1;
+		max-width: 800px;
+		margin: 0 auto;
+		padding: 0 1.5rem;
 	}
 
-	.cta-block__content p {
-		color: var(--text-secondary);
+	@media (min-width: 640px) {
+		.benefits__grid {
+			grid-template-columns: repeat(2, 1fr);
+			padding: 0 2.5rem;
+		}
+	}
+
+	.benefit-card {
+		display: flex;
+		gap: 1rem;
+		padding: 1.5rem;
+		background: var(--surface);
+		border: 1px solid var(--border-subtle);
+		border-radius: var(--radius);
+		transition: border-color 0.2s ease, transform 0.2s ease;
+	}
+
+	.benefit-card:hover {
+		border-color: var(--border);
+		transform: translateY(-2px);
+	}
+
+	.benefit-card__number {
+		flex-shrink: 0;
+		width: 1.75rem;
+		height: 1.75rem;
+		border-radius: 50%;
+		background: var(--primary-soft-bg);
+		border: 1px solid var(--primary-soft-border);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-family: var(--font-heading);
+		font-size: 0.75rem;
+		font-weight: 600;
+		color: var(--primary);
+	}
+
+	.benefit-card p {
+		font-size: 0.95rem;
 		line-height: 1.6;
+		color: var(--text-secondary);
 		margin: 0;
 	}
 
-	.cta-block__actions {
+	/* Workflow Section */
+	.workflow {
+		padding: 5rem 0;
+		border-top: 1px solid var(--border-subtle);
+	}
+
+	.workflow__steps {
 		display: flex;
-		flex-wrap: wrap;
-		gap: 0.9rem;
-		justify-content: center;
+		flex-direction: column;
+		gap: 0;
+		max-width: 560px;
+		margin: 0 auto;
+	}
+
+	.workflow__step {
+		display: flex;
+		gap: 1.25rem;
+		padding-bottom: 1.5rem;
+	}
+
+	.workflow__step:last-child {
+		padding-bottom: 0;
+	}
+
+	.workflow__step-header {
+		display: flex;
+		flex-direction: column;
 		align-items: center;
+		gap: 0;
 	}
 
-	.cta-block__link {
-		color: var(--primary);
-		font-weight: 500;
-	}
-
-	.cta-block__link:hover {
-		color: var(--primary-hover);
-	}
-
-	.cta-block__meta {
+	.workflow__number {
+		flex-shrink: 0;
+		width: 2.25rem;
+		height: 2.25rem;
+		border-radius: 50%;
+		background: var(--primary);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-family: var(--font-heading);
 		font-size: 0.85rem;
+		font-weight: 600;
+		color: var(--primary-foreground);
+	}
+
+	.workflow__line {
+		width: 2px;
+		flex: 1;
+		min-height: 2rem;
+		background: var(--border-subtle);
+		margin-top: 0.5rem;
+	}
+
+	.workflow__text {
+		font-size: 1rem;
+		line-height: 1.6;
+		color: var(--text-secondary);
+		margin: 0;
+		padding-top: 0.35rem;
+	}
+
+	/* Testimonial */
+	.testimonial {
+		padding: 4rem 0;
+		background: var(--subtle);
+		width: 100vw;
+		margin-left: 50%;
+		transform: translateX(-50%);
+		border-top: 1px solid var(--border-subtle);
+		border-bottom: 1px solid var(--border-subtle);
+	}
+
+	.testimonial blockquote {
+		max-width: 640px;
+		margin: 0 auto;
+		padding: 0 1.5rem;
+		text-align: center;
+	}
+
+	.testimonial p {
+		font-size: 1.25rem;
+		line-height: 1.6;
+		color: var(--text-primary);
+		font-style: italic;
+		margin: 0 0 1.5rem;
+	}
+
+	.testimonial footer {
+		display: flex;
+		flex-direction: column;
+		gap: 0.25rem;
+	}
+
+	.testimonial__author {
+		font-weight: 600;
+		color: var(--text-primary);
+	}
+
+	.testimonial__role {
+		font-size: 0.9rem;
 		color: var(--text-muted);
 	}
 
-	@media (max-width: 640px) {
-		.hero__card {
-			padding: 1.5rem;
-		}
+	/* Deep Dive */
+	.deep-dive {
+		padding: 5rem 0;
+	}
+
+	.deep-dive__content {
+		max-width: 680px;
+		margin: 0 auto;
+		padding: 2rem;
+		background: var(--surface);
+		border: 1px solid var(--border-subtle);
+		border-radius: var(--radius);
+		font-size: 1rem;
+		line-height: 1.75;
+		color: var(--text-secondary);
+	}
+
+	.deep-dive__content :global(h2),
+	.deep-dive__content :global(h3) {
+		color: var(--text-primary);
+		margin-top: 1.5rem;
+		margin-bottom: 0.75rem;
+	}
+
+	.deep-dive__content :global(p) {
+		margin-bottom: 1rem;
+	}
+
+	/* Final CTA */
+	.final-cta {
+		padding: 5rem 0 6rem;
+		text-align: center;
+		background: linear-gradient(
+			180deg,
+			var(--background) 0%,
+			var(--primary-soft-bg) 100%
+		);
+		width: 100vw;
+		margin-left: 50%;
+		transform: translateX(-50%);
+		border-top: 1px solid var(--border-subtle);
+	}
+
+	.final-cta h2 {
+		font-size: clamp(1.5rem, 3vw, 2rem);
+		margin-bottom: 0.75rem;
+	}
+
+	.final-cta p {
+		color: var(--text-secondary);
+		font-size: 1.05rem;
+		margin-bottom: 1.5rem;
+	}
+
+	.final-cta__actions {
+		display: flex;
+		justify-content: center;
+		margin-bottom: 1rem;
+	}
+
+	.final-cta__meta {
+		font-size: 0.85rem;
+		color: var(--text-muted);
 	}
 </style>
-

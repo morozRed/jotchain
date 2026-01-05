@@ -6,8 +6,9 @@ Rails.application.routes.draw do
   end
 
   scope constraints: { subdomain: /app/ } do
-    get  "sign_in", to: "sessions#new", as: :sign_in
-    post "sign_in", to: "sessions#create"
+    get    "sign_in",  to: "sessions#new", as: :sign_in
+    post   "sign_in",  to: "sessions#create"
+    delete "sign_out", to: "sessions#sign_out", as: :sign_out
     get  "sign_up", to: "users#new", as: :sign_up
     post "sign_up", to: "users#create"
 
@@ -25,18 +26,7 @@ Rails.application.routes.draw do
     end
 
     get :dashboard, to: "dashboard#index"
-
-    resources :notifications, only: [:index, :create, :update, :destroy] do
-      collection do
-        get :history
-      end
-    end
-
-    resources :insights, only: [:index, :create, :show, :update, :destroy] do
-      collection do
-        get :history
-      end
-    end
+    get :log, to: "log#index"
 
     get "billing", to: "subscriptions#index", as: :billing
     post "billing/checkout", to: "subscriptions#create_checkout_session", as: :billing_checkout
@@ -55,13 +45,12 @@ Rails.application.routes.draw do
       resource :password, only: [:show, :update]
       resource :email, only: [:show, :update]
       resources :sessions, only: [:index]
+      resources :entities, only: [:index]
       inertia :appearance
     end
 
     resources :entries, only: [:create, :update, :destroy]
     resources :feedback, only: [:create]
-
-    get :analytics, to: "analytics#index"
 
     namespace :api do
       resources :projects, only: [:index, :show, :create, :update, :destroy] do
@@ -69,10 +58,9 @@ Rails.application.routes.draw do
       end
       resources :persons, only: [:index, :show, :create, :update, :destroy]
       resources :mentions, only: [:index]
-      resource :analytics, only: [:show]
-      resources :insights, only: [] do
-        collection do
-          get :preview
+      resources :signals, only: [:index, :show, :update] do
+        member do
+          post :add_entry
         end
       end
     end
