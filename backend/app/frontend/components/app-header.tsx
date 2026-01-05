@@ -164,7 +164,7 @@ export function AppHeader({ onCommandOpen }: AppHeaderProps) {
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-              <Link href="/sessions" method="delete" as="button" className="w-full">
+              <Link href="/sign_out" method="delete" as="button" className="w-full">
                 <LogOut className="mr-2 size-4" />
                 Sign out
               </Link>

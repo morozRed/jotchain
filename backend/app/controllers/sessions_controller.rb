@@ -19,6 +19,12 @@ class SessionsController < InertiaController
     end
   end
 
+  def sign_out
+    Current.session.destroy!
+    Current.session = nil
+    redirect_to sign_in_path, notice: "Signed out successfully", inertia: {clear_history: true}
+  end
+
   def destroy
     @session.destroy!
     Current.session = nil

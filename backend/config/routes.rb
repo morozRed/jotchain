@@ -6,8 +6,9 @@ Rails.application.routes.draw do
   end
 
   scope constraints: { subdomain: /app/ } do
-    get  "sign_in", to: "sessions#new", as: :sign_in
-    post "sign_in", to: "sessions#create"
+    get    "sign_in",  to: "sessions#new", as: :sign_in
+    post   "sign_in",  to: "sessions#create"
+    delete "sign_out", to: "sessions#sign_out", as: :sign_out
     get  "sign_up", to: "users#new", as: :sign_up
     post "sign_up", to: "users#create"
 
