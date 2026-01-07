@@ -177,7 +177,8 @@ module Signals
       updated = 0
 
       signals_data.each do |signal_data|
-        signal = find_or_initialize_signal(signal_data)
+        entry_ids = Array(signal_data[:entry_indices]).uniq.filter_map { |idx| entries[idx]&.id }
+        signal = find_or_initialize_signal(signal_data, entry_ids)
         is_new = signal.new_record?
 
         signal.assign_attributes(
@@ -201,16 +202,45 @@ module Signals
       {created: created, updated: updated}
     end
 
-    def find_or_initialize_signal(signal_data)
-      user.work_signals.find_or_initialize_by(
-        signal_type: signal_data[:signal_type],
-        entity_name: signal_data[:entity_name]
-      ) do |signal|
-        signal.first_detected_at = Time.current
-        signal.last_detected_at = Time.current
-        signal.source = "ai"
-        signal.status = "active"
+    def find_or_initialize_signal(signal_data, entry_ids)
+      existing = find_similar_signal(
+        signal_data[:signal_type],
+        signal_data[:entity_name],
+        entry_ids
+      )
+
+      if existing
+        existing # Keep original entity_name
+      else
+        user.work_signals.new(
+          signal_type: signal_data[:signal_type],
+          entity_name: signal_data[:entity_name],
+          first_detected_at: Time.current,
+          last_detected_at: Time.current,
+          source: "ai",
+          status: "active"
+        )
       end
+    end
+
+    def find_similar_signal(signal_type, entity_name, entry_ids)
+      return nil if entry_ids.empty?
+
+      # First, try exact match on entity_name
+      exact = user.work_signals.active.find_by(signal_type: signal_type, entity_name: entity_name)
+      return exact if exact
+
+      # Find active signals of same type that share ≥2/3 of entries
+      min_overlap = [(entry_ids.size * 2 / 3.0).ceil, 2].max
+
+      user.work_signals
+        .where(signal_type: signal_type, status: "active")
+        .joins(:signal_entries)
+        .where(signal_entries: {entry_id: entry_ids})
+        .group("signals.id")
+        .having("COUNT(DISTINCT signal_entries.entry_id) >= ?", min_overlap)
+        .order(last_detected_at: :desc)
+        .first
     end
 
     def sync_signal_entries(signal, entry_indices, entries)

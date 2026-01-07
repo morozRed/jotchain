@@ -237,6 +237,16 @@ function SignalCategory({
   const hasSignals = categorySignals.length > 0
   const isNegative = categorySignals.some((s) => s.sentiment === "negative")
 
+  // Collect all entries from all signals, keeping entity info for highlighting
+  const allEntries = categorySignals.flatMap((signal) =>
+    signal.entries.map((entry) => ({ ...entry, entities: signal.entities }))
+  )
+
+  // Deduplicate by entry id, keeping first occurrence (highest relevance)
+  const uniqueEntries = allEntries.filter(
+    (entry, index, self) => index === self.findIndex((e) => e.id === entry.id)
+  )
+
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
       <CollapsibleTrigger asChild>
@@ -286,21 +296,14 @@ function SignalCategory({
       </CollapsibleTrigger>
       <CollapsibleContent className="overflow-hidden data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down">
         <div className="mb-4 ml-6 space-y-3 border-l-2 border-border pl-5">
-          {categorySignals.map((signal) => (
-            <div key={signal.id} className="space-y-2">
-              {signal.entries.slice(0, 3).map((entry) => (
-                <div
-                  key={entry.id}
-                  className="flex items-start gap-3 text-[13px]"
-                >
-                  <span className="shrink-0 pt-0.5 tabular-nums text-muted-foreground">
-                    {formatRelativeTime(entry.loggedAt)}
-                  </span>
-                  <span className="text-foreground/80 leading-relaxed">
-                    {renderTextWithEntities(entry.excerpt, signal.entities)}
-                  </span>
-                </div>
-              ))}
+          {uniqueEntries.slice(0, 6).map((entry) => (
+            <div key={entry.id} className="flex items-start gap-3 text-[13px]">
+              <span className="shrink-0 pt-0.5 tabular-nums text-muted-foreground">
+                {formatRelativeTime(entry.loggedAt)}
+              </span>
+              <span className="text-foreground/80 leading-relaxed">
+                {renderTextWithEntities(entry.excerpt, entry.entities)}
+              </span>
             </div>
           ))}
         </div>
