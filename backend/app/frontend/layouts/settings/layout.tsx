@@ -17,6 +17,7 @@ const sidebarNavItems = [
   { title: "Password", href: settingsPasswordPath() },
   { title: "Sessions", href: settingsSessionsPath() },
   { title: "Projects & People", href: settingsEntitiesPath() },
+  { title: "Integrations", href: "/settings/integrations" },
   { title: "Appearance", href: settingsAppearancePath() },
 ]
 
