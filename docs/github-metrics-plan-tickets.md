@@ -9,7 +9,7 @@
 [READY_TO_WORK] GH-009 Build repo selection UI for an installation and persist sync_enabled
 [DONE] GH-010 Build GitHubService::Client with rate limit handling + retry strategy
 [DONE] GH-011 Create GitHubContributor, GitHubCommit, GitHubPullRequest, GitHubReview, GitHubIssue models/migrations
-[READY_TO_WORK] GH-012 Implement initial sync jobs for commits, PRs, issues, reviews (backfill)
+[DONE] GH-012 Implement initial sync jobs for commits, PRs, issues, reviews (backfill)
 [READY_TO_WORK] GH-013 Implement webhook endpoint for push, pull_request, pull_request_review, issues
 [READY_TO_WORK] GH-014 Create GitHubMetricSnapshot model/migration
 [READY_TO_WORK] GH-015 Build MetricsCalculator service to compute per-contributor and team metrics

@@ -64,7 +64,12 @@ class SyncGithubRepositoriesJob < ApplicationJob
       description: repo_data["description"]
     )
 
-    repo.save!
+    if repo.save
+      # Enqueue data sync for new or updated repos that are sync-enabled
+      if repo.sync_enabled?
+        Github::SyncRepositoryDataJob.perform_later(installation.id, repo.id)
+      end
+    end
   rescue ActiveRecord::RecordInvalid => e
     Rails.logger.error("Failed to sync repository #{repo_data['full_name']}: #{e.message}")
   end
