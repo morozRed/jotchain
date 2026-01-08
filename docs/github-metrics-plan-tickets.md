@@ -2,7 +2,7 @@
 [DONE] GH-002 Define workspace roles + permissions (owner/admin/member) and expected access to team metrics
 [DONE] GH-003 Create Workspace + WorkspaceMembership models/migrations
 [DONE] GH-004 Backfill personal workspace + owner membership for existing users
-[READY_TO_WORK] GH-005 Implement current_workspace selection + helper
+[DONE] GH-005 Implement current_workspace selection + helper
 [READY_TO_WORK] GH-006 Register GitHub App and store app credentials + webhook secret
 [READY_TO_WORK] GH-007 Implement GitHub App install flow (redirect -> GitHub -> callback) with workspace association
 [READY_TO_WORK] GH-008 Create GitHubInstallation + GitHubRepository models/migrations

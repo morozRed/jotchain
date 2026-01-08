@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_08_100002) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_08_100003) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -143,6 +143,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_08_100002) do
     t.string "ip_address"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.uuid "current_workspace_id"
+    t.index ["current_workspace_id"], name: "index_sessions_on_current_workspace_id"
     t.index ["user_id"], name: "index_sessions_on_user_id"
   end
 
@@ -250,6 +252,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_08_100002) do
   add_foreign_key "project_persons", "projects"
   add_foreign_key "projects", "users"
   add_foreign_key "sessions", "users"
+  add_foreign_key "sessions", "workspaces", column: "current_workspace_id", on_delete: :nullify
   add_foreign_key "signal_entities", "signals", on_delete: :cascade
   add_foreign_key "signal_entries", "entries", on_delete: :cascade
   add_foreign_key "signal_entries", "signals", on_delete: :cascade

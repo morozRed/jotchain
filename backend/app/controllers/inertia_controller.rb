@@ -21,7 +21,30 @@ class InertiaController < ApplicationController
           }
           user_data
         },
-        session: -> { Current.session&.as_json(only: %i[id]) }
+        session: -> { Current.session&.as_json(only: %i[id]) },
+        workspace: -> {
+          return nil unless Current.workspace
+
+          {
+            id: Current.workspace.id,
+            name: Current.workspace.name,
+            slug: Current.workspace.slug,
+            role: Current.workspace_membership&.role
+          }
+        },
+        workspaces: -> {
+          return [] unless Current.user
+
+          Current.user.workspaces.includes(:workspace_memberships).map do |ws|
+            membership = ws.workspace_memberships.find { |m| m.user_id == Current.user.id }
+            {
+              id: ws.id,
+              name: ws.name,
+              slug: ws.slug,
+              role: membership&.role
+            }
+          end
+        }
       }
 
   private

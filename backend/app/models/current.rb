@@ -5,4 +5,11 @@ class Current < ActiveSupport::CurrentAttributes
   attribute :user_agent, :ip_address
 
   delegate :user, to: :session, allow_nil: true
+  delegate :workspace, to: :session, allow_nil: true
+
+  def workspace_membership
+    return nil unless user && workspace
+
+    workspace.workspace_memberships.find_by(user: user)
+  end
 end

@@ -63,6 +63,11 @@ Rails.application.routes.draw do
           post :add_entry
         end
       end
+      resources :workspaces, only: [:index] do
+        member do
+          post :switch
+        end
+      end
     end
 
     root "dashboard#index"
