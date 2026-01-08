@@ -7,7 +7,7 @@
 [DONE] GH-007 Implement GitHub App install flow (redirect -> GitHub -> callback) with workspace association
 [DONE] GH-008 Create GitHubInstallation + GitHubRepository models/migrations
 [READY_TO_WORK] GH-009 Build repo selection UI for an installation and persist sync_enabled
-[READY_TO_WORK] GH-010 Build GitHubService::Client with rate limit handling + retry strategy
+[DONE] GH-010 Build GitHubService::Client with rate limit handling + retry strategy
 [READY_TO_WORK] GH-011 Create GitHubContributor, GitHubCommit, GitHubPullRequest, GitHubReview, GitHubIssue models/migrations
 [READY_TO_WORK] GH-012 Implement initial sync jobs for commits, PRs, issues, reviews (backfill)
 [READY_TO_WORK] GH-013 Implement webhook endpoint for push, pull_request, pull_request_review, issues
