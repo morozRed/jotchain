@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_08_100011) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_08_144907) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -294,6 +294,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_08_100011) do
     t.string "color"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.uuid "github_repository_id"
+    t.index ["github_repository_id"], name: "index_projects_on_github_repository_id"
     t.index ["user_id", "name"], name: "index_projects_on_user_id_and_name"
     t.index ["user_id"], name: "index_projects_on_user_id"
   end
@@ -425,6 +427,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_08_100011) do
   add_foreign_key "persons", "users"
   add_foreign_key "project_persons", "persons"
   add_foreign_key "project_persons", "projects"
+  add_foreign_key "projects", "github_repositories"
   add_foreign_key "projects", "users"
   add_foreign_key "sessions", "users"
   add_foreign_key "sessions", "workspaces", column: "current_workspace_id", on_delete: :nullify

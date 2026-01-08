@@ -51,7 +51,7 @@ module Api
     end
 
     def project_params
-      params.require(:project).permit(:name, :color)
+      params.require(:project).permit(:name, :color, :github_repository_id)
     end
 
     def project_json(project)
@@ -61,7 +61,13 @@ module Api
         color: project.color,
         personCount: project.persons.count,
         entryCount: project.entries.count,
-        createdAt: project.created_at.iso8601
+        createdAt: project.created_at.iso8601,
+        githubRepository: project.github_repository ? {
+          id: project.github_repository.id,
+          name: project.github_repository.name,
+          fullName: project.github_repository.full_name,
+          githubUrl: project.github_repository.github_url
+        } : nil
       }
     end
   end

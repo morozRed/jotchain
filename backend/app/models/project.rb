@@ -4,6 +4,7 @@ class Project < ApplicationRecord
   MAX_NAME_LENGTH = 100
 
   belongs_to :user
+  belongs_to :github_repository, optional: true
   has_many :project_persons, dependent: :destroy
   has_many :persons, through: :project_persons, source: :person
   has_many :entry_mentions, as: :mentionable, dependent: :destroy
