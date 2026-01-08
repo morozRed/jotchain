@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_08_100010) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_08_100011) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -114,6 +114,24 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_08_100010) do
     t.index ["github_repository_id", "state"], name: "index_github_issues_on_github_repository_id_and_state"
     t.index ["opened_at"], name: "index_github_issues_on_opened_at"
     t.index ["state"], name: "index_github_issues_on_state"
+  end
+
+  create_table "github_metric_snapshots", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "workspace_id", null: false
+    t.uuid "github_contributor_id"
+    t.uuid "github_repository_id"
+    t.string "period_type", null: false
+    t.date "period_start", null: false
+    t.date "period_end", null: false
+    t.jsonb "metrics", default: {}, null: false
+    t.datetime "computed_at", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["computed_at"], name: "index_github_metric_snapshots_on_computed_at"
+    t.index ["github_contributor_id", "period_type"], name: "idx_on_github_contributor_id_period_type_00a69b7439"
+    t.index ["github_repository_id", "period_type"], name: "idx_on_github_repository_id_period_type_4cad76a975"
+    t.index ["workspace_id", "github_contributor_id", "github_repository_id", "period_type", "period_start"], name: "idx_metric_snapshots_unique", unique: true
+    t.index ["workspace_id", "period_type", "period_end"], name: "idx_on_workspace_id_period_type_period_end_6b1dcb31a1"
   end
 
   create_table "github_pull_requests", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -392,6 +410,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_08_100010) do
   add_foreign_key "github_installations", "workspaces", on_delete: :cascade
   add_foreign_key "github_issues", "github_contributors", column: "author_id", on_delete: :nullify
   add_foreign_key "github_issues", "github_repositories", on_delete: :cascade
+  add_foreign_key "github_metric_snapshots", "github_contributors", on_delete: :cascade
+  add_foreign_key "github_metric_snapshots", "github_repositories", on_delete: :cascade
+  add_foreign_key "github_metric_snapshots", "workspaces", on_delete: :cascade
   add_foreign_key "github_pull_requests", "github_contributors", column: "author_id", on_delete: :nullify
   add_foreign_key "github_pull_requests", "github_repositories", on_delete: :cascade
   add_foreign_key "github_repositories", "github_installations", on_delete: :cascade

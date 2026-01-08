@@ -11,7 +11,7 @@
 [DONE] GH-011 Create GitHubContributor, GitHubCommit, GitHubPullRequest, GitHubReview, GitHubIssue models/migrations
 [DONE] GH-012 Implement initial sync jobs for commits, PRs, issues, reviews (backfill)
 [DONE] GH-013 Implement webhook endpoint for push, pull_request, pull_request_review, issues
-[READY_TO_WORK] GH-014 Create GitHubMetricSnapshot model/migration
+[DONE] GH-014 Create GitHubMetricSnapshot model/migration
 [READY_TO_WORK] GH-015 Build MetricsCalculator service to compute per-contributor and team metrics
 [READY_TO_WORK] GH-016 Compute derived signals (stale PRs, review bottlenecks, uneven load, throughput drop)
 [READY_TO_WORK] GH-017 Schedule hourly rolling metric updates and weekly snapshots
