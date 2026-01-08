@@ -22,6 +22,9 @@ class User < ApplicationRecord
   has_many :projects, dependent: :destroy
   has_many :persons, dependent: :destroy
   has_many :work_signals, dependent: :destroy
+  has_many :workspace_memberships, dependent: :destroy
+  has_many :workspaces, through: :workspace_memberships
+  has_many :owned_workspaces, class_name: "Workspace", foreign_key: :owner_id, dependent: :nullify
 
   validates :name, presence: true
   validates :email, presence: true, uniqueness: true, format: {with: URI::MailTo::EMAIL_REGEXP}

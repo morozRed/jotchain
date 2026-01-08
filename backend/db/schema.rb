@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_25_125401) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_08_100001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -217,6 +217,28 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_25_125401) do
     t.index ["stripe_subscription_id"], name: "index_users_on_stripe_subscription_id"
   end
 
+  create_table "workspace_memberships", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "workspace_id", null: false
+    t.uuid "user_id", null: false
+    t.integer "role", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "workspace_id"], name: "index_workspace_memberships_on_user_id_and_workspace_id"
+    t.index ["workspace_id", "role"], name: "index_workspace_memberships_on_workspace_id_and_role"
+    t.index ["workspace_id", "user_id"], name: "index_workspace_memberships_on_workspace_id_and_user_id", unique: true
+  end
+
+  create_table "workspaces", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name", null: false
+    t.string "slug", null: false
+    t.uuid "owner_id", null: false
+    t.jsonb "settings", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["owner_id"], name: "index_workspaces_on_owner_id"
+    t.index ["slug"], name: "index_workspaces_on_slug", unique: true
+  end
+
   add_foreign_key "entries", "users"
   add_foreign_key "entry_mentions", "entries"
   add_foreign_key "insight_requests", "users"
@@ -232,4 +254,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_25_125401) do
   add_foreign_key "signal_entries", "entries", on_delete: :cascade
   add_foreign_key "signal_entries", "signals", on_delete: :cascade
   add_foreign_key "signals", "users"
+  add_foreign_key "workspace_memberships", "users", on_delete: :cascade
+  add_foreign_key "workspace_memberships", "workspaces", on_delete: :cascade
+  add_foreign_key "workspaces", "users", column: "owner_id"
 end

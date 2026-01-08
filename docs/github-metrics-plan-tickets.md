@@ -1,6 +1,6 @@
 [DONE] GH-001 Define metrics + guardrails (throughput, cycle time, review load, stale PR thresholds) and document formulas
 [DONE] GH-002 Define workspace roles + permissions (owner/admin/member) and expected access to team metrics
-[READY_TO_WORK] GH-003 Create Workspace + WorkspaceMembership models/migrations
+[DONE] GH-003 Create Workspace + WorkspaceMembership models/migrations
 [READY_TO_WORK] GH-004 Backfill personal workspace + owner membership for existing users
 [READY_TO_WORK] GH-005 Implement current_workspace selection + helper
 [READY_TO_WORK] GH-006 Register GitHub App and store app credentials + webhook secret
