@@ -509,6 +509,7 @@ DEPENDENCIES
   inertia_rails (~> 3.6)
   jbuilder
   js-routes
+  jwt
   kamal
   letter_opener
   mission_control-jobs

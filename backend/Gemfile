@@ -64,6 +64,9 @@ gem "nokogiri", "~> 1.18"
 gem "user_agent_parser"
 gem "httparty"
 
+# JWT for GitHub App authentication
+gem "jwt"
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
