@@ -5,6 +5,27 @@ development:
   signals_scan:
     class: Signals::ScanAllJob
     schedule: every day at 6:00am
+  github_metrics_7d:
+    class: Github::ComputeMetricsJob
+    args:
+      - null
+      - period_type: rolling_7d
+    schedule: every hour
+  github_metrics_14d:
+    class: Github::ComputeMetricsJob
+    args:
+      - null
+      - period_type: rolling_14d
+    schedule: every 6 hours
+  github_metrics_30d:
+    class: Github::ComputeMetricsJob
+    args:
+      - null
+      - period_type: rolling_30d
+    schedule: every 12 hours
+  github_weekly_snapshot:
+    class: Github::WeeklySnapshotJob
+    schedule: every Monday at 1:00am
 
 production:
   trial_emails:
@@ -13,3 +34,24 @@ production:
   signals_scan:
     class: Signals::ScanAllJob
     schedule: every day at 6:00am
+  github_metrics_7d:
+    class: Github::ComputeMetricsJob
+    args:
+      - null
+      - period_type: rolling_7d
+    schedule: every hour
+  github_metrics_14d:
+    class: Github::ComputeMetricsJob
+    args:
+      - null
+      - period_type: rolling_14d
+    schedule: every 6 hours
+  github_metrics_30d:
+    class: Github::ComputeMetricsJob
+    args:
+      - null
+      - period_type: rolling_30d
+    schedule: every 12 hours
+  github_weekly_snapshot:
+    class: Github::WeeklySnapshotJob
+    schedule: every Monday at 1:00am
