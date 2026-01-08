@@ -15,13 +15,13 @@
 [DONE] GH-015 Build MetricsCalculator service to compute per-contributor and team metrics
 [DONE] GH-016 Compute derived signals (stale PRs, review bottlenecks, uneven load, throughput drop)
 [DONE] GH-017 Schedule hourly rolling metric updates and weekly snapshots
-[READY_TO_WORK] GH-018 Implement team overview dashboard (who's working on what, signals)
-[READY_TO_WORK] GH-019 Implement contributor profile view (active work, trends, review load)
-[READY_TO_WORK] GH-020 Implement repo + project filtered views
-[READY_TO_WORK] GH-021 Build Settings -> Integrations page (install/manage GitHub App)
-[READY_TO_WORK] GH-022 Add project -> GitHub repo linking UI
-[READY_TO_WORK] GH-023 Add contributor -> Person linking (private per user)
-[READY_TO_WORK] GH-024 Add commit/PR detection in notes and contextual linking
-[READY_TO_WORK] GH-025 Add weekly team summary email + optional alerts for stale work
-[READY_TO_WORK] GH-026 Add instrumentation for dashboard/profile usage + cycle time trend tracking
-[READY_TO_WORK] GH-027 QA pass on permissions, privacy boundaries, and data visibility
+[DONE] GH-018 Implement team overview dashboard (who's working on what, signals)
+[DONE] GH-019 Implement contributor profile view (active work, trends, review load)
+[DONE] GH-020 Implement repo + project filtered views
+[DONE] GH-021 Build Settings -> Integrations page (install/manage GitHub App)
+[DONE] GH-022 Add project -> GitHub repo linking UI
+[DONE] GH-023 Add contributor -> Person linking (private per user)
+[DONE] GH-024 Add commit/PR detection in notes and contextual linking
+[DONE] GH-025 Add weekly team summary email + optional alerts for stale work
+[DONE] GH-026 Add instrumentation for dashboard/profile usage + cycle time trend tracking
+[DONE] GH-027 QA pass on permissions, privacy boundaries, and data visibility
