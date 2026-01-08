@@ -6,6 +6,7 @@ class Workspace < ApplicationRecord
   has_many :members, through: :workspace_memberships, source: :user
   has_many :github_installations, dependent: :destroy
   has_many :github_repositories, through: :github_installations
+  has_many :github_contributors, dependent: :destroy
 
   validates :name, presence: true
   validates :slug, presence: true, uniqueness: true, format: { with: /\A[a-z0-9-]+\z/, message: "only allows lowercase letters, numbers, and hyphens" }

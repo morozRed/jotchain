@@ -2,6 +2,9 @@
 
 class GitHubRepository < ApplicationRecord
   belongs_to :github_installation
+  has_many :github_commits, dependent: :destroy
+  has_many :github_pull_requests, dependent: :destroy
+  has_many :github_issues, dependent: :destroy
 
   validates :github_id, presence: true, uniqueness: true
   validates :name, presence: true

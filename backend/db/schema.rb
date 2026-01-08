@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_08_100005) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_08_100010) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -40,6 +40,40 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_08_100005) do
     t.index ["mentionable_type", "mentionable_id"], name: "index_entry_mentions_on_mentionable"
   end
 
+  create_table "github_commits", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "github_repository_id", null: false
+    t.uuid "author_id"
+    t.string "sha", null: false
+    t.text "message"
+    t.datetime "committed_at", null: false
+    t.integer "additions", default: 0
+    t.integer "deletions", default: 0
+    t.integer "files_changed", default: 0
+    t.string "author_email"
+    t.string "author_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["author_id"], name: "index_github_commits_on_author_id"
+    t.index ["committed_at"], name: "index_github_commits_on_committed_at"
+    t.index ["github_repository_id", "committed_at"], name: "index_github_commits_on_github_repository_id_and_committed_at"
+    t.index ["github_repository_id", "sha"], name: "index_github_commits_on_github_repository_id_and_sha", unique: true
+    t.index ["sha"], name: "index_github_commits_on_sha"
+  end
+
+  create_table "github_contributors", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "workspace_id", null: false
+    t.bigint "github_id", null: false
+    t.string "login", null: false
+    t.string "name"
+    t.string "avatar_url"
+    t.string "email"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["github_id"], name: "index_github_contributors_on_github_id"
+    t.index ["workspace_id", "github_id"], name: "index_github_contributors_on_workspace_id_and_github_id", unique: true
+    t.index ["workspace_id", "login"], name: "index_github_contributors_on_workspace_id_and_login"
+  end
+
   create_table "github_installations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "workspace_id", null: false
     t.bigint "installation_id", null: false
@@ -60,6 +94,60 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_08_100005) do
     t.index ["workspace_id"], name: "index_github_installations_on_workspace_id"
   end
 
+  create_table "github_issues", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "github_repository_id", null: false
+    t.uuid "author_id"
+    t.bigint "github_id", null: false
+    t.integer "number", null: false
+    t.string "title", null: false
+    t.text "body"
+    t.string "state", null: false
+    t.string "state_reason"
+    t.datetime "opened_at", null: false
+    t.datetime "closed_at"
+    t.jsonb "labels", default: []
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["author_id"], name: "index_github_issues_on_author_id"
+    t.index ["github_repository_id", "github_id"], name: "index_github_issues_on_github_repository_id_and_github_id", unique: true
+    t.index ["github_repository_id", "number"], name: "index_github_issues_on_github_repository_id_and_number", unique: true
+    t.index ["github_repository_id", "state"], name: "index_github_issues_on_github_repository_id_and_state"
+    t.index ["opened_at"], name: "index_github_issues_on_opened_at"
+    t.index ["state"], name: "index_github_issues_on_state"
+  end
+
+  create_table "github_pull_requests", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "github_repository_id", null: false
+    t.uuid "author_id"
+    t.bigint "github_id", null: false
+    t.integer "number", null: false
+    t.string "title", null: false
+    t.text "body"
+    t.string "state", null: false
+    t.boolean "draft", default: false
+    t.integer "additions", default: 0
+    t.integer "deletions", default: 0
+    t.integer "changed_files", default: 0
+    t.integer "commits_count", default: 0
+    t.datetime "opened_at", null: false
+    t.datetime "closed_at"
+    t.datetime "merged_at"
+    t.datetime "first_review_at"
+    t.string "merged_by_login"
+    t.string "head_ref"
+    t.string "base_ref"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["author_id"], name: "index_github_pull_requests_on_author_id"
+    t.index ["github_repository_id", "github_id"], name: "idx_on_github_repository_id_github_id_2f4ace0320", unique: true
+    t.index ["github_repository_id", "number"], name: "index_github_pull_requests_on_github_repository_id_and_number", unique: true
+    t.index ["github_repository_id", "opened_at"], name: "idx_on_github_repository_id_opened_at_08b9d96cdb"
+    t.index ["github_repository_id", "state"], name: "index_github_pull_requests_on_github_repository_id_and_state"
+    t.index ["merged_at"], name: "index_github_pull_requests_on_merged_at"
+    t.index ["opened_at"], name: "index_github_pull_requests_on_opened_at"
+    t.index ["state"], name: "index_github_pull_requests_on_state"
+  end
+
   create_table "github_repositories", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "github_installation_id", null: false
     t.bigint "github_id", null: false
@@ -78,6 +166,21 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_08_100005) do
     t.index ["github_id"], name: "index_github_repositories_on_github_id", unique: true
     t.index ["github_installation_id", "sync_enabled"], name: "idx_on_github_installation_id_sync_enabled_958785057a"
     t.index ["github_installation_id"], name: "index_github_repositories_on_github_installation_id"
+  end
+
+  create_table "github_reviews", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "github_pull_request_id", null: false
+    t.uuid "reviewer_id"
+    t.bigint "github_id", null: false
+    t.string "state", null: false
+    t.text "body"
+    t.datetime "submitted_at", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["github_pull_request_id", "github_id"], name: "index_github_reviews_on_github_pull_request_id_and_github_id", unique: true
+    t.index ["github_pull_request_id", "reviewer_id"], name: "index_github_reviews_on_github_pull_request_id_and_reviewer_id"
+    t.index ["reviewer_id"], name: "index_github_reviews_on_reviewer_id"
+    t.index ["submitted_at"], name: "index_github_reviews_on_submitted_at"
   end
 
   create_table "insight_requests", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -283,8 +386,17 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_08_100005) do
 
   add_foreign_key "entries", "users"
   add_foreign_key "entry_mentions", "entries"
+  add_foreign_key "github_commits", "github_contributors", column: "author_id", on_delete: :nullify
+  add_foreign_key "github_commits", "github_repositories", on_delete: :cascade
+  add_foreign_key "github_contributors", "workspaces", on_delete: :cascade
   add_foreign_key "github_installations", "workspaces", on_delete: :cascade
+  add_foreign_key "github_issues", "github_contributors", column: "author_id", on_delete: :nullify
+  add_foreign_key "github_issues", "github_repositories", on_delete: :cascade
+  add_foreign_key "github_pull_requests", "github_contributors", column: "author_id", on_delete: :nullify
+  add_foreign_key "github_pull_requests", "github_repositories", on_delete: :cascade
   add_foreign_key "github_repositories", "github_installations", on_delete: :cascade
+  add_foreign_key "github_reviews", "github_contributors", column: "reviewer_id", on_delete: :nullify
+  add_foreign_key "github_reviews", "github_pull_requests", on_delete: :cascade
   add_foreign_key "insight_requests", "users"
   add_foreign_key "notification_deliveries", "notification_schedules"
   add_foreign_key "notification_deliveries", "users"
