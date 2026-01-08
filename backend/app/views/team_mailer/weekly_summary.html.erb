@@ -1,0 +1,52 @@
+<h1>Weekly Team Summary</h1>
+
+<p>Hi <%= @user.name %>,</p>
+
+<p>Here's your weekly summary for <strong><%= @workspace.name %></strong>:</p>
+
+<h2>Highlights</h2>
+
+<table style="border-collapse: collapse; width: 100%; max-width: 500px;">
+  <tr>
+    <td style="padding: 8px; border-bottom: 1px solid #e5e7eb;">PRs Merged</td>
+    <td style="padding: 8px; border-bottom: 1px solid #e5e7eb; text-align: right; font-weight: bold;"><%= @summary[:throughput] %></td>
+  </tr>
+  <tr>
+    <td style="padding: 8px; border-bottom: 1px solid #e5e7eb;">Active Contributors</td>
+    <td style="padding: 8px; border-bottom: 1px solid #e5e7eb; text-align: right; font-weight: bold;"><%= @summary[:active_contributors] %></td>
+  </tr>
+  <tr>
+    <td style="padding: 8px; border-bottom: 1px solid #e5e7eb;">Open PRs</td>
+    <td style="padding: 8px; border-bottom: 1px solid #e5e7eb; text-align: right; font-weight: bold;"><%= @summary[:open_prs] %></td>
+  </tr>
+  <% if @summary[:cycle_time_median_hours] %>
+  <tr>
+    <td style="padding: 8px; border-bottom: 1px solid #e5e7eb;">Median Cycle Time</td>
+    <td style="padding: 8px; border-bottom: 1px solid #e5e7eb; text-align: right; font-weight: bold;">
+      <%= @summary[:cycle_time_median_hours] < 24 ? "#{@summary[:cycle_time_median_hours].round}h" : "#{(@summary[:cycle_time_median_hours] / 24).round(1)}d" %>
+    </td>
+  </tr>
+  <% end %>
+</table>
+
+<% if @summary[:stale_prs] > 0 %>
+<h2 style="color: #d97706;">Attention Needed</h2>
+<p><strong><%= @summary[:stale_prs] %> stale PR<%= @summary[:stale_prs] > 1 ? 's' : '' %></strong> need attention.</p>
+<% end %>
+
+<% if @summary[:top_contributors].any? %>
+<h2>Top Contributors</h2>
+<ol>
+  <% @summary[:top_contributors].each do |contributor| %>
+    <li><strong><%= contributor[:name] %></strong> - <%= contributor[:throughput] %> PRs merged</li>
+  <% end %>
+</ol>
+<% end %>
+
+<p style="margin-top: 24px;">
+  <a href="<%= ENV.fetch('APP_URL', 'https://app.jotchain.com') %>/team" style="background: #3b82f6; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px;">View Team Dashboard</a>
+</p>
+
+<p style="color: #6b7280; font-size: 12px; margin-top: 32px;">
+  This summary covers the past 7 days. You're receiving this because you're a member of <%= @workspace.name %>.
+</p>

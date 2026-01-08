@@ -1,0 +1,42 @@
+<h1>Stale Pull Requests Alert</h1>
+
+<p>Hi <%= @user.name %>,</p>
+
+<p><strong><%= @stale_prs.count %> pull request<%= @stale_prs.count > 1 ? 's' : '' %></strong> in <strong><%= @workspace.name %></strong> need attention:</p>
+
+<table style="border-collapse: collapse; width: 100%;">
+  <thead>
+    <tr style="background: #f3f4f6;">
+      <th style="padding: 12px; text-align: left; border-bottom: 2px solid #e5e7eb;">PR</th>
+      <th style="padding: 12px; text-align: left; border-bottom: 2px solid #e5e7eb;">Author</th>
+      <th style="padding: 12px; text-align: right; border-bottom: 2px solid #e5e7eb;">Age</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @stale_prs.each do |pr| %>
+    <tr>
+      <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">
+        <a href="<%= pr.github_url %>" style="color: #3b82f6; text-decoration: none;">
+          <%= pr.github_repository.repo_name %>#<%= pr.number %>
+        </a>
+        <br>
+        <span style="color: #6b7280; font-size: 13px;"><%= truncate(pr.title, length: 60) %></span>
+      </td>
+      <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">
+        <%= pr.author&.login || "Unknown" %>
+      </td>
+      <td style="padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: right; color: #d97706;">
+        <%= pr.age_hours < 24 ? "#{pr.age_hours.round}h" : "#{(pr.age_hours / 24).round}d" %>
+      </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<p style="margin-top: 24px;">
+  <a href="<%= ENV.fetch('APP_URL', 'https://app.jotchain.com') %>/team" style="background: #3b82f6; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px;">View Team Dashboard</a>
+</p>
+
+<p style="color: #6b7280; font-size: 12px; margin-top: 32px;">
+  A PR is considered stale after 5 days without activity.
+</p>

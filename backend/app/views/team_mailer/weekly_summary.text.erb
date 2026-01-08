@@ -1,0 +1,33 @@
+Weekly Team Summary
+
+Hi <%= @user.name %>,
+
+Here's your weekly summary for <%= @workspace.name %>:
+
+HIGHLIGHTS
+----------
+PRs Merged: <%= @summary[:throughput] %>
+Active Contributors: <%= @summary[:active_contributors] %>
+Open PRs: <%= @summary[:open_prs] %>
+<% if @summary[:cycle_time_median_hours] -%>
+Median Cycle Time: <%= @summary[:cycle_time_median_hours] < 24 ? "#{@summary[:cycle_time_median_hours].round}h" : "#{(@summary[:cycle_time_median_hours] / 24).round(1)}d" %>
+<% end -%>
+
+<% if @summary[:stale_prs] > 0 -%>
+ATTENTION NEEDED
+----------------
+<%= @summary[:stale_prs] %> stale PR<%= @summary[:stale_prs] > 1 ? 's' : '' %> need attention.
+
+<% end -%>
+<% if @summary[:top_contributors].any? -%>
+TOP CONTRIBUTORS
+----------------
+<% @summary[:top_contributors].each_with_index do |contributor, i| -%>
+<%= i + 1 %>. <%= contributor[:name] %> - <%= contributor[:throughput] %> PRs merged
+<% end -%>
+<% end -%>
+
+View Team Dashboard: <%= ENV.fetch('APP_URL', 'https://app.jotchain.com') %>/team
+
+---
+This summary covers the past 7 days. You're receiving this because you're a member of <%= @workspace.name %>.
