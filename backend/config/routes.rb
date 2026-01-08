@@ -17,6 +17,11 @@ Rails.application.routes.draw do
     get "auth/:provider/callback", to: "oauth_callbacks#create"
     get "auth/failure", to: "oauth_callbacks#failure"
 
+    # GitHub App routes
+    get "github/install", to: "github_app#install", as: :github_install
+    get "github/callback", to: "github_app#callback", as: :github_callback
+    delete "github/installations/:id", to: "github_app#destroy", as: :github_installation
+
     resources :sessions, only: [:destroy]
     resource :users, only: [:destroy]
 
@@ -46,6 +51,7 @@ Rails.application.routes.draw do
       resource :email, only: [:show, :update]
       resources :sessions, only: [:index]
       resources :entities, only: [:index]
+      resource :integrations, only: [:show]
       inertia :appearance
     end
 
