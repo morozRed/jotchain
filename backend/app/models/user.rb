@@ -41,6 +41,8 @@ class User < ApplicationRecord
     sessions.where.not(id: Current.session).delete_all
   end
 
+  after_create :create_personal_workspace
+
   def current_streak
     return 0 if entries.empty?
 
@@ -138,4 +140,27 @@ class User < ApplicationRecord
   end
 
   private
+
+  def create_personal_workspace
+    base_slug = email.split("@").first.parameterize
+    slug = base_slug
+    counter = 1
+
+    while Workspace.exists?(slug: slug)
+      slug = "#{base_slug}-#{counter}"
+      counter += 1
+    end
+
+    workspace = Workspace.create!(
+      name: "#{name}'s Workspace",
+      slug: slug,
+      owner: self
+    )
+
+    WorkspaceMembership.create!(
+      workspace: workspace,
+      user: self,
+      role: :owner
+    )
+  end
 end
