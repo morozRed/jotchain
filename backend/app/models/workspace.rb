@@ -4,6 +4,8 @@ class Workspace < ApplicationRecord
   belongs_to :owner, class_name: "User"
   has_many :workspace_memberships, dependent: :destroy
   has_many :members, through: :workspace_memberships, source: :user
+  has_many :github_installations, dependent: :destroy
+  has_many :github_repositories, through: :github_installations
 
   validates :name, presence: true
   validates :slug, presence: true, uniqueness: true, format: { with: /\A[a-z0-9-]+\z/, message: "only allows lowercase letters, numbers, and hyphens" }

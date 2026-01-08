@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_08_100003) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_08_100005) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -38,6 +38,46 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_08_100003) do
     t.index ["entry_id", "mentionable_type", "mentionable_id"], name: "index_entry_mentions_uniqueness", unique: true
     t.index ["entry_id"], name: "index_entry_mentions_on_entry_id"
     t.index ["mentionable_type", "mentionable_id"], name: "index_entry_mentions_on_mentionable"
+  end
+
+  create_table "github_installations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "workspace_id", null: false
+    t.bigint "installation_id", null: false
+    t.string "account_login", null: false
+    t.string "account_type", null: false
+    t.bigint "account_id", null: false
+    t.string "target_type"
+    t.jsonb "permissions", default: {}
+    t.jsonb "events", default: []
+    t.string "repository_selection"
+    t.datetime "suspended_at"
+    t.string "access_token"
+    t.datetime "access_token_expires_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["installation_id"], name: "index_github_installations_on_installation_id", unique: true
+    t.index ["workspace_id", "account_login"], name: "index_github_installations_on_workspace_id_and_account_login"
+    t.index ["workspace_id"], name: "index_github_installations_on_workspace_id"
+  end
+
+  create_table "github_repositories", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "github_installation_id", null: false
+    t.bigint "github_id", null: false
+    t.string "name", null: false
+    t.string "full_name", null: false
+    t.boolean "private", default: false
+    t.string "default_branch", default: "main"
+    t.string "language"
+    t.text "description"
+    t.boolean "sync_enabled", default: true
+    t.datetime "last_synced_at"
+    t.jsonb "sync_metadata", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["full_name"], name: "index_github_repositories_on_full_name"
+    t.index ["github_id"], name: "index_github_repositories_on_github_id", unique: true
+    t.index ["github_installation_id", "sync_enabled"], name: "idx_on_github_installation_id_sync_enabled_958785057a"
+    t.index ["github_installation_id"], name: "index_github_repositories_on_github_installation_id"
   end
 
   create_table "insight_requests", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -243,6 +283,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_08_100003) do
 
   add_foreign_key "entries", "users"
   add_foreign_key "entry_mentions", "entries"
+  add_foreign_key "github_installations", "workspaces", on_delete: :cascade
+  add_foreign_key "github_repositories", "github_installations", on_delete: :cascade
   add_foreign_key "insight_requests", "users"
   add_foreign_key "notification_deliveries", "notification_schedules"
   add_foreign_key "notification_deliveries", "users"

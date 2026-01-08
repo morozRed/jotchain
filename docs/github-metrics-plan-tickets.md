@@ -5,7 +5,7 @@
 [DONE] GH-005 Implement current_workspace selection + helper
 [DONE] GH-006 Register GitHub App and store app credentials + webhook secret
 [READY_TO_WORK] GH-007 Implement GitHub App install flow (redirect -> GitHub -> callback) with workspace association
-[READY_TO_WORK] GH-008 Create GitHubInstallation + GitHubRepository models/migrations
+[DONE] GH-008 Create GitHubInstallation + GitHubRepository models/migrations
 [READY_TO_WORK] GH-009 Build repo selection UI for an installation and persist sync_enabled
 [READY_TO_WORK] GH-010 Build GitHubService::Client with rate limit handling + retry strategy
 [READY_TO_WORK] GH-011 Create GitHubContributor, GitHubCommit, GitHubPullRequest, GitHubReview, GitHubIssue models/migrations
