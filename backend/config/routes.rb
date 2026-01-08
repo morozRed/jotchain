@@ -33,6 +33,10 @@ Rails.application.routes.draw do
     get :dashboard, to: "dashboard#index"
     get :log, to: "log#index"
 
+    # Team metrics pages
+    get :team, to: "team#index"
+    get "team/contributors/:id", to: "team#contributor", as: :team_contributor
+
     get "billing", to: "subscriptions#index", as: :billing
     post "billing/checkout", to: "subscriptions#create_checkout_session", as: :billing_checkout
     get "billing/success", to: "subscriptions#success", as: :billing_success
