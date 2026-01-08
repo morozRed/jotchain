@@ -10,9 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_08_144907) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_08_145053) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "contributor_person_links", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.uuid "github_contributor_id", null: false
+    t.uuid "person_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["github_contributor_id"], name: "index_contributor_person_links_on_github_contributor_id"
+    t.index ["person_id"], name: "index_contributor_person_links_on_person_id"
+    t.index ["user_id", "github_contributor_id"], name: "idx_contributor_person_links_user_contributor", unique: true
+    t.index ["user_id"], name: "index_contributor_person_links_on_user_id"
+  end
 
   create_table "entries", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id", null: false
@@ -404,6 +416,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_08_144907) do
     t.index ["slug"], name: "index_workspaces_on_slug", unique: true
   end
 
+  add_foreign_key "contributor_person_links", "github_contributors"
+  add_foreign_key "contributor_person_links", "persons"
+  add_foreign_key "contributor_person_links", "users"
   add_foreign_key "entries", "users"
   add_foreign_key "entry_mentions", "entries"
   add_foreign_key "github_commits", "github_contributors", column: "author_id", on_delete: :nullify

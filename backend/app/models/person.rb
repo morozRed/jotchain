@@ -10,6 +10,8 @@ class Person < ApplicationRecord
   has_many :projects, through: :project_persons
   has_many :entry_mentions, as: :mentionable, dependent: :destroy
   has_many :entries, through: :entry_mentions
+  has_one :contributor_person_link, dependent: :destroy
+  has_one :github_contributor, through: :contributor_person_link
 
   encrypts :name
 

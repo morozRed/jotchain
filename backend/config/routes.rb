@@ -82,6 +82,7 @@ Rails.application.routes.draw do
           post :switch
         end
       end
+      resources :contributor_links, only: [:show, :create, :destroy], param: :contributor_id
     end
 
     root "dashboard#index"

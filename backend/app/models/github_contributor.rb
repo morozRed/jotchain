@@ -6,9 +6,15 @@ class GitHubContributor < ApplicationRecord
   has_many :github_pull_requests, foreign_key: :author_id, dependent: :nullify
   has_many :github_reviews, foreign_key: :reviewer_id, dependent: :nullify
   has_many :github_issues, foreign_key: :author_id, dependent: :nullify
+  has_many :contributor_person_links, dependent: :destroy
 
   validates :github_id, presence: true, uniqueness: { scope: :workspace_id }
   validates :login, presence: true
+
+  # Get the linked person for a specific user
+  def linked_person_for(user)
+    contributor_person_links.find_by(user: user)&.person
+  end
 
   scope :active_in_period, ->(start_date, end_date) {
     joins(:github_commits)
