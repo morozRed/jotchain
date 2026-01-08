@@ -43,6 +43,7 @@ Rails.application.routes.draw do
 
     namespace :webhooks do
       post "stripe", to: "stripe#create"
+      post "github", to: "github#create"
     end
 
     namespace :settings do
