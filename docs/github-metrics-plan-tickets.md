@@ -13,7 +13,7 @@
 [DONE] GH-013 Implement webhook endpoint for push, pull_request, pull_request_review, issues
 [DONE] GH-014 Create GitHubMetricSnapshot model/migration
 [DONE] GH-015 Build MetricsCalculator service to compute per-contributor and team metrics
-[READY_TO_WORK] GH-016 Compute derived signals (stale PRs, review bottlenecks, uneven load, throughput drop)
+[DONE] GH-016 Compute derived signals (stale PRs, review bottlenecks, uneven load, throughput drop)
 [READY_TO_WORK] GH-017 Schedule hourly rolling metric updates and weekly snapshots
 [READY_TO_WORK] GH-018 Implement team overview dashboard (who's working on what, signals)
 [READY_TO_WORK] GH-019 Implement contributor profile view (active work, trends, review load)
