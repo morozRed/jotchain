@@ -83,6 +83,7 @@ Rails.application.routes.draw do
         end
       end
       resources :contributor_links, only: [:show, :create, :destroy], param: :contributor_id
+      post "github_references/detect", to: "github_references#detect"
     end
 
     root "dashboard#index"
