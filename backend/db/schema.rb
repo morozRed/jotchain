@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_08_145053) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_08_145629) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -239,6 +239,19 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_08_145053) do
     t.index ["user_id", "status"], name: "index_insight_requests_on_user_id_and_status"
   end
 
+  create_table "metric_events", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "event_type", null: false
+    t.uuid "user_id"
+    t.uuid "workspace_id"
+    t.jsonb "metadata", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_type"], name: "index_metric_events_on_event_type"
+    t.index ["user_id"], name: "index_metric_events_on_user_id"
+    t.index ["workspace_id", "event_type", "created_at"], name: "idx_on_workspace_id_event_type_created_at_a168df71d1"
+    t.index ["workspace_id"], name: "index_metric_events_on_workspace_id"
+  end
+
   create_table "notification_deliveries", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "notification_schedule_id", null: false
     t.uuid "user_id", null: false
@@ -436,6 +449,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_08_145053) do
   add_foreign_key "github_reviews", "github_contributors", column: "reviewer_id", on_delete: :nullify
   add_foreign_key "github_reviews", "github_pull_requests", on_delete: :cascade
   add_foreign_key "insight_requests", "users"
+  add_foreign_key "metric_events", "users"
+  add_foreign_key "metric_events", "workspaces"
   add_foreign_key "notification_deliveries", "notification_schedules"
   add_foreign_key "notification_deliveries", "users"
   add_foreign_key "notification_schedules", "users"

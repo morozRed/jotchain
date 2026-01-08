@@ -9,6 +9,7 @@ class RepositoriesController < InertiaController
   end
 
   def show
+    track_event(MetricEvent::REPOSITORY_VIEW, { repository_id: params[:id] })
     repository = Current.workspace.github_repositories.find(params[:id])
 
     render inertia: "repositories/show", props: {
@@ -161,5 +162,16 @@ class RepositoriesController < InertiaController
     sorted = array.sort
     mid = sorted.length / 2
     sorted.length.odd? ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2.0
+  end
+
+  def track_event(event_type, metadata = {})
+    MetricEvent.track(
+      event_type: event_type,
+      user: Current.user,
+      workspace: Current.workspace,
+      metadata: metadata
+    )
+  rescue => e
+    Rails.logger.error("Failed to track event: #{e.message}")
   end
 end

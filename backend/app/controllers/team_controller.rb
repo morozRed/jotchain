@@ -2,6 +2,8 @@
 
 class TeamController < InertiaController
   def index
+    track_event(MetricEvent::DASHBOARD_VIEW)
+
     render inertia: "team/index", props: {
       workspace: workspace_props,
       metrics: team_metrics,
@@ -13,6 +15,7 @@ class TeamController < InertiaController
   end
 
   def contributor
+    track_event(MetricEvent::CONTRIBUTOR_VIEW, { contributor_id: params[:id] })
     contributor = Current.workspace.github_contributors.find(params[:id])
 
     render inertia: "team/contributor", props: {
@@ -255,5 +258,16 @@ class TeamController < InertiaController
           url: review.github_url
         }
       end
+  end
+
+  def track_event(event_type, metadata = {})
+    MetricEvent.track(
+      event_type: event_type,
+      user: Current.user,
+      workspace: Current.workspace,
+      metadata: metadata
+    )
+  rescue => e
+    Rails.logger.error("Failed to track event: #{e.message}")
   end
 end
