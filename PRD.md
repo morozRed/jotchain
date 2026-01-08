@@ -1,204 +1,115 @@
-## JotChain PRD — Journaling with Signals (Rails + Inertia)
+## JotChain PRD - Team Visibility with GitHub + Context Notes (Rails + Inertia)
 
 ### Problem
 
-Engineers and tech leads *lose visibility into their real work*.
+Engineering leaders and teams lack low-effort visibility into who is working on what and how the team is progressing.
 
-Interruptions, blockers, helping others, and context switching rarely make it into task tools — so weeks feel exhausting, reviews feel fuzzy, and teams repeat the same problems without understanding why.
-
-Most tools optimize **planning** or **reporting**.
-Very few help people **notice patterns in what actually happened**.
+Standups and status updates are manual and inconsistent. GitHub data is rich but noisy and hard to interpret. Teams need productivity signals without forcing a new workflow.
 
 ---
 
 ### Solution
 
-A lightweight work journal that turns short notes into **ambient signals** about blockers, time sinks, and impact.
+A team visibility layer that connects GitHub activity with optional private notes.
 
-Users write freely.
-JotChain observes quietly.
-Insights appear only when patterns emerge.
-
-No planning. No task management. No dashboards by default.
+JotChain shows active work, review load, throughput, and cycle-time trends while letting individuals add context when needed. It complements existing planning tools instead of replacing them.
 
 ---
 
-## Product Principles (New)
+## Product Principles
 
-* **Notes are the source of truth**
-* **Insights are earned, not demanded**
-* **Reflection is optional, never required**
-* **Text first, visuals second**
-* **No shame, no streak pressure**
-* **Never compete with Linear / Jira**
-
----
-
-## MVP Scope (Re-aligned)
-
-### 1) Work Notes (Core)
-
-* Single writing surface: *“What happened today?”*
-* Free-text journaling (TipTap stays)
-* Inline `@mentions` for people and projects (optional)
-* Notes auto-saved on submit
-* Recent notes visible for memory anchoring
-
-> Writing must take <30 seconds.
+* **Team visibility without surveillance**
+* **Context over raw counts**
+* **Productivity is multi-dimensional**
+* **Private notes stay private by default**
+* **Integrate with Linear/Jira, do not replace them**
+* **Insights must be actionable**
 
 ---
 
-### 2) Signals (NEW CORE CONCEPT)
+## MVP Scope (Aligned)
 
-Signals are **derived patterns**, not user input.
+### 1) GitHub Integration (Core)
 
-#### Initial signal types
-
-* **Blockers**
-* **Time sinks**
-* **Impact / Invisible work** (helping, unblocking, mentoring)
-
-#### Behavior
-
-* Signals appear in a **thin top bar**
-* Collapsed by default
-* Expand via click (slider / toggle)
-* Only appear once enough data exists
-
-Example:
-
-```
-▸ Blockers (3)
-▸ Time sinks
-▸ Impact
-```
-
-Expanded:
-
-```
-▾ Blockers (3)
-CI pipeline — mentioned 2×
-Waiting on review — 1×
-
-[ Reflect ]   [ Ignore ]
-```
+* GitHub App install (org/repo)
+* Repo selection and sync
+* Contributor mapping to team members
 
 ---
 
-### 3) Reflection (Optional, Contextual)
+### 2) Team Overview (Core)
 
-Reflection is **user-initiated**, never forced.
-
-Ways to reflect:
-
-* From a signal slider (“Reflect”)
-* From a specific note (“Reflect on this”)
-
-Reflection is just… another note:
-
-* Linked to the signal
-* No special UI
-* No required outcome
+* "Who's working on what" (active PRs, recent commits, top repos)
+* Review load and response time
+* Throughput and cycle-time trends (7/14/30 days)
 
 ---
 
-### 4) Insights (Reframed)
+### 3) Contributor Profiles (Core)
 
-❌ Remove “on-demand insight generation” as primary UX
-✅ Replace with **passive insight surfacing**
-
-#### Insight rules
-
-* Appear only after patterns emerge
-* Text-first
-* No charts on load
-* No templates to choose from
-
-Example insight copy:
-
-> “This week felt fragmented — interruptions appeared in 4 notes.”
-
-Advanced AI summaries remain **secondary** (see below).
+* Active work, recent PRs, review activity
+* Focus areas by repo
+* Trends over time
 
 ---
 
-### 5) Notifications (Reframed)
+### 4) Project/Repo Mapping (Core)
 
-Notifications are **nudges**, not reports.
-
-#### MVP notifications
-
-* End-of-day gentle reminder (optional)
-
-  > “Want to capture today while it’s fresh?”
-* Weekly reflection nudge
-
-  > “A few patterns stood out this week.”
-
-❌ Remove complex schedules from MVP UI
-❌ Remove “digest as core value”
-
-Emails become:
-
-* Optional
-* Summary-oriented
-* Secondary to in-app insight
+* Link GitHub repos to projects
+* Filter team metrics by project
 
 ---
 
-### 6) Analytics (Demoted)
+### 5) Notes and Context (Optional)
 
-Analytics are **not the aha moment**.
-
-For MVP:
-
-* No dashboards on first run
-* No heatmaps by default
-* No KPI screens in primary nav
-
-Analytics can live under:
-
-> Settings → “Your data”
-
-Later used for:
-
-* Power users
-* Retros
-* Teams
+* Private notes remain the source of personal context
+* Link notes to people, projects, PRs, or commits
 
 ---
 
-### 7) Auth & Billing (Unchanged, but reframed)
+### 6) Signals and Alerts (Core)
+
+Signals are derived patterns from GitHub activity that highlight team health and bottlenecks.
+
+* Stale PRs and long review waits
+* Uneven review load
+* Sudden drops in throughput
+
+Signals surface in the team dashboard and can link to optional private notes.
+
+---
+
+### 7) Notifications (Optional)
+
+* Weekly team summary
+* Optional nudges for stale work
+
+---
+
+## Auth and Billing (Updated)
 
 Billing gates:
 
-* Advanced AI insights (summaries, exports)
-* Email digests
-* Team workspaces (future)
+* Advanced analytics (longer history, exports)
+* Alerts and scheduled reports
+* Larger org and multi-team workspaces
 
-Core journaling + basic signals must remain:
-
-> **usable without payment**
-
-This builds trust.
+Core team visibility should be usable with minimal setup.
 
 ---
 
-## Revised User Journey (Aligned)
+## Revised Team Journey (Aligned)
 
-1. User writes notes for a few days
-2. Nothing happens immediately
-3. A signal appears quietly
-4. User clicks out of curiosity
-5. Insight explains *how the week felt*
-6. User reflects
-7. Habit forms
-
-That’s the loop.
+1. Install the GitHub App and select repos
+2. Team dashboard shows who is working on what
+3. Drill into a contributor or repo
+4. Add private notes for context (optional)
+5. Signals highlight bottlenecks and review load
+6. Weekly summary reinforces trends
 
 ---
 
-## Core Data Model (Adjusted)
+## Core Data Model (Updated)
 
 ### Keep
 
@@ -209,18 +120,22 @@ That’s the loop.
 
 ### Add
 
-* `signals`
-
-  * `signal_type` (blocker, time_sink, impact)
-  * `confidence`
-  * `evidence`
-  * `entry_id`
-* `signal_entities` (cause/target like CI, person, system)
+* `workspaces`
+* `workspace_memberships`
+* `github_installations`
+* `github_repositories`
+* `github_contributors`
+* `github_commits`
+* `github_pull_requests`
+* `github_reviews`
+* `github_issues`
+* `github_metric_snapshots`
+* `project_repositories`
 
 ### Reframe
 
-* `InsightRequest` → background system process, not user-triggered UI
-* `NotificationSchedule` → simplified (daily / weekly only for MVP)
+* `signals` become team productivity signals derived from GitHub data
+* Notifications become team summaries and alerts
 
 ---
 
@@ -228,49 +143,38 @@ That’s the loop.
 
 ### Primary
 
-* Entries per user per week
-* % of users who see at least one signal
-* Signal expansion rate (clicks)
-* Reflection notes created
+* GitHub App installs per team
+* Active repos with successful sync
+* Team dashboard visits
+* Contributor profile views
+* Reduced PR cycle time or review lag
 
 ### Secondary
 
-* Email digests opened
-* AI summaries generated
+* Optional note usage linked to PRs/people
+* Weekly summary opens
 * Conversion to paid
-
-If users don’t **see themselves** in the signals, nothing else matters.
 
 ---
 
-# 3️⃣ What This Changes in Practice
+## What This Changes in Practice
 
-### You are no longer selling:
+You are no longer selling:
 
-> “Prepare for standups and reviews”
+> "A private work journal"
 
 You are selling:
 
-> **“Understand where your time and energy actually go.”**
+> **"Know who's working on what and how the team is moving."**
 
-Standups, reviews, and emails become **side effects**, not the product.
+Notes become context, not the main product.
 
 ---
 
-## Final thought (important)
+## Final Thought
 
 This revised PRD:
 
-* Keeps your current tech viable
-* Explains *why* JotChain exists alongside Linear
-* Creates a defensible UX moat
-* Aligns perfectly with the “Amy food journal” model
-
-If you want next, I can:
-
-* Map **old features → new mental buckets**
-* Propose a **migration plan** (no big bang)
-* Rewrite homepage copy to match this PRD
-* Help you decide **what to delete** (hard but necessary)
-
-This is the right direction.
+* Positions JotChain as a team visibility layer
+* Aligns GitHub metrics with productivity goals
+* Keeps optional notes for context without forcing reporting
