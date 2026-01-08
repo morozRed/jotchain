@@ -37,6 +37,9 @@ Rails.application.routes.draw do
     get :team, to: "team#index"
     get "team/contributors/:id", to: "team#contributor", as: :team_contributor
 
+    # Repository views
+    resources :repositories, only: [:index, :show]
+
     get "billing", to: "subscriptions#index", as: :billing
     post "billing/checkout", to: "subscriptions#create_checkout_session", as: :billing_checkout
     get "billing/success", to: "subscriptions#success", as: :billing_success
